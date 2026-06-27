@@ -75,40 +75,55 @@
       "status": "live",
       "placement": ["nav", "plate", "footer"],
       "blurb": "The whole encounter, start to finish."
-    }
-  ],
-  "unlisted": [
+    },
     {
       "id": "scope-or-nope",
       "name": "ScopeOrNope",
-      "repo": "danstonedev/scope-or-nope",
-      "status": "live-unlisted",
+      "tag": "scope-or-nope",
+      "footerLabel": "ScopeOrNope",
+      "category": "simulation",
       "url": "https://danstonedev.github.io/scope-or-nope/",
-      "note": "Clinical-triage swipe game (React, GitHub Pages). Candidate hub card — verify URL before listing."
+      "repo": "danstonedev/scope-or-nope",
+      "status": "live",
+      "placement": ["footer"],
+      "blurb": "Refer or treat? Triage decisions, one swipe at a time.",
+      "note": "Promoted from unlisted 2026-06-27 (P1 #10). Footer-only, design-safe. Live URL verified HTTP 200 (GitHub Pages SPA, title 'ScopeOrNope | Clinical Triage')."
     },
     {
       "id": "wellness",
       "name": "Wellness",
-      "repo": "danstonedev/wellness",
-      "status": "live-unlisted",
+      "tag": "wellness",
+      "footerLabel": "Wellness",
+      "category": "simulation",
       "url": "https://danstonedev.github.io/wellness/",
-      "note": "ICF / 8-dimensions case-study sim (React, GitHub Pages). Candidate hub card — verify URL."
+      "repo": "danstonedev/wellness",
+      "status": "live",
+      "placement": ["footer"],
+      "blurb": "The eight dimensions of wellness, one case at a time.",
+      "note": "Promoted from unlisted 2026-06-27 (P1 #10). Footer-only, design-safe. Live URL verified HTTP 200 (Vite/React SPA; JS bundle loads 200; populations + 8 wellness-domain case-study data confirmed in repo)."
     },
     {
       "id": "anatomy-database-app",
       "name": "PT Rapid Recall",
+      "tag": "rapid-recall",
+      "footerLabel": "Rapid Recall",
+      "category": "research",
+      "url": "https://thankful-flower-0c1d6480f.4.azurestaticapps.net/",
       "repo": "danstonedev/anatomy-database-app",
-      "status": "live-unlisted",
-      "url": "",
-      "note": "Muscle/nerve reference DB (Next.js + Prisma, Azure SWA). URL TBD; candidate hub card."
-    },
+      "status": "live",
+      "placement": ["footer"],
+      "blurb": "Muscles and nerves, on instant recall.",
+      "note": "Promoted from unlisted 2026-06-27 (P1 #10). Footer-only, design-safe. Real Azure SWA hostname discovered (region prefix '.4') and verified HTTP 200, serving 'Anatomy Database / PT Rapid Recall' search UI. Next.js+Prisma standalone build; no devpt.app subdomain assigned, so the raw SWA URL is used for now."
+    }
+  ],
+  "unlisted": [
     {
       "id": "mash",
       "name": "MASH / IMU Connect",
       "repo": "danstonedev/MASH",
       "status": "internal",
       "url": "",
-      "note": "IMU motion-capture platform (ESP32 + React/three.js, Azure SWA). URL TBD."
+      "note": "IMU motion-capture platform (ESP32 + React/three.js, Azure SWA). URL TBD. Reviewed for hub promotion 2026-06-27 (P1 #10) and deliberately LEFT UNLISTED: it is a hardware-bound biomechanics RESEARCH instrument — it requires physical ESP32-S3 IMU sensors connected over WebSerial/USB to do anything, has no standalone student-facing content, and no verifiable public URL was found (the deploy workflow lists only Azure token-name fallbacks, no committed hostname; default-host probes 404). Not appropriate for the PT-education student hub."
     }
   ],
   "engines": [
