@@ -4,17 +4,20 @@ The master home page and hub for **DevPT**: a growing platform of simulation and
 assessment tools for physical therapy education, built at the University of North
 Dakota.
 
-It's a single, self-contained static site (no build step) so it deploys to GitHub
-Pages instantly and maps cleanly to the `devpt.app` custom domain.
+It's a single, self-contained static site (no build step). The app catalog is
+data-driven: **[`apps.json`](apps.json) is the single source of truth**, and
+`app.js` renders the "Practice tools" nav and the footer list from it.
 
 ## Stack
 
-- `index.html` — markup & content (app cards live here)
-- `styles.css` — dark / tech theme, UND-green accent
-- `app.js` — scroll reveal, stat count-up, category filtering, card glow
-- `CNAME` — custom domain (`devpt.app`)
+- `index.html` — markup & content, including the bespoke marketing "plates" for each app
+- `apps.json` — **canonical app registry** (id, name, live URL, backing repo, status, placement)
+- `styles.css` — light editorial theme, UND-green accent
+- `app.js` — scroll reveal, in-view demo-video playback, and catalog rendering from `apps.json`
+- `assets/` — logo, demo videos/posters, screenshots
+- `CV - Dan Stone.pdf` — linked from the About section
 
-Fonts (Space Grotesk + Inter) load from Google Fonts; everything else is local.
+Fonts (Hanken Grotesk + JetBrains Mono) load from Google Fonts; everything else is local.
 
 ## Run locally
 
@@ -22,27 +25,43 @@ Fonts (Space Grotesk + Inter) load from Google Fonts; everything else is local.
 npm start          # serves at http://localhost:8080 (http-server, no caching)
 ```
 
-Or just open `index.html` in a browser.
+Serve over http(s) (not `file://`) so `app.js` can `fetch('apps.json')`. If opened
+as a local file, the page falls back to the static nav/footer lists in `index.html`.
 
-## Add an application
+## Add or retire an application
 
-Copy a card block in `index.html` (inside `#appGrid`) and set:
+1. Edit **`apps.json`** — add or change one record:
+   - `id` — stable slug; the plate element is `id="app-<id>"`
+   - `name`, `tag` (mono nav label), `footerLabel`
+   - `url` — the app's live URL
+   - `repo` — the backing GitHub repo (`owner/name`)
+   - `status` — `live` | `live-unlisted` | `internal`
+   - `placement` — any of `hero`, `nav`, `plate`, `footer`
+2. The **"Practice tools" nav** and the **footer list** re-render automatically from `apps.json`.
+3. For a full marketing **plate**, also add an `<article class="plate" id="app-<id>">`
+   block in `index.html` (copy an existing one). `app.js` logs a console warning if a
+   plate's link doesn't match the `url` in `apps.json`.
 
-- `href` — the app's live URL (use `target="_blank" rel="noopener noreferrer"`)
-- `data-cat` — one or more of `simulation`, `anatomy`, `motion` (space-separated)
-- icon, title, `card-tag`, description, and a `badge-live` / `badge-soon` badge
+Apps not yet surfaced on the hub (e.g. `scope-or-nope`, `wellness`,
+`anatomy-database-app`, `MASH`) are tracked under `unlisted` in `apps.json` so the
+portfolio stays self-describing.
 
-The category filter chips pick the new card up automatically via `data-cat`.
+## Checks
+
+`scripts/check-apps.mjs` validates `apps.json` (required fields; allowed
+`category` / `status` / `placement` values), confirms every `plate` app has a
+matching `id="app-<id>"` and link in `index.html`, and pings each listed URL. It
+runs in CI on every change to the catalog (`.github/workflows/check-apps.yml`)
+and weekly to catch apps that go offline.
+
+```bash
+node scripts/check-apps.mjs            # full check (schema + page + ping)
+node scripts/check-apps.mjs --no-ping  # skip network checks
+```
 
 ## Deploy
 
-GitHub Pages, `main` branch root (repo: `danstonedev/home`).
-
-1. Push to `main`.
-2. Repo **Settings → Pages**: Source = `main` / root.
-3. **Settings → Pages → Custom domain** = `devpt.app` (the `CNAME` file already sets this).
-4. DNS for `devpt.app` (at your registrar):
-   - `A` records for the apex `@` → GitHub Pages IPs:
-     `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-   - `CNAME` for `www` → `danstonedev.github.io`
-5. Enable **Enforce HTTPS** once the certificate is issued.
+**Azure Static Web Apps**, on push to `main`, via
+`.github/workflows/azure-static-web-apps-black-tree-0e898330f.yml`
+(`app_location: "/"`, `skip_app_build: true`). The `devpt.app` custom domain is
+configured in the Azure Static Web Apps resource.

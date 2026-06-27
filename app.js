@@ -35,34 +35,6 @@
     reveals.forEach(function (el) { el.classList.add("in"); });
   }
 
-  /* Count-up stats */
-  var counted = false;
-  function runCounts() {
-    if (counted) return;
-    counted = true;
-    document.querySelectorAll(".n[data-count]").forEach(function (el) {
-      var target = parseInt(el.getAttribute("data-count"), 10);
-      if (reduceMotion) { el.textContent = target; return; }
-      var start = null, dur = 1100;
-      function step(ts) {
-        if (!start) start = ts;
-        var p = Math.min((ts - start) / dur, 1);
-        el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
-        if (p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    });
-  }
-  var strip = document.querySelector(".strip");
-  if (strip && "IntersectionObserver" in window) {
-    var sio = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) { runCounts(); sio.disconnect(); } });
-    }, { threshold: 0.4 });
-    sio.observe(strip);
-  } else {
-    runCounts();
-  }
-
   /* Demo videos — play only while in view; static poster under reduced motion */
   var vids = Array.prototype.slice.call(document.querySelectorAll('video.lazyvid'));
   if (vids.length) {
@@ -86,19 +58,65 @@
     }
   }
 
-  /* App filtering */
-  var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
-  var cards = Array.prototype.slice.call(document.querySelectorAll("#appGrid .card"));
-  chips.forEach(function (chip) {
-    chip.addEventListener("click", function () {
-      chips.forEach(function (c) { c.classList.remove("is-active"); });
-      chip.classList.add("is-active");
-      var f = chip.getAttribute("data-filter");
-      cards.forEach(function (card) {
-        var cats = card.getAttribute("data-cat") || "";
-        var show = f === "all" || cats.indexOf(f) !== -1;
-        card.classList.toggle("hide", !show);
-      });
+  /* ===== App catalog — single source of truth: apps.json =====
+     The "Practice tools" nav and the footer app list are rendered from
+     apps.json so the catalog is maintained in ONE place. The static markup
+     in index.html is a no-JS fallback; edit apps.json, not the lists.
+     (Fetch requires the page be served over http(s); opening index.html via
+     file:// will skip rendering and keep the static fallback.) */
+  function inPlacement(app, where) {
+    return app.placement && app.placement.indexOf(where) !== -1;
+  }
+  function buildNavItem(app) {
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    a.href = "#app-" + app.id;
+    a.className = "mono";
+    a.textContent = app.tag;
+    li.appendChild(a);
+    return li;
+  }
+  function buildFooterItem(app) {
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    a.href = app.url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = app.footerLabel || app.name;
+    li.appendChild(a);
+    return li;
+  }
+  function renderCatalog(apps) {
+    var navUl = document.querySelector(".contract ul");
+    if (navUl) {
+      navUl.innerHTML = "";
+      apps.filter(function (a) { return inPlacement(a, "nav"); })
+          .forEach(function (a) { navUl.appendChild(buildNavItem(a)); });
+    }
+    var footUl = document.querySelector(".footer-apps");
+    if (footUl) {
+      footUl.innerHTML = "";
+      apps.filter(function (a) { return inPlacement(a, "footer"); })
+          .forEach(function (a) { footUl.appendChild(buildFooterItem(a)); });
+    }
+  }
+  function validatePlates(apps) {
+    apps.filter(function (a) { return inPlacement(a, "plate"); }).forEach(function (a) {
+      var plate = document.getElementById("app-" + a.id);
+      if (!plate) { console.warn("[apps] missing plate #app-" + a.id); return; }
+      var links = Array.prototype.slice.call(plate.querySelectorAll("a[href]"));
+      var match = links.some(function (l) { return l.getAttribute("href") === a.url; });
+      if (!match) console.warn("[apps] plate #app-" + a.id + " has no link to " + a.url);
     });
-  });
+  }
+  if (window.fetch) {
+    fetch("apps.json", { cache: "no-cache" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data || !data.apps) return;
+        renderCatalog(data.apps);
+        validatePlates(data.apps);
+      })
+      .catch(function () { /* keep the static fallback lists */ });
+  }
 })();

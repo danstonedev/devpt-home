@@ -1,0 +1,141 @@
+{
+  "_comment": "Single source of truth for the DevPT app catalog. Edit apps here; index.html's 'Practice tools' nav and footer list are rendered from this file by app.js. To add a full marketing plate, also add an <article class=\"plate\" id=\"app-<id>\"> block in index.html. placement values: 'hero' | 'nav' | 'plate' | 'footer'.",
+  "domain": "https://devpt.app",
+  "deploy": "Azure Static Web Apps (.github/workflows/azure-static-web-apps-black-tree-0e898330f.yml)",
+  "apps": [
+    {
+      "id": "painmap",
+      "name": "PainMap",
+      "tag": "painmap",
+      "footerLabel": "PainMap",
+      "category": "research",
+      "url": "https://pain3d.com",
+      "repo": "danstonedev/3DPainMap",
+      "status": "live",
+      "placement": ["hero", "footer"],
+      "blurb": "Pain in three dimensions — a research instrument beyond the 0–10 scale."
+    },
+    {
+      "id": "emrsim",
+      "name": "EMRsim",
+      "tag": "emrsim",
+      "footerLabel": "EMRsim",
+      "category": "simulation",
+      "url": "https://emrsim.devpt.app",
+      "repo": "danstonedev/VSPx-EMRsim",
+      "status": "live",
+      "placement": ["nav", "plate", "footer"],
+      "blurb": "Documentation that behaves like a real chart."
+    },
+    {
+      "id": "vspx",
+      "name": "VSPx Chat",
+      "tag": "vspx",
+      "footerLabel": "VSPx",
+      "category": "simulation",
+      "url": "https://vspx.devpt.app",
+      "repo": "danstonedev/vspx-v2",
+      "status": "live",
+      "placement": ["nav", "plate", "footer"],
+      "blurb": "A virtual patient to interview, on demand."
+    },
+    {
+      "id": "simpacs",
+      "name": "simPACS",
+      "tag": "simpacs",
+      "footerLabel": "simPACS",
+      "category": "imaging",
+      "url": "https://simpacs.devpt.app",
+      "repo": "danstonedev/anatomy-viewer",
+      "status": "live",
+      "placement": ["nav", "plate", "footer"],
+      "blurb": "The imaging workstation, hands-on."
+    },
+    {
+      "id": "aquatic",
+      "name": "Aquatic Therapy",
+      "tag": "aquatic",
+      "footerLabel": "Aquatic",
+      "category": "simulation",
+      "url": "https://aquatic.devpt.app",
+      "repo": "danstonedev/aquatic-therapy",
+      "status": "live",
+      "placement": ["nav", "plate", "footer"],
+      "blurb": "How the body responds to water.",
+      "note": "Repo deploy workflow is currently gated on a missing Azure secret (inert) as of 2026-06; verify the subdomain is actually serving."
+    },
+    {
+      "id": "lab",
+      "name": "DevPT Lab",
+      "tag": "lab",
+      "footerLabel": "DevPT Lab",
+      "category": "platform",
+      "url": "https://lab.devpt.app",
+      "repo": "danstonedev/devpt",
+      "status": "live",
+      "placement": ["nav", "plate", "footer"],
+      "blurb": "The whole encounter, start to finish."
+    },
+    {
+      "id": "scope-or-nope",
+      "name": "ScopeOrNope",
+      "tag": "scope-or-nope",
+      "footerLabel": "ScopeOrNope",
+      "category": "simulation",
+      "url": "https://danstonedev.github.io/scope-or-nope/",
+      "repo": "danstonedev/scope-or-nope",
+      "status": "live",
+      "placement": ["footer"],
+      "blurb": "Refer or treat? Triage decisions, one swipe at a time.",
+      "note": "Promoted from unlisted 2026-06-27 (P1 #10). Footer-only, design-safe. Live URL verified HTTP 200 (GitHub Pages SPA, title 'ScopeOrNope | Clinical Triage')."
+    },
+    {
+      "id": "wellness",
+      "name": "Wellness",
+      "tag": "wellness",
+      "footerLabel": "Wellness",
+      "category": "simulation",
+      "url": "https://danstonedev.github.io/wellness/",
+      "repo": "danstonedev/wellness",
+      "status": "live",
+      "placement": ["footer"],
+      "blurb": "The eight dimensions of wellness, one case at a time.",
+      "note": "Promoted from unlisted 2026-06-27 (P1 #10). Footer-only, design-safe. Live URL verified HTTP 200 (Vite/React SPA; JS bundle loads 200; populations + 8 wellness-domain case-study data confirmed in repo)."
+    }
+  ],
+  "unlisted": [
+    {
+      "id": "anatomy-database-app",
+      "name": "PT Rapid Recall",
+      "repo": "danstonedev/anatomy-database-app",
+      "status": "internal",
+      "url": "https://thankful-flower-0c1d6480f.4.azurestaticapps.net/",
+      "note": "Held OFF the public hub 2026-06-27: the P1 #10 footer promotion was reverted after review. (1) Only a raw region-prefixed Azure SWA host is available, not a stable devpt.app subdomain; (2) PORTFOLIO flags this app runs `prisma db push --accept-data-loss` against prod on every deploy with no tests / unclear auth, so it is not ready for public hub traffic. Promote once it has a real subdomain and a confirmed data-safety posture."
+    },
+    {
+      "id": "mash",
+      "name": "MASH / IMU Connect",
+      "repo": "danstonedev/MASH",
+      "status": "internal",
+      "url": "",
+      "note": "IMU motion-capture platform (ESP32 + React/three.js, Azure SWA). URL TBD. Reviewed for hub promotion 2026-06-27 (P1 #10) and deliberately LEFT UNLISTED: it is a hardware-bound biomechanics RESEARCH instrument — it requires physical ESP32-S3 IMU sensors connected over WebSerial/USB to do anything, has no standalone student-facing content, and no verifiable public URL was found (the deploy workflow lists only Azure token-name fallbacks, no committed hostname; default-host probes 404). Not appropriate for the PT-education student hub."
+    }
+  ],
+  "engines": [
+    {
+      "id": "scenario-engine",
+      "repo": "danstonedev/scenario-engine",
+      "role": "Branching clinical-scenario engine; consumed by devpt as a git submodule."
+    },
+    {
+      "id": "pose-engine",
+      "repo": "danstonedev/pose-engine",
+      "role": "Shared 3D rig/pose library; consumed by 3DPainMap, anatomy-viewer, aquatic-therapy. Currently also the de-facto source of the runtime mannequin GLBs."
+    },
+    {
+      "id": "vspx-3d-assets",
+      "repo": "danstonedev/vspx-3d-assets",
+      "role": "Intended canonical mannequin GLB assets — currently UNCONSUMED (apps copy GLBs from pose-engine/models instead). Resolve the source of truth."
+    }
+  ]
+}
