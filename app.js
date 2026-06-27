@@ -35,34 +35,6 @@
     reveals.forEach(function (el) { el.classList.add("in"); });
   }
 
-  /* Count-up stats */
-  var counted = false;
-  function runCounts() {
-    if (counted) return;
-    counted = true;
-    document.querySelectorAll(".n[data-count]").forEach(function (el) {
-      var target = parseInt(el.getAttribute("data-count"), 10);
-      if (reduceMotion) { el.textContent = target; return; }
-      var start = null, dur = 1100;
-      function step(ts) {
-        if (!start) start = ts;
-        var p = Math.min((ts - start) / dur, 1);
-        el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
-        if (p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    });
-  }
-  var strip = document.querySelector(".strip");
-  if (strip && "IntersectionObserver" in window) {
-    var sio = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) { runCounts(); sio.disconnect(); } });
-    }, { threshold: 0.4 });
-    sio.observe(strip);
-  } else {
-    runCounts();
-  }
-
   /* Demo videos — play only while in view; static poster under reduced motion */
   var vids = Array.prototype.slice.call(document.querySelectorAll('video.lazyvid'));
   if (vids.length) {

@@ -13,7 +13,7 @@ data-driven: **[`apps.json`](apps.json) is the single source of truth**, and
 - `index.html` — markup & content, including the bespoke marketing "plates" for each app
 - `apps.json` — **canonical app registry** (id, name, live URL, backing repo, status, placement)
 - `styles.css` — light editorial theme, UND-green accent
-- `app.js` — scroll reveal, stat count-up, in-view demo-video playback, and catalog rendering from `apps.json`
+- `app.js` — scroll reveal, in-view demo-video playback, and catalog rendering from `apps.json`
 - `assets/` — logo, demo videos/posters, screenshots
 - `CV - Dan Stone.pdf` — linked from the About section
 
@@ -45,6 +45,19 @@ as a local file, the page falls back to the static nav/footer lists in `index.ht
 Apps not yet surfaced on the hub (e.g. `scope-or-nope`, `wellness`,
 `anatomy-database-app`, `MASH`) are tracked under `unlisted` in `apps.json` so the
 portfolio stays self-describing.
+
+## Checks
+
+`scripts/check-apps.mjs` validates `apps.json` (required fields; allowed
+`category` / `status` / `placement` values), confirms every `plate` app has a
+matching `id="app-<id>"` and link in `index.html`, and pings each listed URL. It
+runs in CI on every change to the catalog (`.github/workflows/check-apps.yml`)
+and weekly to catch apps that go offline.
+
+```bash
+node scripts/check-apps.mjs            # full check (schema + page + ping)
+node scripts/check-apps.mjs --no-ping  # skip network checks
+```
 
 ## Deploy
 
