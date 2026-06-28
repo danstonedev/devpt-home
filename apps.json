@@ -17,9 +17,9 @@
     },
     {
       "id": "emrsim",
-      "name": "EMRsim",
-      "tag": "emrsim",
-      "footerLabel": "EMRsim",
+      "name": "simEMR",
+      "tag": "simemr",
+      "footerLabel": "simEMR",
       "category": "simulation",
       "url": "https://emrsim.devpt.app",
       "repo": "danstonedev/VSPx-EMRsim",
@@ -29,9 +29,9 @@
     },
     {
       "id": "vspx",
-      "name": "VSPx Chat",
-      "tag": "vspx",
-      "footerLabel": "VSPx",
+      "name": "simCHAT",
+      "tag": "simchat",
+      "footerLabel": "simCHAT",
       "category": "simulation",
       "url": "https://vspx.devpt.app",
       "repo": "danstonedev/vspx-v2",
@@ -53,9 +53,9 @@
     },
     {
       "id": "aquatic",
-      "name": "Aquatic Therapy",
-      "tag": "aquatic",
-      "footerLabel": "Aquatic",
+      "name": "simAQUA",
+      "tag": "simaqua",
+      "footerLabel": "simAQUA",
       "category": "simulation",
       "url": "https://aquatic.devpt.app",
       "repo": "danstonedev/aquatic-therapy",
@@ -66,15 +66,15 @@
     },
     {
       "id": "lab",
-      "name": "DevPT Lab",
-      "tag": "lab",
-      "footerLabel": "DevPT Lab",
+      "name": "simLAB",
+      "tag": "simlab",
+      "footerLabel": "simLAB",
       "category": "platform",
       "url": "https://lab.devpt.app",
       "repo": "danstonedev/devpt",
       "status": "live",
       "placement": ["nav", "plate", "footer"],
-      "blurb": "The whole encounter, start to finish."
+      "blurb": "Pre-built scenario packs run end to end as one continuous case."
     },
     {
       "id": "scope-or-nope",
