@@ -314,3 +314,83 @@ h3 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); }
 .domains-note { color: var(--steel); font-size: 0.98rem; margin: 0 0 12px; }
 .dchips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
 .dchip { font-size: 0.76rem; font-weight: 500; color: var(--green-d); background: rgba(0, 154, 68, 0.07); border: 1px solid rgba(0, 154, 68, 0.22); border-radius: 999px; padding: 5px 12px; }
+
+/* ============================================================
+   Homepage refinement (2026): split hero, arc strip, worked
+   example, pilot band, compact module grid, condensed PainMap.
+   Adds to the "Clinical Ledger" base system; tokens reused.
+   ============================================================ */
+
+/* Split hero — copy + product demo */
+.hero.split { text-align: left; padding: 72px 0 56px; }
+.hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 50px; align-items: center; }
+.hero.split .hero-copy { max-width: 56ch; margin: 0; }
+.hero.split h1 { margin: 0; max-width: 22ch; }
+.hero.split .lede { margin: 22px 0 0; max-width: 54ch; }
+.hero.split .hero-cta { justify-content: flex-start; }
+.hero.split .hero-note { margin-top: 24px; }
+.hero-viz { margin: 0; }
+.hero-viz figcaption { margin-top: 14px; font-size: 0.78rem; color: var(--steel); text-align: center; }
+
+/* Clinical-arc strip (dark band = rare contrast anchor) */
+.arc-strip { background: var(--ink); color: #E7EBEC; }
+.arc-strip .wrap { padding: 28px 28px; }
+.arc-strip p { margin: 0; max-width: 94ch; font-size: 1.02rem; line-height: 1.55; }
+.arc-strip b { color: #fff; font-weight: 600; }
+.arc-strip .cite a { color: #7fd6a3; }
+
+/* Scenario "gradable work" line (replaces the old pill rows) */
+.gradable { margin: 34px 0 0; max-width: 72ch; color: var(--steel); font-size: 1.02rem; }
+
+/* Worked example */
+.sample { margin-top: 42px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-2); padding: 30px 28px; }
+.sample h3 { font-size: 1.25rem; margin-bottom: 10px; }
+.sample > p { color: var(--ink); margin: 0 0 16px; }
+.sample-flow { list-style: none; counter-reset: s; margin: 0; padding: 0; display: grid; gap: 11px; }
+.sample-flow li { counter-increment: s; position: relative; padding-left: 36px; color: var(--steel); line-height: 1.5; }
+.sample-flow li::before { content: counter(s); position: absolute; left: 0; top: 1px; width: 22px; height: 22px; display: grid; place-items: center; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--green-d); border: 1px solid var(--line); border-radius: 999px; background: var(--paper); }
+.sample-flow .sk { font-weight: 600; color: var(--ink); }
+.sample-flow .arr-i { color: var(--mid); }
+.sample-flow i { color: var(--green-d); font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
+.sample-note { margin: 18px 0 0; color: var(--steel); font-size: 0.95rem; }
+
+/* Pilot band + steps */
+.pilot-band { background: var(--paper-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.pilot-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.pilot-steps li { display: flex; flex-direction: column; gap: 10px; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); font-weight: 500; color: var(--ink); font-size: 0.98rem; }
+.pilot-steps .pn { font-size: 0.82rem; color: var(--green-d); font-weight: 600; }
+.derisk { margin: 22px 0 0; color: var(--steel); font-size: 0.9rem; }
+
+/* Compact module grid */
+.modgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.modcard { display: flex; flex-direction: column; gap: 8px; padding: 22px 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); color: inherit; transition: transform 0.2s var(--ease), box-shadow 0.22s, border-color 0.2s; }
+a.modcard:hover { transform: translateY(-3px); box-shadow: 0 18px 38px -30px rgba(22, 25, 29, 0.4); border-color: var(--mid); }
+.modcard.flag { border-color: var(--green); }
+.modname { font-weight: 600; font-size: 1.05rem; margin: 0; display: flex; align-items: center; gap: 9px; }
+.livedot { font-size: 0.64rem; color: var(--green-d); font-weight: 500; }
+.livedot::before { content: "\25CF "; font-size: 0.8em; }
+.moddesc { margin: 0; color: var(--steel); font-size: 0.92rem; flex: 1; }
+.modlink { margin-top: 4px; font-weight: 600; font-size: 0.85rem; color: var(--green-d); }
+
+/* PainMap callout (condensed second pillar) */
+.painmap-callout { background: linear-gradient(180deg, var(--paper-2), var(--paper)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.painmap-callout .wrap { padding: 56px 28px; max-width: 760px; }
+.painmap-callout h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); margin: 10px 0 14px; }
+.painmap-callout p { color: var(--steel); font-size: 1.04rem; margin: 0; }
+
+/* Co-research invitation */
+.coresearch { margin: 26px 0 0; max-width: 66ch; color: var(--steel); font-size: 1rem; }
+
+/* References read as scholarship (override base .refs li) */
+.refs li { font-size: 0.9rem; color: var(--ink); }
+.refs li a { color: var(--green-d); }
+
+/* Responsive */
+@media (max-width: 880px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 30px; }
+    .pilot-steps { grid-template-columns: 1fr 1fr; }
+    .modgrid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+    .pilot-steps, .modgrid { grid-template-columns: 1fr; }
+}
