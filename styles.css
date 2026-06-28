@@ -294,3 +294,23 @@ h3 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); }
 @media (max-width: 880px) {
     .packs { grid-template-columns: 1fr; }
 }
+
+/* ===== Performance arc ===== */
+.arc-band { border-top: 1px solid var(--line); background: var(--paper-2); }
+.arc { list-style: none; counter-reset: arc; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.arc li {
+    counter-increment: arc; display: flex; align-items: center; gap: 9px;
+    padding: 10px 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper);
+    font-weight: 600; font-size: 0.92rem; color: var(--ink);
+}
+.arc li::before { content: counter(arc); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--green-d); font-weight: 600; }
+.arc li:not(:last-child)::after { content: "\2192"; margin-left: 4px; color: var(--mid); }
+
+/* ===== Scenario artifacts + readiness domains ===== */
+.artifacts { margin-top: 44px; border-top: 1px solid var(--line); padding-top: 32px; }
+.artifacts h3 { font-size: 1.2rem; margin-bottom: 16px; }
+.artifact-list { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.artifact-list li { font-size: 0.78rem; color: var(--ink); background: var(--paper-2); border: 1px solid var(--line); border-radius: 8px; padding: 7px 12px; }
+.domains-note { color: var(--steel); font-size: 0.98rem; margin: 0 0 12px; }
+.dchips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+.dchip { font-size: 0.76rem; font-weight: 500; color: var(--green-d); background: rgba(0, 154, 68, 0.07); border: 1px solid rgba(0, 154, 68, 0.22); border-radius: 999px; padding: 5px 12px; }
