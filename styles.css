@@ -261,3 +261,36 @@ h3 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); }
     .reveal { opacity: 1; transform: none; transition: none; }
     * { scroll-behavior: auto; }
 }
+
+/* ===== Thesis band (scenario-first statement) ===== */
+.thesis { background: var(--ink); color: var(--paper); }
+.thesis .wrap { padding: 40px 28px; }
+.thesis p { margin: 0; max-width: 46ch; font-size: clamp(1.15rem, 2.2vw, 1.5rem); font-weight: 500; letter-spacing: -0.01em; line-height: 1.45; color: #E7EBEC; }
+.thesis b { color: #fff; font-weight: 600; }
+
+/* ===== Scenario packs ===== */
+.packs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+.pack {
+    display: flex; flex-direction: column; gap: 10px;
+    border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); padding: 26px 24px;
+    transition: transform 0.22s var(--ease), box-shadow 0.25s;
+}
+.pack:hover { transform: translateY(-3px); box-shadow: 0 22px 44px -32px rgba(22, 25, 29, 0.4); }
+.pack-home { font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--green-d); font-weight: 600; }
+.pack h3 { font-size: 1.2rem; }
+.pack-task { margin: 0; color: var(--steel); font-size: 0.97rem; }
+.pack-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.chip { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--ink); background: var(--paper-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
+.pack-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); }
+.pack-align { font-size: 0.7rem; color: var(--steel); }
+.packs-more { margin: 18px 0 0; font-size: 0.8rem; color: var(--steel); }
+
+/* maturity badges (honest product-state labels) */
+.mat { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.mat.ready { color: var(--green-d); background: rgba(0, 154, 68, 0.09); border: 1px solid rgba(0, 154, 68, 0.28); }
+.mat.internal { color: var(--steel); background: var(--paper-2); border: 1px solid var(--line); }
+.mat.proto { color: var(--steel); background: transparent; border: 1px dashed var(--mid); }
+
+@media (max-width: 880px) {
+    .packs { grid-template-columns: 1fr; }
+}
