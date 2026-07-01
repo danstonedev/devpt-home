@@ -1,5 +1,5 @@
 {
-  "_comment": "Single source of truth for the DevPT app catalog. Edit apps here; index.html's 'Practice tools' nav and footer list are rendered from this file by app.js. To add a full marketing plate, also add an <article class=\"plate\" id=\"app-<id>\"> block in index.html. placement values: 'hero' | 'nav' | 'plate' | 'footer'.",
+  "_comment": "Single source of truth for the DevPT app catalog. Edit apps here; index.html's 'Practice tools' nav and footer list are rendered from this file by app.js. To add a full marketing plate, also add a visible id=\"app-<id>\" section/card in index.html. placement values: 'hero' | 'nav' | 'plate' | 'footer'.",
   "domain": "https://devpt.app",
   "deploy": "Azure Static Web Apps (.github/workflows/azure-static-web-apps-black-tree-0e898330f.yml)",
   "apps": [
@@ -12,8 +12,8 @@
       "url": "https://pain3d.com",
       "repo": "danstonedev/3DPainMap",
       "status": "live",
-      "placement": ["hero", "footer"],
-      "blurb": "Pain in three dimensions — a research instrument beyond the 0–10 scale."
+      "placement": ["hero", "plate", "footer"],
+      "blurb": "Development and validation work for 3D symptom mapping beyond the 0-10 scale."
     },
     {
       "id": "emrsim",
