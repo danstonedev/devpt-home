@@ -21,11 +21,21 @@ Fonts (Hanken Grotesk + JetBrains Mono) load from Google Fonts; everything else 
 
 ## Run locally
 
+Use the npm script, not a direct `python -m http.server`, so localhost cannot drift behind production unnoticed.
+
 ```bash
-npm start          # serves at http://localhost:8080 (http-server, no caching)
+npm start          # syncs local main to origin/main, then serves http://localhost:8099
 ```
 
-Serve over http(s) (not `file://`) so `app.js` can `fetch('apps.json')`. If opened
+`npm start` runs `scripts/ensure-fresh-main.mjs` before serving. The guard fetches
+`origin/main`; if local `main` is clean and behind, it fast-forwards automatically.
+It refuses to serve if the checkout is dirty, ahead, diverged, detached, on another
+branch, or unable to reach `origin/main`.
+
+There is intentionally no stale-mode bypass. If localhost is serving this site, it
+should represent the same source that deploys to `devpt.app`.
+
+Serve over http(s), not `file://`, so `app.js` can `fetch('apps.json')`. If opened
 as a local file, the page falls back to the static nav/footer lists in `index.html`.
 
 ## Add or retire an application

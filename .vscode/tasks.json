@@ -2,12 +2,14 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Start Server",
+			"label": "Start DevPT homepage (freshness-checked)",
 			"type": "shell",
 			"command": "npm start",
 			"args": [],
 			"isBackground": true,
-			"group": "none"
+			"group": "none",
+			"problemMatcher": [],
+			"detail": "Fast-forwards local main to origin/main before serving; refuses stale or dirty checkouts."
 		}
 	]
 }
