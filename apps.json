@@ -61,7 +61,7 @@
       "repo": "danstonedev/simvitals",
       "status": "live",
       "placement": ["footer"],
-      "blurb": "How the body responds to water.",
+      "blurb": "How the body responds — to water, exercise, medication, and illness.",
       "note": "Repo deploy workflow is currently gated on a missing Azure secret (inert) as of 2026-06; verify the subdomain is actually serving."
     },
     {
