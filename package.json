@@ -4,7 +4,8 @@
   "description": "DevPT — master hub for physical therapy education simulation tools (devpt.app)",
   "main": "index.js",
   "scripts": {
-    "start": "npx http-server -c-1",
+    "prestart": "node scripts/ensure-fresh-main.mjs",
+    "start": "npx http-server -c-1 -p 8099",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

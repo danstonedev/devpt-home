@@ -3,20 +3,10 @@ name: Check apps.json
 on:
   push:
     branches: [main]
-    paths:
-      - "apps.json"
-      - "index.html"
-      - "scripts/check-apps.mjs"
-      - ".github/workflows/check-apps.yml"
   pull_request:
     branches: [main]
-    paths:
-      - "apps.json"
-      - "index.html"
-      - "scripts/check-apps.mjs"
-      - ".github/workflows/check-apps.yml"
   schedule:
-    - cron: "17 13 * * 1" # weekly (Mon) — catch apps that have gone offline
+    - cron: "17 13 * * 1" # weekly (Mon) - catch apps that have gone offline
   workflow_dispatch:
 
 permissions:

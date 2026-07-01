@@ -29,6 +29,7 @@
             </a>
             <nav class="nav-links" aria-label="Primary">
                 <a href="#modules">How it works</a>
+                <a href="#tools">Tools</a>
                 <a href="#scenarios">Scenarios</a>
                 <a href="#painmap">PainMap</a>
                 <a href="#about">About</a>
@@ -49,7 +50,7 @@
                         <a href="mailto:danstone.pt@gmail.com?subject=simLAB%20pilot%20inquiry&body=Institution%3A%0ACourse%20%2F%20term%3A%0ACohort%20size%3A%0AWhat%20you'd%20like%20students%20to%20practice%3A%0A" class="btn btn-green btn-lg">Request a pilot</a>
                         <a href="#modules" class="btn btn-ghost btn-lg">Watch a case run &rarr;</a>
                     </div>
-                    <p class="hero-note reveal mono">simLAB runs at <a href="https://lab.devpt.app" target="_blank" rel="noopener">lab.devpt.app</a> &middot; the engine behind simPAIN is in clinical use at <a href="https://pain3d.com" target="_blank" rel="noopener">pain3d.com</a></p>
+                    <p class="hero-note reveal mono">simLAB runs at <a href="https://lab.devpt.app" target="_blank" rel="noopener">lab.devpt.app</a> &middot; simPAIN is built on PainMap, now in development and validation at <a href="https://pain3d.com" target="_blank" rel="noopener">pain3d.com</a></p>
                 </div>
                 <figure class="hero-viz reveal">
                     <div class="frame">
@@ -60,7 +61,7 @@
                             <img src="assets/shots/painmap.png" alt="3D pain-pattern mapping on a body model" />
                         </video>
                     </div>
-                    <figcaption>simPAIN &mdash; map pain in 3D, built on the PainMap clinical engine. One of the tools below.</figcaption>
+                    <figcaption>simPAIN &mdash; map pain in 3D, built on the PainMap development and validation engine. One of the tools below.</figcaption>
                 </figure>
             </div>
         </section>
@@ -102,7 +103,7 @@
                                     <img src="assets/shots/emrsim.png" alt="simEMR chart" />
                                 </video>
                             </div>
-                            <a class="modlink" id="app-emrsim" href="https://emrsim.devpt.app" target="_blank" rel="noopener">Open simEMR &nearr;</a>
+                            <a class="modlink" href="https://emrsim.devpt.app" target="_blank" rel="noopener">Open simEMR &nearr;</a>
                         </div>
                     </div>
                     <!-- 2 Interview / simCHAT (poster only) -->
@@ -121,7 +122,7 @@
                                     <span class="chatbubble mono">"Any numbness in the saddle area?"</span>
                                 </div>
                             </div>
-                            <a class="modlink" id="app-vspx" href="https://vspx.devpt.app" target="_blank" rel="noopener">Open the live patient &nearr;</a>
+                            <a class="modlink" href="https://vspx.devpt.app" target="_blank" rel="noopener">Open the live patient &nearr;</a>
                         </div>
                     </div>
                     <!-- 3 Screen / simPAIN -->
@@ -161,7 +162,7 @@
                                     <img src="assets/shots/simpacs.png" alt="simPACS imaging workstation" />
                                 </video>
                             </div>
-                            <a class="modlink" id="app-simpacs" href="https://simpacs.devpt.app" target="_blank" rel="noopener">Open simPACS &nearr;</a>
+                            <a class="modlink" href="https://simpacs.devpt.app" target="_blank" rel="noopener">Open simPACS &nearr;</a>
                         </div>
                     </div>
                     <!-- 5 Educate / no module -->
@@ -218,15 +219,118 @@
                     </div>
                 </div>
 
-                <a class="rail-closer reveal" id="app-lab" href="https://lab.devpt.app" target="_blank" rel="noopener">
+                <a class="rail-closer reveal" href="https://lab.devpt.app" target="_blank" rel="noopener">
                     <span><b>simLAB</b> plays all seven steps as one continuous visit.</span>
                     <span class="arr">Open simLAB &nearr;</span>
                 </a>
                 <p class="rail-trail reveal">One case leaves a trail you grade: case summary &middot; interview record &middot; pain map &middot; SOAP note &middot; reflection &mdash; mapped to the reasoning, communication, safety, and documentation skills students struggle with most at first rotation.<sup class="cite"><a href="#ref-2">2</a></sup></p>
-                <p class="rail-aside mono reveal"><a href="https://aquatic.devpt.app" id="app-aquatic" target="_blank" rel="noopener">simAQUA</a> is a specialty aquatic module, available separately &mdash; not part of this case.</p>
+                <p class="rail-aside mono reveal"><a href="https://aquatic.devpt.app" target="_blank" rel="noopener">simAQUA</a> is a specialty aquatic module, available separately &mdash; not part of this case.</p>
             </div>
         </section>
 
+        <!-- ===== Tool showcase: clips + app blurbs ===== -->
+        <section class="block tools-band" id="tools">
+            <div class="wrap">
+                <div class="head reveal">
+                    <p class="eyebrow mono">// practice tools</p>
+                    <h2>Each tool still has its own surface.</h2>
+                    <p>The rail shows one case moving across the system. These are the individual apps faculty and students can open directly.</p>
+                </div>
+                <div class="toolshowcase reveal" aria-label="DevPT practice tools">
+                    <article class="toolcard featured" id="app-lab">
+                        <a class="toolmedia labmedia" href="https://lab.devpt.app" target="_blank" rel="noopener" aria-label="Open DevPT Lab">
+                            <img src="assets/shots/lab.svg" alt="DevPT Lab encounter card" loading="lazy" />
+                        </a>
+                        <div class="toolbody">
+                            <p class="tooltag mono">platform / live</p>
+                            <h3>DevPT Lab</h3>
+                            <p>The whole encounter in one continuous run: chart review, patient interview, screening, clinical reasoning, documentation, and debrief.</p>
+                            <div class="toolchips mono"><span>scenario packs</span><span>rubric artifacts</span><span>pilot-ready</span></div>
+                            <a class="plate-open" href="https://lab.devpt.app" target="_blank" rel="noopener noreferrer">Open DevPT Lab <span class="arr">&rarr;</span></a>
+                        </div>
+                    </article>
+
+                    <article class="toolcard" id="app-emrsim">
+                        <a class="toolmedia" href="https://emrsim.devpt.app" target="_blank" rel="noopener" aria-label="Open simEMR">
+                            <video class="plate-video lazyvid" loop muted playsinline preload="none" poster="assets/shots/emrsim.png" aria-label="simEMR chart and documentation preview">
+                                <source src="assets/demos/emrsim.mp4" type="video/mp4" />
+                                <source src="assets/demos/emrsim.webm" type="video/webm" />
+                                <img src="assets/shots/emrsim.png" alt="simEMR chart and documentation" loading="lazy" />
+                            </video>
+                        </a>
+                        <div class="toolbody">
+                            <p class="tooltag mono">chart / live</p>
+                            <h3>simEMR</h3>
+                            <p>Students read the chart, catch the details that matter, and write the note back into a realistic record.</p>
+                            <a class="plate-open" href="https://emrsim.devpt.app" target="_blank" rel="noopener noreferrer">Open simEMR <span class="arr">&rarr;</span></a>
+                        </div>
+                    </article>
+
+                    <article class="toolcard" id="app-vspx">
+                        <a class="toolmedia" href="https://vspx.devpt.app" target="_blank" rel="noopener" aria-label="Open simCHAT">
+                            <div class="chatposter toolposter">
+                                <img src="assets/shots/vspx.png" alt="simCHAT virtual patient interview" loading="lazy" />
+                                <span class="chatbubble mono">"Tell me what changed today."</span>
+                            </div>
+                        </a>
+                        <div class="toolbody">
+                            <p class="tooltag mono">interview / live</p>
+                            <h3>simCHAT</h3>
+                            <p>A virtual patient interview space where students practice asking useful questions, not just picking from a list.</p>
+                            <a class="plate-open" href="https://vspx.devpt.app" target="_blank" rel="noopener noreferrer">Open simCHAT <span class="arr">&rarr;</span></a>
+                        </div>
+                    </article>
+
+                    <article class="toolcard" id="app-painmap">
+                        <a class="toolmedia" href="https://pain3d.com" target="_blank" rel="noopener" aria-label="Open PainMap">
+                            <video class="plate-video lazyvid" loop muted playsinline preload="none" poster="assets/shots/painmap.png" aria-label="PainMap 3D symptom mapping preview">
+                                <source src="assets/demos/painmap.mp4" type="video/mp4" />
+                                <source src="assets/demos/painmap.webm" type="video/webm" />
+                                <img src="assets/shots/painmap.png" alt="PainMap 3D symptom map" loading="lazy" />
+                            </video>
+                        </a>
+                        <div class="toolbody">
+                            <p class="tooltag mono">pain mapping / validation</p>
+                            <h3>PainMap</h3>
+                            <p>Development and validation work for mapping symptom quality, spread, and change in 3D without claiming diagnostic status.</p>
+                            <a class="plate-open" href="https://pain3d.com" target="_blank" rel="noopener noreferrer">Open PainMap <span class="arr">&rarr;</span></a>
+                        </div>
+                    </article>
+
+                    <article class="toolcard" id="app-simpacs">
+                        <a class="toolmedia" href="https://simpacs.devpt.app" target="_blank" rel="noopener" aria-label="Open simPACS">
+                            <video class="plate-video lazyvid" loop muted playsinline preload="none" poster="assets/shots/simpacs.png" aria-label="simPACS imaging workstation preview">
+                                <source src="assets/demos/simpacs.mp4" type="video/mp4" />
+                                <source src="assets/demos/simpacs.webm" type="video/webm" />
+                                <img src="assets/shots/simpacs.png" alt="simPACS imaging workstation" loading="lazy" />
+                            </video>
+                        </a>
+                        <div class="toolbody">
+                            <p class="tooltag mono">imaging / live</p>
+                            <h3>simPACS</h3>
+                            <p>Hands-on imaging review so students connect patient presentation, report language, and the clinical decision.</p>
+                            <a class="plate-open" href="https://simpacs.devpt.app" target="_blank" rel="noopener noreferrer">Open simPACS <span class="arr">&rarr;</span></a>
+                        </div>
+                    </article>
+
+                    <article class="toolcard" id="app-aquatic">
+                        <a class="toolmedia" href="https://aquatic.devpt.app" target="_blank" rel="noopener" aria-label="Open simAQUA">
+                            <video class="plate-video lazyvid" loop muted playsinline preload="none" poster="assets/shots/aquatic.png" aria-label="simAQUA aquatic therapy preview">
+                                <source src="assets/demos/aquatic.mp4" type="video/mp4" />
+                                <source src="assets/demos/aquatic.webm" type="video/webm" />
+                                <img src="assets/shots/aquatic.png" alt="simAQUA aquatic therapy simulator" loading="lazy" />
+                            </video>
+                        </a>
+                        <div class="toolbody">
+                            <p class="tooltag mono">aquatics / live</p>
+                            <h3>simAQUA</h3>
+                            <p>A specialty module for seeing how buoyancy, turbulence, depth, and movement change therapy decisions.</p>
+                            <a class="plate-open" href="https://aquatic.devpt.app" target="_blank" rel="noopener noreferrer">Open simAQUA <span class="arr">&rarr;</span></a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
         <!-- ===== Scenario packs (other cases on the same rail) ===== -->
         <section class="block" id="scenarios">
             <div class="wrap">
@@ -317,9 +421,9 @@
                         <span class="status pending">Pilot-ready</span>
                     </div>
                     <div class="ledger-row">
-                        <span class="claim">PainMap in real clinical use</span>
-                        <span class="proof">Running at pain3d.com as a measurement model — not a diagnostic device — well beyond any classroom setting</span>
-                        <span class="status ok">In use</span>
+                        <span class="claim">PainMap in development and validation</span>
+                        <span class="proof">Available at pain3d.com as a development and validation build for controlled pilots and research, not as a routine care product</span>
+                        <span class="status pending">Validation in progress</span>
                     </div>
                     <div class="ledger-row">
                         <span class="claim">Measured learning outcomes</span>
@@ -334,9 +438,9 @@
         <!-- ===== PainMap (second pillar, condensed) ===== -->
         <section class="painmap-callout" id="painmap">
             <div class="wrap reveal">
-                <p class="eyebrow mono">// clinical &amp; research platform</p>
+                <p class="eyebrow mono">// development &amp; validation platform</p>
                 <h2>simPAIN is built on PainMap.</h2>
-                <p>PainMap is a clinical and research instrument for mapping pain in three dimensions &mdash; quality and spread, not just a 0&ndash;10 number<sup class="cite"><a href="#ref-4">4</a></sup> &mdash; in real use at pain3d.com. It's a measurement model, not a diagnostic device; clinicians remain responsible for interpretation. simPAIN adapts the concept for the classroom.</p>
+                <p>PainMap is a measurement platform in development and validation for mapping pain in three dimensions &mdash; quality and spread, not just a 0&ndash;10 number<sup class="cite"><a href="#ref-4">4</a></sup>. It is available at pain3d.com for controlled pilot and research workflows; it is not a diagnostic device, and clinicians remain responsible for interpretation. simPAIN adapts the concept for the classroom.</p>
                 <p style="margin-top:18px"><a href="https://pain3d.com" target="_blank" rel="noopener noreferrer" class="plate-open">Open PainMap <span class="arr">&rarr;</span></a></p>
             </div>
         </section>
@@ -354,7 +458,7 @@
                     <li><span class="ck mono">Role</span><span class="cv">Assistant Professor, Physical Therapy</span></li>
                     <li><span class="ck mono">Institution</span><span class="cv">University of North Dakota</span></li>
                     <li><span class="ck mono">Teaching</span><span class="cv">Clinical reasoning, imaging, documentation</span></li>
-                    <li><span class="ck mono">Research</span><span class="cv">Clinical pain science with PainMap</span></li>
+                    <li><span class="ck mono">Research</span><span class="cv">Pain science and PainMap validation</span></li>
                 </ul>
             </div>
         </section>
@@ -366,7 +470,7 @@
                     <h2>Bring simLAB into your program.</h2>
                     <p>A low-risk pilot &mdash; one unit, one cohort, pre/post data and a faculty debrief. Tell me the course and what you want students to practice, and I'll take it from there.</p>
                     <a href="mailto:danstone.pt@gmail.com?subject=simLAB%20pilot%20inquiry&body=Institution%3A%0ACourse%20%2F%20term%3A%0ACohort%20size%3A%0AWhat%20you'd%20like%20students%20to%20practice%3A%0A" class="btn btn-green btn-lg">Request a pilot</a>
-                    <p class="mono" style="margin-top:18px;font-size:0.85rem"><a href="mailto:danstone.pt@gmail.com?subject=PainMap%20research%2Fclinical%20pilot" class="plate-open" style="justify-content:center">Discuss a PainMap research or clinical pilot &rarr;</a></p>
+                    <p class="mono" style="margin-top:18px;font-size:0.85rem"><a href="mailto:danstone.pt@gmail.com?subject=PainMap%20research%2Fvalidation%20pilot" class="plate-open" style="justify-content:center">Discuss a PainMap research or validation pilot &rarr;</a></p>
                 </div>
             </div>
         </section>
