@@ -15,26 +15,43 @@
   }
 
   var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
-  if ("IntersectionObserver" in window && !reduceMotion) {
-    var io = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) {
-            e.target.classList.add("in");
-            io.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-    );
-    reveals.forEach(function (el, i) {
-      el.style.transitionDelay = Math.min(i % 6, 5) * 55 + "ms";
-      io.observe(el);
-    });
-  } else {
-    reveals.forEach(function (el) { el.classList.add("in"); });
+  function showReveal(el) {
+    el.classList.add("in");
+    el.removeAttribute("data-reveal-pending");
+    el.style.transitionDelay = "";
   }
-
+  if (reveals.length) {
+    try {
+      if ("IntersectionObserver" in window && !reduceMotion) {
+        var remainingReveals = reveals.length;
+        var revealFallback = window.setTimeout(function () {
+          reveals.forEach(showReveal);
+        }, 1600);
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) {
+                showReveal(e.target);
+                io.unobserve(e.target);
+                remainingReveals -= 1;
+                if (remainingReveals <= 0) window.clearTimeout(revealFallback);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+        );
+        reveals.forEach(function (el, i) {
+          el.setAttribute("data-reveal-pending", "true");
+          el.style.transitionDelay = Math.min(i % 6, 5) * 55 + "ms";
+          io.observe(el);
+        });
+      } else {
+        reveals.forEach(showReveal);
+      }
+    } catch (e) {
+      reveals.forEach(showReveal);
+    }
+  }
   var vids = Array.prototype.slice.call(document.querySelectorAll("video.lazyvid"));
   if (vids.length && !reduceMotion) {
     if ("IntersectionObserver" in window) {
