@@ -75,32 +75,6 @@
       "status": "live",
       "placement": ["nav", "plate", "footer"],
       "blurb": "Pre-built scenario packs run end to end as one continuous case."
-    },
-    {
-      "id": "scope-or-nope",
-      "name": "ScopeOrNope",
-      "tag": "scope-or-nope",
-      "footerLabel": "ScopeOrNope",
-      "category": "simulation",
-      "url": "https://danstonedev.github.io/scope-or-nope/",
-      "repo": "danstonedev/scope-or-nope",
-      "status": "live",
-      "placement": ["footer"],
-      "blurb": "Refer or treat? Triage decisions, one swipe at a time.",
-      "note": "Promoted from unlisted 2026-06-27 (P1 #10). Footer-only, design-safe. Live URL verified HTTP 200 (GitHub Pages SPA, title 'ScopeOrNope | Clinical Triage')."
-    },
-    {
-      "id": "wellness",
-      "name": "Wellness",
-      "tag": "wellness",
-      "footerLabel": "Wellness",
-      "category": "simulation",
-      "url": "https://danstonedev.github.io/wellness/",
-      "repo": "danstonedev/wellness",
-      "status": "live",
-      "placement": ["footer"],
-      "blurb": "The eight dimensions of wellness, one case at a time.",
-      "note": "Promoted from unlisted 2026-06-27 (P1 #10). Footer-only, design-safe. Live URL verified HTTP 200 (Vite/React SPA; JS bundle loads 200; populations + 8 wellness-domain case-study data confirmed in repo)."
     }
   ],
   "unlisted": [
@@ -110,15 +84,7 @@
       "repo": "danstonedev/anatomy-database-app",
       "status": "internal",
       "url": "https://thankful-flower-0c1d6480f.4.azurestaticapps.net/",
-      "note": "Held OFF the public hub 2026-06-27: the P1 #10 footer promotion was reverted after review. (1) Only a raw region-prefixed Azure SWA host is available, not a stable devpt.app subdomain; (2) PORTFOLIO flags this app runs `prisma db push --accept-data-loss` against prod on every deploy with no tests / unclear auth, so it is not ready for public hub traffic. Promote once it has a real subdomain and a confirmed data-safety posture."
-    },
-    {
-      "id": "mash",
-      "name": "MASH / IMU Connect",
-      "repo": "danstonedev/MASH",
-      "status": "internal",
-      "url": "",
-      "note": "IMU motion-capture platform (ESP32 + React/three.js, Azure SWA). URL TBD. Reviewed for hub promotion 2026-06-27 (P1 #10) and deliberately LEFT UNLISTED: it is a hardware-bound biomechanics RESEARCH instrument — it requires physical ESP32-S3 IMU sensors connected over WebSerial/USB to do anything, has no standalone student-facing content, and no verifiable public URL was found (the deploy workflow lists only Azure token-name fallbacks, no committed hostname; default-host probes 404). Not appropriate for the PT-education student hub."
+      "note": "Onboarding into DevPT/Education (2026-07-01). Data-safety hazard RESOLVED: the deploy workflow now uses `prisma migrate deploy` (committed migration 20260126_init_postgresql; no --accept-data-loss; DB mutates only on push to the default branch, never on PRs). Remaining before public promotion: a stable devpt.app subdomain (currently only a raw Azure SWA host)."
     }
   ],
   "engines": [
