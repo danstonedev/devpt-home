@@ -1,5 +1,5 @@
 {
-  "_comment": "Single source of truth for the DevPT app catalog. Edit apps here; index.html's 'Practice tools' nav and footer list are rendered from this file by app.js. To add a full marketing plate, also add a visible id=\"app-<id>\" section/card in index.html. placement values: 'hero' | 'nav' | 'plate' | 'footer'.",
+  "_comment": "Single source of truth for the DevPT app catalog. The footer list is rendered from this file by app.js. Apps with placement 'plate' must have a visible id=\"app-<id>\" surface in index.html that links to the app URL. placement values: 'hero' | 'nav' | 'plate' | 'footer'.",
   "domain": "https://devpt.app",
   "deploy": "Azure Static Web Apps (.github/workflows/azure-static-web-apps-black-tree-0e898330f.yml)",
   "apps": [
@@ -60,7 +60,7 @@
       "url": "https://aquatic.devpt.app",
       "repo": "danstonedev/aquatic-therapy",
       "status": "live",
-      "placement": ["nav", "plate", "footer"],
+      "placement": ["footer"],
       "blurb": "How the body responds to water.",
       "note": "Repo deploy workflow is currently gated on a missing Azure secret (inert) as of 2026-06; verify the subdomain is actually serving."
     },
