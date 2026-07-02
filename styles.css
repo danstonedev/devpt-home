@@ -101,6 +101,54 @@ h3 { font-size: 1.05rem; }
 .device-bar span:first-child { background: var(--green); }
 .device-bar b { margin-left: auto; font-size: 0.72rem; font-weight: 500; color: #b8c2ca; letter-spacing: 0.04em; }
 .hero-device img { width: 100%; background: var(--paper-2); }
+.hero-walkthrough { --walk-duration: 4200ms; }
+.walkthrough-stage { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: #0c0f12; }
+.walkthrough-step {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    transform: scale(1.018);
+    transition: opacity 0.5s var(--ease), transform 0.7s var(--ease);
+}
+.walkthrough-step.active { opacity: 1; transform: scale(1); z-index: 1; }
+.walkthrough-step img { width: 100%; height: 100%; object-fit: cover; background: var(--paper-2); }
+.walkthrough-step figcaption {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 18px;
+    display: grid;
+    gap: 5px;
+    max-width: 520px;
+    padding: 14px 16px;
+    color: #fff;
+    background: rgba(12, 15, 18, 0.78);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: var(--radius);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+.walkthrough-step figcaption span { color: #8ce1b0; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.walkthrough-step figcaption b { font-size: clamp(0.95rem, 1.7vw, 1.2rem); line-height: 1.18; }
+.walkthrough-timeline {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+    padding: 12px;
+    background: #111417;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+.walkthrough-timeline li { display: grid; gap: 7px; min-width: 0; color: #8c969e; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; }
+.walkthrough-timeline .track { display: block; height: 5px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,0.14); }
+.walkthrough-timeline .track b { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--green); }
+.walkthrough-timeline li.done { color: #dce6e0; }
+.walkthrough-timeline li.done .track b { width: 100%; }
+.walkthrough-timeline li.active { color: #fff; }
+.walkthrough-timeline li.active .track b { animation: walk-progress var(--walk-duration) linear forwards; }
+@keyframes walk-progress { from { width: 0; } to { width: 100%; } }
 
 .readline { background: var(--ink); color: #fff; }
 .readline .wrap { padding: 24px 0; }
