@@ -85,6 +85,28 @@ h3 { font-size: 1.05rem; }
 .hero-copy { min-width: 0; }
 .eyebrow { margin-bottom: 14px; color: var(--green-d); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
 .hero h1 { margin-bottom: 22px; }
+.hero-logo-title {
+    width: min(100%, 500px);
+    max-width: 500px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    line-height: 0;
+    border-radius: var(--radius);
+    background: #000;
+    box-shadow: 0 24px 54px -42px rgba(22, 25, 29, 0.72);
+}
+.hero-logo-title img {
+    width: 100%;
+    height: auto;
+}
+.hero-subtitle {
+    max-width: 18ch;
+    margin-bottom: 18px;
+    color: var(--ink);
+    font-size: clamp(1.55rem, 3.1vw, 2.45rem);
+    font-weight: 600;
+    line-height: 1.08;
+}
 .lede { color: #44505a; font-size: clamp(1.08rem, 1.6vw, 1.25rem); max-width: 58ch; margin-bottom: 0; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
 .confidence-line { margin: 24px 0 0; color: var(--steel); font-size: 0.82rem; overflow-wrap: anywhere; }
