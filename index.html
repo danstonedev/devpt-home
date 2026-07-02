@@ -57,9 +57,37 @@
                     </div>
                     <p class="confidence-line mono reveal">Browser-based. No real patient data. Designed by PT faculty.</p>
                 </div>
-                <a class="device hero-device reveal" id="app-lab" href="https://lab.devpt.app" target="_blank" rel="noopener" aria-label="Open the DevPT case environment">
-                    <div class="device-bar"><span></span><span></span><span></span><b>student encounter</b></div>
-                    <img src="assets/shots/lab.svg" alt="Student encounter screen with a full simulated PT visit" />
+                <a class="device hero-walkthrough reveal" id="app-lab" href="https://lab.devpt.app" target="_blank" rel="noopener" aria-label="Watch the DevPT encounter walkthrough and open DevPT Lab">
+                    <div class="device-bar"><span></span><span></span><span></span><b>guided encounter</b></div>
+                    <div class="walkthrough-stage" aria-label="Auto-playing walkthrough of a simulated PT encounter">
+                        <figure class="walkthrough-step active">
+                            <img src="assets/shots/emrsim.png" alt="Chart review screen in the guided encounter" />
+                            <figcaption><span class="mono">01 / chart review</span><b>Student spots the intake clue before speaking with the patient.</b></figcaption>
+                        </figure>
+                        <figure class="walkthrough-step">
+                            <img src="assets/shots/vspx.png" alt="Virtual standardized patient interview screen in the guided encounter" />
+                            <figcaption><span class="mono">02 / interview</span><b>Voice or text questions reveal the red-flag history.</b></figcaption>
+                        </figure>
+                        <figure class="walkthrough-step">
+                            <img src="assets/shots/painmap.png" alt="3D PainMap symptom mapping screen in the guided encounter" />
+                            <figcaption><span class="mono">03 / PainMap</span><b>Symptoms become a visible, structured map.</b></figcaption>
+                        </figure>
+                        <figure class="walkthrough-step">
+                            <img src="assets/shots/simpacs.png" alt="Imaging decision support screen in the guided encounter" />
+                            <figcaption><span class="mono">04 / decision</span><b>The student chooses treat, refer, image, or gather more data.</b></figcaption>
+                        </figure>
+                        <figure class="walkthrough-step">
+                            <img src="assets/shots/lab.svg" alt="DevPT Lab case feedback and debrief summary" />
+                            <figcaption><span class="mono">05 / feedback</span><b>Faculty review the reasoning trail and debrief the next attempt.</b></figcaption>
+                        </figure>
+                    </div>
+                    <ol class="walkthrough-timeline" aria-label="Encounter walkthrough progress">
+                        <li class="active"><span class="track"><b></b></span><span class="mono">Chart</span></li>
+                        <li><span class="track"><b></b></span><span class="mono">Interview</span></li>
+                        <li><span class="track"><b></b></span><span class="mono">PainMap</span></li>
+                        <li><span class="track"><b></b></span><span class="mono">Decision</span></li>
+                        <li><span class="track"><b></b></span><span class="mono">Feedback</span></li>
+                    </ol>
                 </a>
             </div>
         </section>
@@ -276,7 +304,7 @@
                     <h2>See a student encounter.</h2>
                     <p>For class demos, collaboration, or research partnerships, reach out and I will show the case flow.</p>
                     <div class="contact-actions">
-                        <a href="mailto:danstone.pt@gmail.com?subject=DevPT%20demo%20inquiry&body=Institution%3A%0ACourse%20or%20program%3A%0AWhat%20you%27d%20like%20to%20see%3A%0A" class="btn btn-green btn-lg">See a demo</a>
+                        <a href="mailto:daniel.j.stone@und.edu?subject=DevPT%20demo%20inquiry&body=Institution%3A%0ACourse%20or%20program%3A%0AWhat%20you%27d%20like%20to%20see%3A%0A" class="btn btn-green btn-lg">See a demo</a>
                         <a href="https://lab.devpt.app" target="_blank" rel="noopener" class="btn btn-ghost btn-lg">Open simulator</a>
                     </div>
                 </div>
@@ -306,7 +334,7 @@
                 <dl class="footer-contact">
                     <div>
                         <dt>Email</dt>
-                        <dd><a href="mailto:danstone.pt@gmail.com">danstone.pt@gmail.com</a></dd>
+                        <dd><a href="mailto:daniel.j.stone@und.edu">daniel.j.stone@und.edu</a></dd>
                     </div>
                     <div>
                         <dt>Location</dt>
@@ -350,7 +378,7 @@
                 <section>
                     <h2>Company</h2>
                     <ul>
-                        <li><a href="mailto:danstone.pt@gmail.com?subject=DevPT%20demo%20inquiry">Contact</a></li>
+                        <li><a href="mailto:daniel.j.stone@und.edu?subject=DevPT%20demo%20inquiry">Contact</a></li>
                         <li><a href="privacy.html">Privacy</a></li>
                         <li><a href="terms.html">Terms</a></li>
                         <li><a href="accessibility.html">Accessibility</a></li>
@@ -362,7 +390,7 @@
         <div class="wrap footer-bottom">
             <ul class="footer-social" aria-label="External links">
                 <li><a href="https://github.com/danstonedev" target="_blank" rel="noopener" aria-label="DevPT on GitHub">GitHub</a></li>
-                <li><a href="mailto:danstone.pt@gmail.com" aria-label="Email DevPT">Email</a></li>
+                <li><a href="mailto:daniel.j.stone@und.edu" aria-label="Email DevPT">Email</a></li>
             </ul>
             <p class="footer-meta">&copy; <span id="year">2026</span> DevPT. Built by Dan Stone, PT, DPT, MS.</p>
             <a class="back-top" href="#top" aria-label="Back to top">Top</a>

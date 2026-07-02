@@ -75,6 +75,36 @@
     }
   }
 
+  var walkthrough = document.querySelector(".hero-walkthrough");
+  if (walkthrough) {
+    var walkSteps = Array.prototype.slice.call(walkthrough.querySelectorAll(".walkthrough-step"));
+    var walkItems = Array.prototype.slice.call(walkthrough.querySelectorAll(".walkthrough-timeline li"));
+    var walkIndex = 0;
+    var walkDelay = 4200;
+    function setWalkthroughStep(nextIndex) {
+      walkIndex = nextIndex % walkSteps.length;
+      walkSteps.forEach(function (step, i) {
+        step.classList.toggle("active", i === walkIndex);
+      });
+      walkItems.forEach(function (item, i) {
+        item.classList.toggle("active", i === walkIndex);
+        item.classList.toggle("done", i < walkIndex);
+        var bar = item.querySelector(".track b");
+        if (bar) {
+          bar.style.animation = "none";
+          bar.offsetHeight;
+          bar.style.animation = "";
+        }
+      });
+    }
+    setWalkthroughStep(0);
+    if (!reduceMotion && walkSteps.length > 1) {
+      window.setInterval(function () {
+        setWalkthroughStep(walkIndex + 1);
+      }, walkDelay);
+    }
+  }
+
   function inPlacement(app, where) {
     return app.placement && app.placement.indexOf(where) !== -1;
   }
