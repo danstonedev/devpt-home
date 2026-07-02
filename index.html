@@ -11,13 +11,13 @@
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DevPT - clinical reasoning practice before real patients</title>
-    <meta name="description" content="DevPT lets PT students run a complete simulated patient encounter: chart review, interview, symptom mapping, clinical decisions, documentation, and feedback." />
+    <title>DevPT - Clinical Reasoning Simulator for DPT Programs</title>
+    <meta name="description" content="DevPT gives DPT students structured practice in PT clinical reasoning with simulated cases, faculty-visible reasoning trails, and no real patient data." />
     <meta name="theme-color" content="#FCFCFB" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="DevPT - clinical reasoning practice before real patients" />
-    <meta property="og:description" content="A visual walkthrough of one simulated PT patient encounter, from chart review to feedback." />
+    <meta property="og:title" content="DevPT - Clinical Reasoning Simulator for DPT Programs" />
+    <meta property="og:description" content="A visual walkthrough of one simulated PT patient encounter for DPT clinical decision-making practice." />
     <meta property="og:url" content="https://devpt.app/" />
     <meta property="og:site_name" content="DevPT" />
 
@@ -48,45 +48,45 @@
         <section class="hero">
             <div class="wrap hero-grid">
                 <div class="hero-copy">
-                    <p class="eyebrow mono reveal">// classroom simulation for PT students</p>
-                    <h1 class="reveal">Clinical reasoning practice before real patients.</h1>
-                    <p class="lede reveal">DevPT is a simulation environment where PT students run a complete patient encounter: chart review, interview, symptom mapping, clinical decisions, documentation, and feedback.</p>
+                    <p class="eyebrow mono reveal">// in development - pilot access estimated September 2026</p>
+                    <h1 class="reveal">Clinical Reasoning Simulator for DPT Programs</h1>
+                    <p class="lede reveal">More than a case study. DevPT gives students structured practice in PT clinical reasoning: screening for red flags, interviewing a simulated patient, mapping symptoms, interpreting vitals, observing movement, making treat-or-refer decisions, documenting rationale, and communicating concerns across the care team.</p>
                     <div class="hero-cta reveal">
                         <a href="#flow" class="btn btn-green btn-lg">See the case flow</a>
                         <a href="https://lab.devpt.app" target="_blank" rel="noopener" class="btn btn-ghost btn-lg">Explore the simulator</a>
                     </div>
-                    <p class="confidence-line mono reveal">Browser-based. No real patient data. Designed by PT faculty.</p>
+                    <p class="confidence-line mono reveal">Competency-based practice &middot; Simulated PT cases &middot; Faculty-visible reasoning trail &middot; No real patient data</p>
                 </div>
                 <a class="device hero-walkthrough reveal" id="app-lab" href="https://lab.devpt.app" target="_blank" rel="noopener" aria-label="Watch the DevPT encounter walkthrough and open DevPT Lab">
                     <div class="device-bar"><span></span><span></span><span></span><b>guided encounter</b></div>
                     <div class="walkthrough-stage" aria-label="Auto-playing walkthrough of a simulated PT encounter">
                         <figure class="walkthrough-step active">
                             <img src="assets/shots/emrsim.png" alt="Chart review screen in the guided encounter" />
-                            <figcaption><span class="mono">01 / chart review</span><b>Student spots the intake clue before speaking with the patient.</b></figcaption>
+                            <figcaption><span class="mono">01 / screen</span><b>Student spots the intake clue and screens for red flags.</b></figcaption>
                         </figure>
                         <figure class="walkthrough-step">
                             <img src="assets/shots/vspx.png" alt="Virtual standardized patient interview screen in the guided encounter" />
-                            <figcaption><span class="mono">02 / interview</span><b>Voice or text questions reveal the red-flag history.</b></figcaption>
+                            <figcaption><span class="mono">02 / ask</span><b>Voice or text questions reveal the red-flag history.</b></figcaption>
                         </figure>
                         <figure class="walkthrough-step">
                             <img src="assets/shots/painmap.png" alt="3D PainMap symptom mapping screen in the guided encounter" />
-                            <figcaption><span class="mono">03 / PainMap</span><b>Symptoms become a visible, structured map.</b></figcaption>
+                            <figcaption><span class="mono">03 / map</span><b>Symptoms become a visible, structured map.</b></figcaption>
                         </figure>
                         <figure class="walkthrough-step">
                             <img src="assets/shots/simpacs.png" alt="Imaging decision support screen in the guided encounter" />
-                            <figcaption><span class="mono">04 / decision</span><b>The student chooses treat, refer, image, or gather more data.</b></figcaption>
+                            <figcaption><span class="mono">04 / decide</span><b>The student chooses treat, refer, modify, or gather more data.</b></figcaption>
                         </figure>
                         <figure class="walkthrough-step">
                             <img src="assets/shots/lab.svg" alt="DevPT Lab case feedback and debrief summary" />
-                            <figcaption><span class="mono">05 / feedback</span><b>Faculty review the reasoning trail and debrief the next attempt.</b></figcaption>
+                            <figcaption><span class="mono">05 / reflect</span><b>Faculty review the reasoning trail and debrief the next attempt.</b></figcaption>
                         </figure>
                     </div>
                     <ol class="walkthrough-timeline" aria-label="Encounter walkthrough progress">
-                        <li class="active"><span class="track"><b></b></span><span class="mono">Chart</span></li>
-                        <li><span class="track"><b></b></span><span class="mono">Interview</span></li>
-                        <li><span class="track"><b></b></span><span class="mono">PainMap</span></li>
-                        <li><span class="track"><b></b></span><span class="mono">Decision</span></li>
-                        <li><span class="track"><b></b></span><span class="mono">Feedback</span></li>
+                        <li class="active"><span class="track"><b></b></span><span class="mono">Screen</span></li>
+                        <li><span class="track"><b></b></span><span class="mono">Ask</span></li>
+                        <li><span class="track"><b></b></span><span class="mono">Map</span></li>
+                        <li><span class="track"><b></b></span><span class="mono">Decide</span></li>
+                        <li><span class="track"><b></b></span><span class="mono">Reflect</span></li>
                     </ol>
                 </a>
             </div>
@@ -94,14 +94,26 @@
 
         <section class="readline" aria-label="DevPT encounter sequence">
             <div class="wrap">
-                <p class="mono">Read. Interview. Reason. Document. Improve.</p>
+                <p class="mono">Screen. Ask. Map. Monitor. Move. Decide. Document. Communicate. Reflect.</p>
             </div>
         </section>
 
         <section class="block flow-block" id="flow">
             <div class="wrap">
                 <div class="section-head reveal">
-                    <h2>One simulated patient visit, start to finish.</h2>
+                    <h2>Structured practice in PT clinical decision-making.</h2>
+                    <p>DevPT turns a simulated encounter into a visible sequence of reasoning moves faculty can observe and debrief.</p>
+                </div>
+                <div class="skill-sequence reveal" aria-label="PT clinical decision-making skills practiced in DevPT">
+                    <article><span class="mono">Screen</span><p>Identify red flags and medical concerns</p></article>
+                    <article><span class="mono">Ask</span><p>Interview the patient</p></article>
+                    <article><span class="mono">Map</span><p>Characterize symptoms</p></article>
+                    <article><span class="mono">Monitor</span><p>Interpret vitals and patient response</p></article>
+                    <article><span class="mono">Move</span><p>Observe movement and function</p></article>
+                    <article><span class="mono">Decide</span><p>Treat, refer, modify, or gather more data</p></article>
+                    <article><span class="mono">Document</span><p>Support the clinical decision</p></article>
+                    <article><span class="mono">Communicate</span><p>Share concerns with the appropriate provider or team</p></article>
+                    <article><span class="mono">Reflect</span><p>Improve reasoning after feedback</p></article>
                 </div>
                 <div class="journey reveal" aria-label="Visual case flow">
                     <a class="journey-card" id="app-emrsim" href="https://emrsim.devpt.app" target="_blank" rel="noopener" aria-label="Open chart review environment">
@@ -112,14 +124,14 @@
                                 <img src="assets/shots/emrsim.png" alt="Chart review screen" />
                             </video>
                         </span>
-                        <h3>Read the chart</h3>
+                        <h3>Screen for red flags</h3>
                     </a>
                     <a class="journey-card" id="app-vspx" href="https://vspx.devpt.app" target="_blank" rel="noopener" aria-label="Open patient interview environment">
                         <span class="shot chat-shot">
                             <img src="assets/shots/vspx.png" alt="Virtual patient interview screen" loading="lazy" />
                             <span class="chatbubble mono">"Tell me what changed today."</span>
                         </span>
-                        <h3>Interview the patient</h3>
+                        <h3>Ask the patient</h3>
                     </a>
                     <a class="journey-card" id="app-painmap" href="https://pain3d.com" target="_blank" rel="noopener" aria-label="Open symptom mapping environment">
                         <span class="shot">
@@ -139,13 +151,13 @@
                                 <img src="assets/shots/simpacs.png" alt="Imaging decision screen" />
                             </video>
                         </span>
-                        <h3>Make decisions</h3>
+                        <h3>Decide and communicate</h3>
                     </a>
                     <article class="journey-card">
                         <span class="shot">
                             <img src="assets/shots/emrsim.png" alt="Documentation screen" loading="lazy" />
                         </span>
-                        <h3>Document reasoning</h3>
+                        <h3>Document rationale</h3>
                     </article>
                     <article class="journey-card feedback-card">
                         <span class="feedback-visual" aria-hidden="true">
@@ -166,7 +178,7 @@
                 <div class="section-head reveal">
                     <p class="eyebrow mono">// sample case walkthrough</p>
                     <h2>Maria, 34: acute low back pain with a red-flag clue.</h2>
-                    <p>Follow one student through the encounter and see the artifacts a faculty member can debrief afterward.</p>
+                    <p>Follow one student through PT clinical decision-making and see the artifacts a faculty member can debrief afterward.</p>
                 </div>
                 <div class="case-board reveal" aria-label="Maria sample case artifacts">
                     <article class="case-shot case-shot-wide">
@@ -213,7 +225,7 @@
                 <div class="section-head reveal">
                     <p class="eyebrow mono">// faculty view</p>
                     <h2>Faculty review the debrief dashboard.</h2>
-                    <p>Faculty can see the reasoning trail, missed safety questions, note quality, and cohort themes without reconstructing the case from memory.</p>
+                    <p>Faculty can see the reasoning trail, missed safety questions, note quality, interprofessional communication needs, and cohort themes without reconstructing the case from memory.</p>
                 </div>
                 <div class="faculty-dashboard reveal" aria-label="Faculty dashboard example">
                     <div class="dash-top">
@@ -274,10 +286,10 @@
             <div class="wrap proof-grid reveal">
                 <h2>Safe repetition before clinical placement.</h2>
                 <ul class="proof-points mono">
-                    <li>Built for classroom simulation.</li>
-                    <li>Browser-based.</li>
+                    <li>In development; pilot access estimated September 2026.</li>
+                    <li>Simulated PT cases.</li>
+                    <li>Faculty-visible reasoning trail.</li>
                     <li>No real patient data.</li>
-                    <li>Designed by PT faculty.</li>
                 </ul>
             </div>
         </section>
@@ -302,7 +314,7 @@
                 <div class="contact-box reveal">
                     <p class="eyebrow mono">// quiet next step</p>
                     <h2>See a student encounter.</h2>
-                    <p>For class demos, collaboration, or research partnerships, reach out and I will show the case flow.</p>
+                    <p>For class demos, pilot planning, collaboration, or research partnerships, reach out and I will show the case flow.</p>
                     <div class="contact-actions">
                         <a href="mailto:daniel.j.stone@und.edu?subject=DevPT%20demo%20inquiry&body=Institution%3A%0ACourse%20or%20program%3A%0AWhat%20you%27d%20like%20to%20see%3A%0A" class="btn btn-green btn-lg">See a demo</a>
                         <a href="https://lab.devpt.app" target="_blank" rel="noopener" class="btn btn-ghost btn-lg">Open simulator</a>
@@ -330,7 +342,7 @@
                 <a class="footer-mark" href="#top" aria-label="DevPT home">
                     <img class="footer-logo" src="assets/devpt-logo.png" alt="DevPT" width="108" height="34" />
                 </a>
-                <p>Clinical reasoning practice before real patients. Students run a complete simulated PT encounter from chart review to feedback.</p>
+                <p>Clinical reasoning simulator for DPT programs. Students run a complete simulated PT encounter from red-flag screening to feedback.</p>
                 <dl class="footer-contact">
                     <div>
                         <dt>Email</dt>
