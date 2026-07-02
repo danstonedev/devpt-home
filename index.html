@@ -134,39 +134,89 @@
         </section>
 
         <section class="block student-band" id="student">
-            <div class="wrap two-up">
+            <div class="wrap">
                 <div class="section-head reveal">
-                    <p class="eyebrow mono">// student view</p>
-                    <h2>What the learner experiences.</h2>
-                    <p>A single patient case that asks the student to notice, ask, map, decide, document, and revise.</p>
+                    <p class="eyebrow mono">// sample case walkthrough</p>
+                    <h2>Maria, 34: acute low back pain with a red-flag clue.</h2>
+                    <p>Follow one student through the encounter and see the artifacts a faculty member can debrief afterward.</p>
                 </div>
-                <div class="student-screen reveal" aria-label="Student encounter summary">
-                    <div class="screen-top mono">Maria, 34 / acute low back pain</div>
-                    <ol>
-                        <li><span>Read</span><b>New bladder-symptom note</b></li>
-                        <li><span>Ask</span><b>Red-flag interview questions</b></li>
-                        <li><span>Map</span><b>Pain location and spread</b></li>
-                        <li><span>Decide</span><b>Treat, refer, or gather more data</b></li>
-                        <li><span>Write</span><b>Reasoning in the note</b></li>
-                        <li><span>Reflect</span><b>Feedback before the next case</b></li>
-                    </ol>
+                <div class="case-board reveal" aria-label="Maria sample case artifacts">
+                    <article class="case-shot case-shot-wide">
+                        <div class="case-shot-copy">
+                            <span class="mono">01 / chart</span>
+                            <h3>Intake note surfaces the clue.</h3>
+                            <p>Maria reports acute low back pain and a new bladder symptom note. The student must decide what to ask next.</p>
+                        </div>
+                        <img src="assets/shots/emrsim.png" alt="Example chart review and documentation screen" loading="lazy" />
+                    </article>
+                    <article class="case-shot">
+                        <img src="assets/shots/vspx.png" alt="Example virtual standardized patient interview screen" loading="lazy" />
+                        <div class="case-shot-copy">
+                            <span class="mono">02 / interview</span>
+                            <h3>Student asks targeted red-flag questions.</h3>
+                            <p class="case-quote mono">"Any change with bladder, bowel, or numbness around the saddle area?"</p>
+                        </div>
+                    </article>
+                    <article class="case-shot">
+                        <img src="assets/shots/painmap.png" alt="Example 3D symptom map screen" loading="lazy" />
+                        <div class="case-shot-copy">
+                            <span class="mono">03 / symptom map</span>
+                            <h3>Pain location, spread, nature, and timing become visible.</h3>
+                        </div>
+                    </article>
+                    <article class="case-decision">
+                        <div class="decision-top mono">04 / decision and note</div>
+                        <div class="decision-options" aria-label="Clinical decision choices">
+                            <span>Treat</span>
+                            <span class="selected">Refer</span>
+                            <span>Gather more data</span>
+                        </div>
+                        <div class="note-preview">
+                            <b>Assessment</b>
+                            <p>Concern for cauda equina features given new bladder change plus bilateral symptoms. Same-day referral is indicated.</p>
+                        </div>
+                    </article>
                 </div>
             </div>
         </section>
 
         <section class="block faculty-band" id="faculty">
-            <div class="wrap">
+            <div class="wrap faculty-layout">
                 <div class="section-head reveal">
                     <p class="eyebrow mono">// faculty view</p>
-                    <h2>What faculty can review.</h2>
+                    <h2>Faculty review the debrief dashboard.</h2>
+                    <p>Faculty can see the reasoning trail, missed safety questions, note quality, and cohort themes without reconstructing the case from memory.</p>
                 </div>
-                <div class="artifact-grid reveal" aria-label="Faculty review artifacts">
-                    <article><span class="mono">01</span><h3>Chart findings</h3></article>
-                    <article><span class="mono">02</span><h3>Interview transcript</h3></article>
-                    <article><span class="mono">03</span><h3>Symptom map</h3></article>
-                    <article><span class="mono">04</span><h3>Decision log</h3></article>
-                    <article><span class="mono">05</span><h3>SOAP note</h3></article>
-                    <article><span class="mono">06</span><h3>Reflection</h3></article>
+                <div class="faculty-dashboard reveal" aria-label="Faculty dashboard example">
+                    <div class="dash-top">
+                        <div>
+                            <span class="mono">case dashboard</span>
+                            <h3>Maria / acute low back pain</h3>
+                        </div>
+                        <b>82% complete</b>
+                    </div>
+                    <div class="dash-metrics">
+                        <article><span>Expected questions</span><b>8 / 12</b></article>
+                        <article><span>Decision</span><b class="green">Refer</b></article>
+                        <article><span>SOAP note</span><b>Rationale thin</b></article>
+                    </div>
+                    <div class="dash-body">
+                        <div class="missed-box">
+                            <span class="mono">missed follow-up</span>
+                            <ul>
+                                <li>Bladder stream / retention detail</li>
+                                <li>Saddle anesthesia follow-up</li>
+                            </ul>
+                        </div>
+                        <div class="artifact-stack" aria-label="Artifacts available for review">
+                            <span>Chart findings</span>
+                            <span>Interview transcript</span>
+                            <span>Symptom map</span>
+                            <span>Decision log</span>
+                            <span>SOAP note</span>
+                            <span>Reflection</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
