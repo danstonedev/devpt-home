@@ -86,17 +86,18 @@ h3 { font-size: 1.05rem; }
 .eyebrow { margin-bottom: 14px; color: var(--green-d); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
 .hero h1 { margin-bottom: 22px; }
 .hero-logo-title {
-    width: min(100%, 560px);
-    max-width: 560px;
+    width: min(100%, 500px);
+    max-width: 500px;
+    padding: 14px 18px;
     margin-bottom: 18px;
     line-height: 0;
+    border-radius: var(--radius);
+    background: #000;
+    box-shadow: 0 24px 54px -42px rgba(22, 25, 29, 0.72);
 }
 .hero-logo-title img {
     width: 100%;
     height: auto;
-    border-radius: var(--radius);
-    background: #000;
-    box-shadow: 0 24px 54px -42px rgba(22, 25, 29, 0.72);
 }
 .hero-subtitle {
     max-width: 18ch;
