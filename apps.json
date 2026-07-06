@@ -10,13 +10,17 @@
       "footerLabel": "PainMap",
       "category": "research",
       "url": "https://pain3d.com",
+      "aliases": [
+        "https://pain.devpt.app"
+      ],
       "repo": "danstonedev/3DPainMap",
       "status": "live",
       "placement": [
         "plate",
         "footer"
       ],
-      "blurb": "Development and validation work for 3D symptom mapping beyond the 0-10 scale."
+      "blurb": "Development and validation work for 3D symptom mapping beyond the 0-10 scale.",
+      "note": "pain3d.com is the canonical URL. pain.devpt.app is a resilient alternate (CNAME subdomain, global distribution) — PENDING Azure custom-domain provisioning; run 3DPainMap/scripts/setup-custom-domain.sh, then drop this note. See 3DPainMap/docs/access-and-domains.md."
     },
     {
       "id": "emrsim",
