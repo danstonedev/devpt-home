@@ -12,12 +12,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DevPT - Clinical Reasoning Simulator for DPT Programs</title>
-    <meta name="description" content="DevPT's simLAB is a standardized virtual platform for DPT programs — experiential, competency-based training where students navigate clinical scenarios, communicate with virtual patients, and receive feedback from specialized AI agents." />
+    <meta name="description" content="DevPT's simLAB is a clinical reasoning simulator in development for DPT programs. Students will run simulated PT cases end to end — interview a virtual patient, examine in 3D, decide, document, plan care, and debrief. Pilot access estimated September 2026." />
     <meta name="theme-color" content="#FCFCFB" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="DevPT - Clinical Reasoning Simulator for DPT Programs" />
-    <meta property="og:description" content="A standardized virtual platform for experiential, competency-based DPT training — clinical scenarios, virtual patients, and specialized AI-agent feedback." />
+    <meta property="og:description" content="A clinical reasoning simulator in development for DPT programs — simulated PT cases run end to end, from chart review to debrief. Pilot access estimated September 2026." />
     <meta property="og:url" content="https://devpt.app/" />
     <meta property="og:site_name" content="DevPT" />
 
@@ -61,44 +61,50 @@
                     </div>
                     <p class="confidence-line mono reveal">Competency-based practice &middot; Simulated PT cases &middot; Faculty-visible reasoning trail &middot; No real patient data</p>
                 </div>
-                <a class="device hero-walkthrough reveal" id="app-lab" href="https://lab.devpt.app" target="_blank" rel="noopener" aria-label="Watch the DevPT encounter walkthrough and open DevPT Lab">
-                    <div class="device-bar"><span></span><span></span><span></span><b>guided encounter</b></div>
-                    <div class="walkthrough-stage" aria-label="Auto-playing walkthrough of a simulated PT encounter">
+                <a class="device hero-walkthrough reveal" id="app-lab" href="https://lab.devpt.app" target="_blank" rel="noopener" aria-label="Open the simulator — the case walkthrough shown runs from intake to debrief">
+                    <div class="device-bar"><span></span><span></span><span></span><b>one case, start to debrief</b></div>
+                    <div class="walkthrough-stage" role="group" aria-label="Auto-playing walkthrough of a simulated PT case">
                         <figure class="walkthrough-step active">
-                            <img src="assets/shots/emrsim.png" alt="Chart review screen in the guided encounter" />
-                            <figcaption><span class="mono">01 / screen</span><b>Student spots the intake clue and screens for red flags.</b></figcaption>
+                            <img src="assets/shots/simlab-intake.png" alt="simLAB intake step — reading the patient chart before the encounter" />
+                            <figcaption><span class="mono">01 / intake</span><b>Start in the record — what the chart is silent on becomes the interview list.</b></figcaption>
                         </figure>
                         <figure class="walkthrough-step">
-                            <img src="assets/shots/vspx.png" alt="Virtual standardized patient interview screen in the guided encounter" />
-                            <figcaption><span class="mono">02 / ask</span><b>Voice or text questions reveal the red-flag history.</b></figcaption>
+                            <img src="assets/shots/simlab-encounter.png" alt="simLAB interview step — talking with the virtual patient by text or voice with live vitals" />
+                            <figcaption><span class="mono">02 / interview</span><b>Ask the virtual patient — typed or voice — with live vitals on the rail.</b></figcaption>
                         </figure>
                         <figure class="walkthrough-step">
-                            <img src="assets/shots/painmap.png" alt="3D PainMap symptom mapping screen in the guided encounter" />
-                            <figcaption><span class="mono">03 / map</span><b>Symptoms become a visible, structured map.</b></figcaption>
+                            <img src="assets/shots/simlab-exam.png" alt="simLAB movement exam — directing the 3D patient and filing goniometer values" />
+                            <figcaption><span class="mono">03 / exam</span><b>Direct the 3D movement exam and file the goniometer values you choose to keep.</b></figcaption>
                         </figure>
                         <figure class="walkthrough-step">
-                            <img src="assets/shots/simpacs.png" alt="Imaging decision support screen in the guided encounter" />
-                            <figcaption><span class="mono">04 / decide</span><b>The student chooses treat, refer, modify, or gather more data.</b></figcaption>
+                            <img src="assets/shots/simlab-chart.png" alt="simLAB chart step — the EMR-style note with a red-flag screen, problems, and goals" />
+                            <figcaption><span class="mono">04 / chart</span><b>Sign a defensible note — every problem linked to a goal, then locked.</b></figcaption>
                         </figure>
                         <figure class="walkthrough-step">
-                            <img src="assets/shots/lab.svg" alt="DevPT Lab case feedback and debrief summary" />
-                            <figcaption><span class="mono">05 / reflect</span><b>Faculty review the reasoning trail and debrief the next attempt.</b></figcaption>
+                            <img src="assets/shots/simlab-plan.png" alt="simLAB plan of care — matching interventions to impairments with live feedback" />
+                            <figcaption><span class="mono">05 / plan</span><b>Build the plan of care against the impairments — and defend the order.</b></figcaption>
+                        </figure>
+                        <figure class="walkthrough-step">
+                            <img src="assets/shots/simlab-debrief.png" alt="simLAB debrief — outcome, rubric score, and the scored moments of the attempt" />
+                            <figcaption><span class="mono">06 / debrief</span><b>See the outcome, the score, and the exact moments that earned it.</b></figcaption>
                         </figure>
                     </div>
-                    <ol class="walkthrough-timeline" aria-label="Encounter walkthrough progress">
-                        <li class="active"><span class="track"><b></b></span><span class="mono">Screen</span></li>
+                    <ol class="walkthrough-timeline" aria-label="Case walkthrough progress">
+                        <li class="active"><span class="track"><b></b></span><span class="mono">Intake</span></li>
                         <li><span class="track"><b></b></span><span class="mono">Ask</span></li>
-                        <li><span class="track"><b></b></span><span class="mono">Map</span></li>
-                        <li><span class="track"><b></b></span><span class="mono">Decide</span></li>
-                        <li><span class="track"><b></b></span><span class="mono">Reflect</span></li>
+                        <li><span class="track"><b></b></span><span class="mono">Exam</span></li>
+                        <li><span class="track"><b></b></span><span class="mono">Chart</span></li>
+                        <li><span class="track"><b></b></span><span class="mono">Plan</span></li>
+                        <li><span class="track"><b></b></span><span class="mono">Debrief</span></li>
                     </ol>
                 </a>
             </div>
         </section>
 
         <section class="readline" aria-label="DevPT encounter sequence">
-            <div class="wrap">
-                <p class="mono">Screen. Ask. Map. Monitor. Move. Decide. Document. Communicate. Reflect.</p>
+            <div class="wrap readline-row">
+                <p class="mono">Screen. Ask. Map. Monitor. Move. Decide. Order. Document. Plan. Adapt. Communicate. Reflect.</p>
+                <button type="button" id="motion-toggle" class="mono motion-toggle" aria-pressed="false">Pause motion</button>
             </div>
         </section>
 
@@ -108,72 +114,89 @@
                     <h2>Structured practice in PT clinical decision-making.</h2>
                     <p>DevPT turns a simulated encounter into a visible sequence of reasoning moves faculty can observe and debrief.</p>
                 </div>
-                <div class="skill-sequence reveal" aria-label="PT clinical decision-making skills practiced in DevPT">
+                <div class="skill-sequence reveal" role="group" aria-label="PT clinical decision-making skills practiced in DevPT">
                     <article><span class="mono">Screen</span><p>Identify red flags and medical concerns</p></article>
-                    <article><span class="mono">Ask</span><p>Interview the patient</p></article>
-                    <article><span class="mono">Map</span><p>Characterize symptoms</p></article>
-                    <article><span class="mono">Monitor</span><p>Interpret vitals and patient response</p></article>
-                    <article><span class="mono">Move</span><p>Observe movement and function</p></article>
+                    <article><span class="mono">Ask</span><p>Interview the patient — typed or voice</p></article>
+                    <article><span class="mono">Map</span><p>Characterize symptoms on a 3D body</p></article>
+                    <article><span class="mono">Monitor</span><p>Interpret live vitals and patient response</p></article>
+                    <article><span class="mono">Move</span><p>Direct the movement exam and measure it</p></article>
                     <article><span class="mono">Decide</span><p>Treat, refer, modify, or gather more data</p></article>
-                    <article><span class="mono">Document</span><p>Support the clinical decision</p></article>
-                    <article><span class="mono">Communicate</span><p>Share concerns with the appropriate provider or team</p></article>
-                    <article><span class="mono">Reflect</span><p>Improve reasoning after feedback</p></article>
+                    <article><span class="mono">Order</span><p>Decide whether imaging changes management</p></article>
+                    <article><span class="mono">Document</span><p>Sign a note with linked problems and goals</p></article>
+                    <article><span class="mono">Plan</span><p>Match interventions to impairments, in order</p></article>
+                    <article><span class="mono">Adapt</span><p>Change the plan when the patient responds</p></article>
+                    <article><span class="mono">Communicate</span><p>Put the provider handoff in writing, in the note</p></article>
+                    <article><span class="mono">Reflect</span><p>Debrief the moments that earned the score</p></article>
                 </div>
-                <div class="journey reveal" aria-label="Visual case flow">
-                    <a class="journey-card" id="app-emrsim" href="https://emrsim.devpt.app" target="_blank" rel="noopener" aria-label="Open chart review environment">
+                <div class="journey reveal" role="group" aria-label="Visual case flow — every step inside the simulator">
+                    <a class="journey-card" href="https://lab.devpt.app" target="_blank" rel="noopener" aria-label="Open the simulator — chart review step">
                         <span class="shot">
-                            <video class="lazyvid" loop muted playsinline preload="none" poster="assets/shots/emrsim.png" aria-label="Chart review screen">
-                                <source src="assets/demos/emrsim.mp4" type="video/mp4" />
-                                <source src="assets/demos/emrsim.webm" type="video/webm" />
-                                <img src="assets/shots/emrsim.png" alt="Chart review screen" />
-                            </video>
+                            <img src="assets/shots/simlab-intake.png" alt="Chart review inside the simulator — the patient record beside the interview notes" loading="lazy" />
                         </span>
-                        <h3>Screen for red flags</h3>
+                        <h3>Read the record</h3>
                     </a>
-                    <a class="journey-card" id="app-vspx" href="https://vspx.devpt.app" target="_blank" rel="noopener" aria-label="Open patient interview environment">
+                    <a class="journey-card" href="https://lab.devpt.app" target="_blank" rel="noopener" aria-label="Open the simulator — patient interview step">
                         <span class="shot chat-shot">
-                            <img src="assets/shots/vspx.png" alt="Virtual patient interview screen" loading="lazy" />
-                            <span class="chatbubble mono">"Tell me what changed today."</span>
+                            <img src="assets/shots/simlab-encounter.png" alt="Interviewing the virtual patient with live vitals on the rail" loading="lazy" />
+                            <span class="chatbubble mono">"Do you get pain at night — and does changing position settle it?"</span>
                         </span>
-                        <h3>Ask the patient</h3>
+                        <h3>Interview the patient</h3>
                     </a>
-                    <a class="journey-card" id="app-painmap" href="https://pain3d.com" target="_blank" rel="noopener" aria-label="Open symptom mapping environment">
+                    <a class="journey-card" href="https://lab.devpt.app" target="_blank" rel="noopener" aria-label="Open the simulator — symptom mapping step">
                         <span class="shot">
-                            <video class="lazyvid" loop muted playsinline preload="none" poster="assets/shots/painmap.png" aria-label="3D symptom mapping screen">
-                                <source src="assets/demos/painmap.mp4" type="video/mp4" />
-                                <source src="assets/demos/painmap.webm" type="video/webm" />
-                                <img src="assets/shots/painmap.png" alt="3D symptom mapping screen" />
+                            <video class="lazyvid" loop muted playsinline preload="none" poster="assets/shots/simlab-map.png" aria-label="Examining symptoms on the 3D body">
+                                <source src="assets/demos/simlab-map.mp4" type="video/mp4" />
+                                <source src="assets/demos/simlab-map.webm" type="video/webm" />
+                                <img src="assets/shots/simlab-map.png" alt="3D symptom examination inside the simulator" />
                             </video>
                         </span>
-                        <h3>Map symptoms</h3>
+                        <h3>Put symptoms on the body</h3>
                     </a>
-                    <a class="journey-card" id="app-simpacs" href="https://simpacs.devpt.app" target="_blank" rel="noopener" aria-label="Open imaging decision environment">
+                    <a class="journey-card" href="https://lab.devpt.app" target="_blank" rel="noopener" aria-label="Open the simulator — 3D movement exam step">
                         <span class="shot">
-                            <video class="lazyvid" loop muted playsinline preload="none" poster="assets/shots/simpacs.png" aria-label="Imaging decision screen">
-                                <source src="assets/demos/simpacs.mp4" type="video/mp4" />
-                                <source src="assets/demos/simpacs.webm" type="video/webm" />
-                                <img src="assets/shots/simpacs.png" alt="Imaging decision screen" />
+                            <video class="lazyvid" loop muted playsinline preload="none" poster="assets/shots/simlab-exam.png" aria-label="Directing the 3D movement exam and filing goniometer values">
+                                <source src="assets/demos/simlab-exam.mp4" type="video/mp4" />
+                                <source src="assets/demos/simlab-exam.webm" type="video/webm" />
+                                <img src="assets/shots/simlab-exam.png" alt="3D movement exam with a live goniometer readout" />
                             </video>
                         </span>
-                        <h3>Decide and communicate</h3>
+                        <h3>Direct the movement exam</h3>
                     </a>
-                    <article class="journey-card">
+                    <a class="journey-card" href="https://lab.devpt.app" target="_blank" rel="noopener" aria-label="Open the simulator — plan of care step">
                         <span class="shot">
-                            <img src="assets/shots/emrsim.png" alt="Documentation screen" loading="lazy" />
+                            <video class="lazyvid" loop muted playsinline preload="none" poster="assets/shots/simlab-plan.png" aria-label="Building the plan of care with live feedback on every choice">
+                                <source src="assets/demos/simlab-plan.mp4" type="video/mp4" />
+                                <source src="assets/demos/simlab-plan.webm" type="video/webm" />
+                                <img src="assets/shots/simlab-plan.png" alt="Plan-of-care builder with live critiques" />
+                            </video>
                         </span>
-                        <h3>Document rationale</h3>
-                    </article>
-                    <article class="journey-card feedback-card">
-                        <span class="feedback-visual" aria-hidden="true">
-                            <span class="scoreline"><b></b></span>
-                            <span class="scoreline short"><b></b></span>
-                            <span class="feedback-note">Decision trail</span>
-                            <span class="feedback-note">SOAP note</span>
-                            <span class="feedback-note">Reflection</span>
+                        <h3>Plan care — and defend it</h3>
+                    </a>
+                    <a class="journey-card" href="https://lab.devpt.app" target="_blank" rel="noopener" aria-label="Open the simulator — debrief step">
+                        <span class="shot">
+                            <img src="assets/shots/simlab-debrief.png" alt="Debrief with outcome, rubric score, and scored moments" loading="lazy" />
                         </span>
-                        <h3>Reflect and improve</h3>
-                    </article>
+                        <h3>Debrief on the evidence</h3>
+                    </a>
                 </div>
+            </div>
+        </section>
+
+        <section class="block longitudinal" id="response-to-treatment">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <p class="eyebrow mono">// response to treatment</p>
+                    <h2>The patient responds. The plan has to answer.</h2>
+                    <p>Cases don't end at the first visit. In simLAB's plan-of-care phase, the student matches interventions to the patient's impairments, commits the plan, then reads the follow-up — and adapts to how the patient actually responded.</p>
+                </div>
+                <article class="case-shot case-shot-wide reveal longitudinal-card">
+                    <div class="case-shot-copy">
+                        <span class="mono">one patient, carried through time</span>
+                        <h3>Margaret's knee: prehab, day of surgery, outpatient recovery.</h3>
+                        <p>Three linked cases follow one virtual patient across her knee-replacement journey. The same weak quadriceps gets a different answer at every stage — the student has to read the joint in front of them, not apply one protocol. Here, her follow-up re-exam has come back: the plan must be progressed, and the student says why.</p>
+                    </div>
+                    <img src="assets/shots/simlab-followup.png" alt="Follow-up visit in the plan-of-care phase — interval re-exam findings and the plan to adapt" loading="lazy" />
+                </article>
             </div>
         </section>
 
@@ -181,43 +204,44 @@
             <div class="wrap">
                 <div class="section-head reveal">
                     <p class="eyebrow mono">// sample case walkthrough</p>
-                    <h2>Maria, 34: acute low back pain with a red-flag clue.</h2>
-                    <p>Follow one student through PT clinical decision-making and see the artifacts a faculty member can debrief afterward.</p>
+                    <h2>James, 60: low back and leg pain — and a finding that isn't his back.</h2>
+                    <p>Follow an authored simLAB case from intake to the signed note and see the artifacts a faculty member could debrief afterward. Every screen was captured from a real attempt in the simulator.</p>
                 </div>
-                <div class="case-board reveal" aria-label="Maria sample case artifacts">
+                <div class="case-board reveal" role="group" aria-label="Sample case artifacts">
                     <article class="case-shot case-shot-wide">
                         <div class="case-shot-copy">
-                            <span class="mono">01 / chart</span>
-                            <h3>Intake note surfaces the clue.</h3>
-                            <p>Maria reports acute low back pain and a new bladder symptom note. The student must decide what to ask next.</p>
+                            <span class="mono">01 / intake</span>
+                            <h3>The record frames the visit.</h3>
+                            <p>A prior PT evaluation is on file — and an elevated check-in blood pressure sits in plain view. What the chart is silent on becomes the student's interview list.</p>
                         </div>
-                        <img src="assets/shots/emrsim.png" alt="Example chart review and documentation screen" loading="lazy" />
+                        <img src="assets/shots/simlab-intake.png" alt="Intake chart review — prior records beside the interview notes" loading="lazy" />
                     </article>
                     <article class="case-shot">
-                        <img src="assets/shots/vspx.png" alt="Example virtual standardized patient interview screen" loading="lazy" />
+                        <img src="assets/shots/simlab-encounter.png" alt="Interviewing the virtual patient about red-flag symptoms" loading="lazy" />
                         <div class="case-shot-copy">
                             <span class="mono">02 / interview</span>
-                            <h3>Student asks targeted red-flag questions.</h3>
-                            <p class="case-quote mono">"Any change with bladder, bowel, or numbness around the saddle area?"</p>
-                        </div>
-                    </article>
-                    <article class="case-shot">
-                        <img src="assets/shots/painmap.png" alt="Example 3D symptom map screen" loading="lazy" />
-                        <div class="case-shot-copy">
-                            <span class="mono">03 / symptom map</span>
-                            <h3>Pain location, spread, nature, and timing become visible.</h3>
+                            <h3>The interview characterizes the night pain instead of checkboxing it.</h3>
+                            <p class="case-quote mono">"Do you get pain at night — and does changing position settle it?"</p>
                         </div>
                     </article>
                     <article class="case-decision">
-                        <div class="decision-top mono">04 / decision and note</div>
-                        <div class="decision-options" aria-label="Clinical decision choices">
-                            <span>Treat</span>
-                            <span class="selected">Refer</span>
-                            <span>Gather more data</span>
+                        <div class="decision-top mono">03 / decision and note</div>
+                        <div class="decision-options" role="group" aria-label="Clinical decision choices">
+                            <span class="selected">Treat &amp; educate<span class="visually-hidden"> (selected)</span></span>
+                            <span>Order MRI now</span>
+                            <span>Bed rest</span>
                         </div>
                         <div class="note-preview">
                             <b>Assessment</b>
-                            <p>Concern for cauda equina features given new bladder change plus bilateral symptoms. Same-day referral is indicated.</p>
+                            <p>Reassuring screen; movement exam matches the story. Graded return to his job demands — and today's blood-pressure readings go to his physician, in writing.</p>
+                        </div>
+                    </article>
+                    <article class="case-shot">
+                        <img src="assets/shots/simlab-imaging.png" alt="Imaging decision — order a study or defend ordering nothing" loading="lazy" />
+                        <div class="case-shot-copy">
+                            <span class="mono">04 / imaging decision</span>
+                            <h3>Ordering nothing is also a decision — and it's scored like one.</h3>
+                            <p>Every option demands the same question: what would the result change?</p>
                         </div>
                     </article>
                 </div>
@@ -228,36 +252,33 @@
             <div class="wrap faculty-layout">
                 <div class="section-head reveal">
                     <p class="eyebrow mono">// faculty view</p>
-                    <h2>Faculty review the debrief dashboard.</h2>
-                    <p>Faculty can see the reasoning trail, missed safety questions, note quality, interprofessional communication needs, and cohort themes without reconstructing the case from memory.</p>
+                    <h2>A reasoning trail faculty can debrief — not reconstruct.</h2>
+                    <p>Every attempt records its artifacts — what was read, asked, measured, ordered, signed, planned, and revised. The debrief lays them out so a faculty member can coach the reasoning instead of reconstructing it.</p>
                 </div>
-                <div class="faculty-dashboard reveal" aria-label="Faculty dashboard example">
+                <div class="faculty-dashboard reveal" role="group" aria-label="Clinical progress dashboard and recorded attempt artifacts">
                     <div class="dash-top">
                         <div>
-                            <span class="mono">case dashboard</span>
-                            <h3>Maria / acute low back pain</h3>
+                            <span class="mono">clinical progress — practice evidence</span>
+                            <h3>Readiness domains, exposures, and reps — from real attempts</h3>
                         </div>
-                        <b>82% complete</b>
                     </div>
-                    <div class="dash-metrics">
-                        <article><span>Expected questions</span><b>8 / 12</b></article>
-                        <article><span>Decision</span><b class="green">Refer</b></article>
-                        <article><span>SOAP note</span><b>Rationale thin</b></article>
-                    </div>
+                    <img class="dash-shot" src="assets/shots/simlab-home.png" alt="simLAB clinical progress dashboard — cases completed, practice reps, exposures by setting, patient complexity, and readiness-domain evidence" loading="lazy" />
                     <div class="dash-body">
                         <div class="missed-box">
-                            <span class="mono">missed follow-up</span>
+                            <span class="mono">what the trail holds</span>
                             <ul>
-                                <li>Bladder stream / retention detail</li>
-                                <li>Saddle anesthesia follow-up</li>
+                                <li>Every question asked, in order</li>
+                                <li>Every measurement filed, and when</li>
+                                <li>Decisions, with the rationale they demanded</li>
                             </ul>
                         </div>
-                        <div class="artifact-stack" aria-label="Artifacts available for review">
+                        <div class="artifact-stack" role="group" aria-label="Artifacts recorded during an attempt">
                             <span>Chart findings</span>
                             <span>Interview transcript</span>
-                            <span>Symptom map</span>
-                            <span>Decision log</span>
-                            <span>SOAP note</span>
+                            <span>Movement measurements</span>
+                            <span>Imaging decision + rationale</span>
+                            <span>Signed note + problem list</span>
+                            <span>Plan of care + adaptation</span>
                             <span>Reflection</span>
                         </div>
                     </div>
@@ -308,7 +329,7 @@
                     <a class="text-link" href="https://pain3d.com" target="_blank" rel="noopener">Follow PainMap development <span>&rarr;</span></a>
                 </div>
                 <div class="research-visual reveal">
-                    <a class="device research-device" href="https://pain3d.com" target="_blank" rel="noopener" aria-label="Open PainMap development site">
+                    <a class="device research-device" id="app-painmap" href="https://pain3d.com" target="_blank" rel="noopener" aria-label="Open PainMap development site">
                         <div class="device-bar"><span></span><span></span><span></span><b>candidate outcome measure</b></div>
                         <img src="assets/shots/painmap.png" alt="3D symptom map interface" loading="lazy" />
                     </a>
@@ -377,7 +398,7 @@
                 <a class="footer-mark" href="#top" aria-label="DevPT home">
                     <img class="footer-logo" src="assets/devpt-logo.png" alt="DevPT" width="108" height="34" />
                 </a>
-                <p>Clinical reasoning simulator for DPT programs. Students run a complete simulated PT encounter from red-flag screening to feedback.</p>
+                <p>Clinical reasoning simulator for DPT programs — a complete simulated PT encounter, from red-flag screening to feedback.</p>
                 <dl class="footer-contact">
                     <div>
                         <dt>Email</dt>
@@ -395,6 +416,7 @@
                     <h2>Experience</h2>
                     <ul>
                         <li><a href="#flow">Case flow</a></li>
+                        <li><a href="#response-to-treatment">Response to treatment</a></li>
                         <li><a href="#student">Student view</a></li>
                         <li><a href="#faculty">Faculty view</a></li>
                         <li><a href="#why">Why it matters</a></li>

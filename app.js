@@ -59,8 +59,10 @@
         entries.forEach(function (e) {
           var v = e.target;
           if (e.isIntersecting) {
-            var p = v.play();
-            if (p && p.catch) p.catch(function () {});
+            if (!motionPaused) {
+              var p = v.play();
+              if (p && p.catch) p.catch(function () {});
+            }
           } else if (!v.paused) {
             v.pause();
           }
@@ -71,6 +73,27 @@
       vids.forEach(function (v) {
         var p = v.play();
         if (p && p.catch) p.catch(function () {});
+      });
+    }
+  }
+
+  var motionPaused = false;
+  var motionToggle = document.getElementById("motion-toggle");
+  if (motionToggle) {
+    if (reduceMotion) {
+      motionToggle.hidden = true;
+    } else {
+      motionToggle.addEventListener("click", function () {
+        motionPaused = !motionPaused;
+        motionToggle.setAttribute("aria-pressed", String(motionPaused));
+        motionToggle.textContent = motionPaused ? "Play motion" : "Pause motion";
+        vids.forEach(function (v) {
+          if (motionPaused) { if (!v.paused) v.pause(); }
+          else {
+            var r = v.getBoundingClientRect();
+            if (r.top < window.innerHeight && r.bottom > 0) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+          }
+        });
       });
     }
   }
@@ -100,7 +123,7 @@
     setWalkthroughStep(0);
     if (!reduceMotion && walkSteps.length > 1) {
       window.setInterval(function () {
-        setWalkthroughStep(walkIndex + 1);
+        if (!motionPaused) setWalkthroughStep(walkIndex + 1);
       }, walkDelay);
     }
   }
