@@ -12,7 +12,10 @@
       "url": "https://pain3d.com",
       "repo": "danstonedev/3DPainMap",
       "status": "live",
-      "placement": ["hero", "plate", "footer"],
+      "placement": [
+        "plate",
+        "footer"
+      ],
       "blurb": "Development and validation work for 3D symptom mapping beyond the 0-10 scale."
     },
     {
@@ -24,7 +27,10 @@
       "url": "https://emrsim.devpt.app",
       "repo": "danstonedev/simnote",
       "status": "live",
-      "placement": ["nav", "plate", "footer"],
+      "placement": [
+        "nav",
+        "footer"
+      ],
       "blurb": "Documentation that behaves like a real chart."
     },
     {
@@ -36,7 +42,10 @@
       "url": "https://vspx.devpt.app",
       "repo": "danstonedev/simchat",
       "status": "live",
-      "placement": ["nav", "plate", "footer"],
+      "placement": [
+        "nav",
+        "footer"
+      ],
       "blurb": "A virtual patient to interview, on demand."
     },
     {
@@ -48,7 +57,10 @@
       "url": "https://simpacs.devpt.app",
       "repo": "danstonedev/simpacs",
       "status": "live",
-      "placement": ["nav", "plate", "footer"],
+      "placement": [
+        "nav",
+        "footer"
+      ],
       "blurb": "The imaging workstation, hands-on."
     },
     {
@@ -60,7 +72,9 @@
       "url": "https://aquatic.devpt.app",
       "repo": "danstonedev/simvitals",
       "status": "live",
-      "placement": ["footer"],
+      "placement": [
+        "footer"
+      ],
       "blurb": "How the body responds — to water, exercise, medication, and illness.",
       "note": "Repo deploy workflow is currently gated on a missing Azure secret (inert) as of 2026-06; verify the subdomain is actually serving."
     },
@@ -73,7 +87,11 @@
       "url": "https://lab.devpt.app",
       "repo": "danstonedev/simlab",
       "status": "live",
-      "placement": ["nav", "plate", "footer"],
+      "placement": [
+        "nav",
+        "plate",
+        "footer"
+      ],
       "blurb": "Pre-built scenario packs run end to end as one continuous case."
     }
   ],
