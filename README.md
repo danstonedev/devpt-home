@@ -75,3 +75,21 @@ node scripts/check-apps.mjs --no-ping  # skip network checks
 `.github/workflows/azure-static-web-apps-black-tree-0e898330f.yml`
 (`app_location: "/"`, `skip_app_build: true`). The `devpt.app` custom domain is
 configured in the Azure Static Web Apps resource.
+
+## Custom domains & reliability
+
+Custom domains and DNS live in Azure (Azure DNS + each app's SWA resource), not in
+this repo. Two things to know:
+
+- **Apex vs. subdomain.** Subdomains (`*.devpt.app`, `www.*`) are `CNAME`s that ride
+  Azure's global Traffic-Manager path. The bare apexes (`devpt.app`, `pain3d.com`)
+  are single-region `A` records — Microsoft's discouraged path ("no longer benefits
+  from global distribution"). Prefer the **Azure DNS ALIAS** apex flow when you touch
+  these. Reports of "works on my phone but not desktop" are almost always
+  network-path issues (DNS cache or a TLS-intercepting campus/office wifi proxy),
+  which HSTS makes un-bypassable — a different host (a `*.devpt.app` subdomain) is
+  the quickest workaround.
+- **PainMap alternate URL.** `pain.devpt.app` is being added as a resilient alternate
+  to `pain3d.com` (recorded under the `painmap` entry's `aliases` in `apps.json`).
+  The full diagnosis, the provisioning script, and the apex-hardening steps are in
+  the pain map repo: **`danstonedev/3DPainMap` → `docs/access-and-domains.md`**.
