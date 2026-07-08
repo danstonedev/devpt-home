@@ -97,6 +97,20 @@
         "footer"
       ],
       "blurb": "Pre-built scenario packs run end to end as one continuous case."
+    },
+    {
+      "id": "simmove",
+      "name": "simMOVE",
+      "tag": "simmove",
+      "footerLabel": "simMOVE",
+      "category": "motion",
+      "url": "https://move.devpt.app",
+      "repo": "danstonedev/simmove",
+      "status": "live",
+      "placement": [
+        "footer"
+      ],
+      "blurb": "Pose a 3D model and read each joint against its normative range of motion."
     }
   ],
   "unlisted": [
