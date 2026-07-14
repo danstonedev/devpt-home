@@ -113,16 +113,7 @@
       "blurb": "Pose a 3D model and read each joint against its normative range of motion."
     }
   ],
-  "unlisted": [
-    {
-      "id": "anatomy-database-app",
-      "name": "PT Rapid Recall",
-      "repo": "danstonedev/anatomy-database-app",
-      "status": "internal",
-      "url": "https://thankful-flower-0c1d6480f.4.azurestaticapps.net/",
-      "note": "Onboarding into DevPT/Education (2026-07-01). Data-safety hazard RESOLVED: the deploy workflow now uses `prisma migrate deploy` (committed migration 20260126_init_postgresql; no --accept-data-loss; DB mutates only on push to the default branch, never on PRs). Remaining before public promotion: a stable devpt.app subdomain (currently only a raw Azure SWA host)."
-    }
-  ],
+  "unlisted": [],
   "engines": [
     {
       "id": "scenario-engine",
