@@ -9,8 +9,11 @@
       "tag": "painmap",
       "footerLabel": "PainMap",
       "category": "research",
-      "url": "https://pain3d.com",
+      "url": "https://3dpain.app",
       "aliases": [
+        "https://www.3dpain.app",
+        "https://pain3d.com",
+        "https://www.pain3d.com",
         "https://pain.devpt.app"
       ],
       "repo": "danstonedev/3DPainMap",
@@ -20,7 +23,7 @@
         "footer"
       ],
       "blurb": "Development and validation work for 3D symptom mapping beyond the 0-10 scale.",
-      "note": "pain3d.com is the canonical URL. pain.devpt.app is a resilient alternate (CNAME subdomain, global distribution) — PENDING Azure custom-domain provisioning; run 3DPainMap/scripts/setup-custom-domain.sh, then drop this note. See 3DPainMap/docs/access-and-domains.md."
+      "note": "3dpain.app is the canonical URL (apex ALIAS on Azure DNS). Every alias listed here is bound to the same Static Web App and serves the identical build — pain3d.com is permanently retained, not deprecated, since simNOTE embeds that origin. pain.devpt.app is still PENDING provisioning; run 3DPainMap/scripts/setup-custom-domain.sh. Do not flip this url ahead of the Azure certificate reaching Ready — .app is HSTS-preloaded, so a premature link hard-fails. See 3DPainMap/docs/access-and-domains.md."
     },
     {
       "id": "emrsim",

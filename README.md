@@ -89,7 +89,19 @@ this repo. Two things to know:
   network-path issues (DNS cache or a TLS-intercepting campus/office wifi proxy),
   which HSTS makes un-bypassable — a different host (a `*.devpt.app` subdomain) is
   the quickest workaround.
-- **PainMap alternate URL.** `pain.devpt.app` is being added as a resilient alternate
-  to `pain3d.com` (recorded under the `painmap` entry's `aliases` in `apps.json`).
-  The full diagnosis, the provisioning script, and the apex-hardening steps are in
-  the pain map repo: **`danstonedev/3DPainMap` → `docs/access-and-domains.md`**.
+- **PainMap's canonical URL is `3dpain.app`.** Its zone moved from Squarespace DNS to
+  Azure DNS so the apex could be an `ALIAS` rather than a single-region `A`.
+  `pain3d.com`, `www.pain3d.com`, and `www.3dpain.app` remain bound to the same
+  Static Web App and serve the identical build — they are permanent aliases, not
+  deprecated hosts. In particular **`pain3d.com` must keep resolving**: simNOTE
+  iframes that exact origin and validates it on `postMessage`.
+  `pain.devpt.app` is a further resilient alternate, still pending provisioning.
+- **Never link a `.app` host before its certificate is `Ready`.** `.app` is
+  HSTS-preloaded at the TLD with `includeSubDomains`, so a link to a
+  not-yet-provisioned hostname is an unbypassable browser error with no "proceed
+  anyway" — not a soft 404. Verify with `curl -sSI https://<host>` before adding a
+  URL to `apps.json` or `index.html`.
+
+The full diagnosis, the migration runbook, the provisioning script, and the
+apex-hardening steps live in the pain map repo:
+**`danstonedev/3DPainMap` → `docs/access-and-domains.md`**.
