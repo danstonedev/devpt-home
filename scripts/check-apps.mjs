@@ -95,11 +95,25 @@ async function ping(url) {
 if (!noPing && typeof fetch === "function" && errors.length === 0) {
   console.log("Pinging listed app URLs…");
   for (const a of data.apps) {
-    if (typeof a.url !== "string" || !a.url) continue;
-    const status = await ping(a.url);
-    const ok = status >= 200 && status < 400;
-    console.log(`  ${ok ? "✓" : "✗"} ${String(a.id).padEnd(10)} ${a.url} -> ${status || "unreachable"}`);
-    if (!ok) (strict ? errors : warnings).push(`${a.id}: ${a.url} returned ${status || "unreachable"}`);
+    // Aliases are advertised URLs too, and until August 2026 nothing checked
+    // them: `pain.devpt.app` sat in this file as PainMap's "resilient
+    // alternate" while it was NXDOMAIN the whole time, because only `url` was
+    // ever pinged. An alias nobody verifies is worse than no alias — it is a
+    // URL the hub tells people to use.
+    const targets = [
+      { url: a.url, kind: "url" },
+      ...(Array.isArray(a.aliases) ? a.aliases : []).map((url) => ({ url, kind: "alias" })),
+    ];
+    for (const { url, kind } of targets) {
+      if (typeof url !== "string" || !url) continue;
+      // `redirect: "follow"` is deliberate: a 301 to a hostname that does not
+      // resolve must fail here, not report the redirect's own 301 as healthy.
+      const status = await ping(url);
+      const ok = status >= 200 && status < 400;
+      const label = kind === "alias" ? `${a.id} (alias)` : String(a.id);
+      console.log(`  ${ok ? "✓" : "✗"} ${label.padEnd(18)} ${url} -> ${status || "unreachable"}`);
+      if (!ok) (strict ? errors : warnings).push(`${label}: ${url} returned ${status || "unreachable"}`);
+    }
   }
 }
 
