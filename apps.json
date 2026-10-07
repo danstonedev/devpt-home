@@ -69,18 +69,32 @@
     },
     {
       "id": "aquatic",
-      "name": "simVITALS",
+      "name": "Aquatic Therapy",
       "tag": "simaqua",
-      "footerLabel": "simVITALS",
+      "footerLabel": "Aquatic Therapy",
       "category": "simulation",
-      "url": "https://aquatic.devpt.app",
-      "repo": "danstonedev/simvitals",
+      "url": "https://lab.devpt.app/?aquatic",
+      "repo": "danstonedev/simlab",
       "status": "live",
       "placement": [
         "footer"
       ],
-      "blurb": "How the body responds — to water, exercise, medication, and illness.",
-      "note": "Repo deploy workflow is currently gated on a missing Azure secret (inert) as of 2026-06; verify the subdomain is actually serving."
+      "blurb": "Explore immersion, movement, and physiologic response in simLAB.",
+      "note": "Native simLAB learning tool. The standalone simVITALS source application remains available at https://aquatic.devpt.app."
+    },
+    {
+      "id": "live-vitals",
+      "name": "Live Vitals",
+      "tag": "simvitals",
+      "footerLabel": "Live Vitals",
+      "category": "simulation",
+      "url": "https://lab.devpt.app/?live-vitals",
+      "repo": "danstonedev/simlab",
+      "status": "live",
+      "placement": [
+        "footer"
+      ],
+      "blurb": "Follow posture, effort, and recovery with model-derived vital signs."
     },
     {
       "id": "lab",
