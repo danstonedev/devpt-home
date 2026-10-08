@@ -14,6 +14,9 @@ data-driven: **[`apps.json`](apps.json) is the single source of truth**, and
 - `apps.json` — **canonical app registry** (id, name, live URL, backing repo, status, placement)
 - `styles.css` — light editorial theme, UND-green accent
 - `app.js` — accessible product tabs, screenshot dialog, mobile menu and footer catalog
+- `experience.js` / `experience.css` — guided interview and sample class reveal
+- `reasoning-demo.js` / `reasoning-demo.css` — draggable, keyboard-accessible evidence map
+- `demos/` — lazy-loaded native simLAB knee model, sampler, viewer and attribution
 - `assets/` — logo, demo videos/posters, screenshots
 - `CV - Dan Stone.pdf` — linked from the About section
 
@@ -23,9 +26,28 @@ Fonts (Hanken Grotesk + JetBrains Mono) load from Google Fonts; product imagery 
 
 The homepage presents the current simLAB learning environment: native patient encounters and DDx reasoning maps,
 care planning, live/scheduled classes, faculty review, and integrated learning labs. `index.html` owns the product
-tour copy; `app.js` adds keyboard-accessible tabs and a screenshot dialog. Without JavaScript, all four tour panels
-and the static footer links remain available. Screenshots are real captures of synthetic localhost demonstrations,
-not production student records. Capture provenance is recorded in `docs/homepage-refresh.md`.
+tour copy; `app.js` adds keyboard-accessible tabs and a screenshot dialog. Visitors can ask authored interview
+questions, carry the findings into an interactive reasoning map, create supporting/challenging links, reveal an
+illustrative class view, and manipulate the actual Movement Lab knee model. The previews use local browser state
+and do not call the AI or account services. Sample findings remain available for visitors who go directly to the map.
+
+Without JavaScript, all four tour panels, explanatory fallbacks and static footer links remain available. Screenshots
+are real captures of synthetic localhost demonstrations, not production student records. Capture and interaction
+provenance are recorded in `docs/homepage-refresh.md`.
+
+The 3D viewer and 1.42 MB model load when the visitor presses **Load 3D model**. Rendering runs after controls
+change and pauses offscreen or when the document is hidden. The knee motion sampler and anatomy asset are copied
+unchanged from simLAB; `demos/UPSTREAM.md` records their origin and scope. Preserve the visible model credits.
+
+After changing the viewer source, regenerate the checked-in ESM bundle:
+
+```bash
+npm ci
+npm run build:demos
+```
+
+Azure serves the committed static files without a build step. Three.js and esbuild are pinned development
+dependencies; the browser loads the local bundle rather than a CDN runtime.
 
 ## Run locally
 

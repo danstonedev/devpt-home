@@ -8,12 +8,15 @@
     "start": "npx http-server -c-1 -p 8099",
     "prepreview": "node scripts/ensure-fresh-main.mjs --preview",
     "preview": "http-server -c-1 -p 8109 -a 127.0.0.1",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:demos": "node scripts/build-demos.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "esbuild": "0.25.12",
+    "http-server": "^14.1.1",
+    "three": "0.183.2"
   }
 }

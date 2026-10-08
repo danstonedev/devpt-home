@@ -1,0 +1,18 @@
+[
+  {
+    "path": "native-joints/index.ts",
+    "sha256": "73678d955a951dba760dbad02c3504c15190f0a79a9183756d29e52ee554dcd2"
+  },
+  {
+    "path": "native-joints/knee.ts",
+    "sha256": "5eab6dbe246d6ca6010a2430ed22354f0f53c1122c84d9bcfa16fb6022298606"
+  },
+  {
+    "path": "knee.glb",
+    "sha256": "bb311e4a017267cf03ff1baeac2edd471382fe9ddbb82e491640de23994cf2a1"
+  },
+  {
+    "path": "knee.meta.json",
+    "sha256": "a85f39f3f86f7df898f6e0a977ef8e99a55a685429e4c0ca6f558356c6d8389d"
+  }
+]
