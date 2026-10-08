@@ -4,68 +4,42 @@
   "deploy": "Azure Static Web Apps (.github/workflows/azure-static-web-apps-black-tree-0e898330f.yml)",
   "apps": [
     {
-      "id": "painmap",
-      "name": "PainMap",
-      "tag": "painmap",
-      "footerLabel": "PainMap",
-      "category": "research",
-      "url": "https://www.3dpain.app",
-      "aliases": [
-        "https://pain3d.com"
-      ],
-      "repo": "danstonedev/3DPainMap",
+      "id": "lab",
+      "name": "simLAB",
+      "tag": "simlab",
+      "footerLabel": "simLAB",
+      "category": "platform",
+      "url": "https://lab.devpt.app",
+      "repo": "danstonedev/simlab",
       "status": "live",
-      "placement": [
-        "plate",
-        "footer"
-      ],
-      "blurb": "Development and validation work for 3D symptom mapping beyond the 0-10 scale.",
-      "note": "www.3dpain.app is the canonical URL. The `www.` is required: the bare 3dpain.app apex has no DNS address record and does not resolve, and .app is HSTS-preloaded so it fails unbypassably rather than warning. pain3d.com is the retired brand domain, kept as an alias because it 301s to the canonical host. The previously-listed pain.devpt.app alias was never provisioned and has been dropped. See 3DPainMap/docs/access-and-domains.md."
+      "placement": ["nav", "plate", "footer"],
+      "blurb": "An integrated clinical simulation workspace with native DDx cases, patient and instructor conversations, examination, documentation, debrief, and live classes."
     },
     {
-      "id": "emrsim",
-      "name": "simNOTE",
-      "tag": "simemr",
-      "footerLabel": "simNOTE",
+      "id": "movements",
+      "name": "Movement lab",
+      "tag": "movements",
+      "footerLabel": "Movement lab",
+      "category": "motion",
+      "url": "https://lab.devpt.app/?movements",
+      "repo": "danstonedev/simlab",
+      "status": "live",
+      "placement": ["footer"],
+      "blurb": "Explore clinical tests and joint movements on simLAB's 3D patient, with adjustable findings.",
+      "note": "Native simLAB learning tool; access follows simLAB sign-in and account approval."
+    },
+    {
+      "id": "neuro",
+      "name": "Neuro lab",
+      "tag": "neuro",
+      "footerLabel": "Neuro lab",
       "category": "simulation",
-      "url": "https://emrsim.devpt.app",
-      "repo": "danstonedev/simnote",
+      "url": "https://lab.devpt.app/?neuro",
+      "repo": "danstonedev/simlab",
       "status": "live",
-      "placement": [
-        "nav",
-        "footer"
-      ],
-      "blurb": "Documentation that behaves like a real chart."
-    },
-    {
-      "id": "vspx",
-      "name": "simCHAT",
-      "tag": "simchat",
-      "footerLabel": "simCHAT",
-      "category": "simulation",
-      "url": "https://vspx.devpt.app",
-      "repo": "danstonedev/simchat",
-      "status": "live",
-      "placement": [
-        "nav",
-        "footer"
-      ],
-      "blurb": "A virtual patient to interview, on demand."
-    },
-    {
-      "id": "simpacs",
-      "name": "simPACS",
-      "tag": "simpacs",
-      "footerLabel": "simPACS",
-      "category": "imaging",
-      "url": "https://simpacs.devpt.app",
-      "repo": "danstonedev/simpacs",
-      "status": "live",
-      "placement": [
-        "nav",
-        "footer"
-      ],
-      "blurb": "The imaging workstation, hands-on."
+      "placement": ["footer"],
+      "blurb": "Explore sensory pathways and lesion effects alongside the bedside examination and 3D anatomy.",
+      "note": "Native simLAB learning tool; access follows simLAB sign-in and account approval."
     },
     {
       "id": "aquatic",
@@ -76,9 +50,7 @@
       "url": "https://lab.devpt.app/?aquatic",
       "repo": "danstonedev/simlab",
       "status": "live",
-      "placement": [
-        "footer"
-      ],
+      "placement": ["footer"],
       "blurb": "Explore immersion, movement, and physiologic response in simLAB.",
       "note": "Native simLAB learning tool. The standalone simVITALS source application remains available at https://aquatic.devpt.app."
     },
@@ -91,26 +63,35 @@
       "url": "https://lab.devpt.app/?live-vitals",
       "repo": "danstonedev/simlab",
       "status": "live",
-      "placement": [
-        "footer"
-      ],
-      "blurb": "Follow posture, effort, and recovery with model-derived vital signs."
+      "placement": ["footer"],
+      "blurb": "Follow posture, effort, and recovery with model-derived vital signs.",
+      "note": "Native simLAB learning tool; access follows simLAB sign-in and account approval."
     },
     {
-      "id": "lab",
-      "name": "simLAB",
-      "tag": "simlab",
-      "footerLabel": "simLAB",
-      "category": "platform",
-      "url": "https://lab.devpt.app",
-      "repo": "danstonedev/simlab",
+      "id": "painmap",
+      "name": "PainMap",
+      "tag": "painmap",
+      "footerLabel": "PainMap",
+      "category": "research",
+      "url": "https://www.3dpain.app",
+      "aliases": ["https://pain3d.com"],
+      "repo": "danstonedev/3DPainMap",
       "status": "live",
-      "placement": [
-        "nav",
-        "plate",
-        "footer"
-      ],
-      "blurb": "Pre-built scenario packs run end to end as one continuous case."
+      "placement": ["plate", "footer"],
+      "blurb": "Development and validation work for 3D symptom mapping beyond the 0-10 scale.",
+      "note": "www.3dpain.app is the canonical URL. The `www.` is required: the bare 3dpain.app apex has no DNS address record and does not resolve, and .app is HSTS-preloaded so it fails unbypassably rather than warning. pain3d.com is the retired brand domain, kept as an alias because it 301s to the canonical host. The previously-listed pain.devpt.app alias was never provisioned and has been dropped. See 3DPainMap/docs/access-and-domains.md."
+    },
+    {
+      "id": "simpacs",
+      "name": "simPACS",
+      "tag": "simpacs",
+      "footerLabel": "simPACS",
+      "category": "imaging",
+      "url": "https://simpacs.devpt.app",
+      "repo": "danstonedev/simpacs",
+      "status": "live",
+      "placement": ["nav", "footer"],
+      "blurb": "The imaging workstation, hands-on."
     },
     {
       "id": "simmove",
@@ -121,13 +102,35 @@
       "url": "https://move.devpt.app",
       "repo": "danstonedev/simmove",
       "status": "live",
-      "placement": [
-        "footer"
-      ],
+      "placement": ["footer"],
       "blurb": "Pose a 3D model and read each joint against its normative range of motion."
     }
   ],
   "unlisted": [
+    {
+      "id": "emrsim",
+      "name": "simNOTE",
+      "tag": "simemr",
+      "footerLabel": "simNOTE",
+      "category": "simulation",
+      "url": "https://emrsim.devpt.app",
+      "repo": "danstonedev/simnote",
+      "status": "live-unlisted",
+      "blurb": "Documentation that behaves like a real chart.",
+      "note": "Legacy standalone documentation tool retained in the portfolio registry; the homepage now leads with documentation inside simLAB."
+    },
+    {
+      "id": "vspx",
+      "name": "simCHAT",
+      "tag": "simchat",
+      "footerLabel": "simCHAT",
+      "category": "simulation",
+      "url": "https://vspx.devpt.app",
+      "repo": "danstonedev/simchat",
+      "status": "live-unlisted",
+      "blurb": "A virtual patient to interview, on demand.",
+      "note": "Standalone virtual patient tool retained in the portfolio registry; the homepage now leads with patient conversations inside simLAB."
+    },
     {
       "id": "anatomy-database-app",
       "name": "PT Rapid Recall",

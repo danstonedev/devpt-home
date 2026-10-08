@@ -6,18 +6,26 @@ Dakota.
 
 It's a single, self-contained static site (no build step). The app catalog is
 data-driven: **[`apps.json`](apps.json) is the single source of truth**, and
-`app.js` renders the "Practice tools" nav and the footer list from it.
+`app.js` renders the footer tool list from it.
 
 ## Stack
 
-- `index.html` — markup & content, including the bespoke marketing "plates" for each app
+- `index.html` — homepage content, product tour, student/faculty sections and lab links
 - `apps.json` — **canonical app registry** (id, name, live URL, backing repo, status, placement)
 - `styles.css` — light editorial theme, UND-green accent
-- `app.js` — scroll reveal, in-view demo-video playback, and catalog rendering from `apps.json`
+- `app.js` — accessible product tabs, screenshot dialog, mobile menu and footer catalog
 - `assets/` — logo, demo videos/posters, screenshots
 - `CV - Dan Stone.pdf` — linked from the About section
 
-Fonts (Hanken Grotesk + JetBrains Mono) load from Google Fonts; everything else is local.
+Fonts (Hanken Grotesk + JetBrains Mono) load from Google Fonts; product imagery is local.
+
+## Homepage product story
+
+The homepage presents the current simLAB learning environment: native patient encounters and DDx reasoning maps,
+care planning, live/scheduled classes, faculty review, and integrated learning labs. `index.html` owns the product
+tour copy; `app.js` adds keyboard-accessible tabs and a screenshot dialog. Without JavaScript, all four tour panels
+and the static footer links remain available. Screenshots are real captures of synthetic localhost demonstrations,
+not production student records. Capture provenance is recorded in `docs/homepage-refresh.md`.
 
 ## Run locally
 
@@ -32,8 +40,14 @@ npm start          # syncs local main to origin/main, then serves http://localho
 It refuses to serve if the checkout is dirty, ahead, diverged, detached, on another
 branch, or unable to reach `origin/main`.
 
-There is intentionally no stale-mode bypass. If localhost is serving this site, it
-should represent the same source that deploys to `devpt.app`.
+There is intentionally no stale-mode bypass for `npm start`: it serves the same
+source that deploys to `devpt.app`.
+
+For an intentional redesign draft, use `npm ci` followed by `npm run preview`.
+This serves `http://127.0.0.1:8109` after fetching `origin/main` and checking that
+the draft contains the latest production commit. Draft previews allow local edits
+and feature branches, clearly report that they are not production, and refuse
+to serve an outdated base. `npm start` retains its strict clean-main checks.
 
 Serve over http(s), not `file://`, so `app.js` can `fetch('apps.json')`. If opened
 as a local file, the page falls back to the static nav/footer lists in `index.html`.

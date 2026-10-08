@@ -1,175 +1,129 @@
-/* DevPT - devpt.app interactions */
+/* DevPT homepage: deliberate, accessible product exploration. */
 (function () {
   "use strict";
+  var year = document.getElementById("year");
+  if (year) year.textContent = new Date().getFullYear();
 
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  var yearEl = document.getElementById("year");
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-  var nav = document.querySelector(".nav");
-  if (nav) {
-    var onScroll = function () { nav.classList.toggle("scrolled", window.scrollY > 8); };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-  }
-
-  var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
-  function showReveal(el) {
-    el.classList.add("in");
-    el.removeAttribute("data-reveal-pending");
-    el.style.transitionDelay = "";
-  }
-  if (reveals.length) {
-    try {
-      if ("IntersectionObserver" in window && !reduceMotion) {
-        var remainingReveals = reveals.length;
-        var revealFallback = window.setTimeout(function () {
-          reveals.forEach(showReveal);
-        }, 1600);
-        var io = new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (e) {
-              if (e.isIntersecting) {
-                showReveal(e.target);
-                io.unobserve(e.target);
-                remainingReveals -= 1;
-                if (remainingReveals <= 0) window.clearTimeout(revealFallback);
-              }
-            });
-          },
-          { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-        );
-        reveals.forEach(function (el, i) {
-          el.setAttribute("data-reveal-pending", "true");
-          el.style.transitionDelay = Math.min(i % 6, 5) * 55 + "ms";
-          io.observe(el);
-        });
-      } else {
-        reveals.forEach(showReveal);
-      }
-    } catch (e) {
-      reveals.forEach(showReveal);
-    }
-  }
-  var vids = Array.prototype.slice.call(document.querySelectorAll("video.lazyvid"));
-  if (vids.length && !reduceMotion) {
-    if ("IntersectionObserver" in window) {
-      var vio = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          var v = e.target;
-          if (e.isIntersecting) {
-            if (!motionPaused) {
-              var p = v.play();
-              if (p && p.catch) p.catch(function () {});
-            }
-          } else if (!v.paused) {
-            v.pause();
-          }
-        });
-      }, { threshold: 0.35 });
-      vids.forEach(function (v) { vio.observe(v); });
-    } else {
-      vids.forEach(function (v) {
-        var p = v.play();
-        if (p && p.catch) p.catch(function () {});
+  var mobileMenu = document.querySelector(".nav-mobile");
+  if (mobileMenu)
+    mobileMenu.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        mobileMenu.removeAttribute("open");
       });
-    }
-  }
+    });
 
-  var motionPaused = false;
-  var motionToggle = document.getElementById("motion-toggle");
-  if (motionToggle) {
-    if (reduceMotion) {
-      motionToggle.hidden = true;
-    } else {
-      motionToggle.addEventListener("click", function () {
-        motionPaused = !motionPaused;
-        motionToggle.setAttribute("aria-pressed", String(motionPaused));
-        motionToggle.textContent = motionPaused ? "Play motion" : "Pause motion";
-        vids.forEach(function (v) {
-          if (motionPaused) { if (!v.paused) v.pause(); }
-          else {
-            var r = v.getBoundingClientRect();
-            if (r.top < window.innerHeight && r.bottom > 0) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
-          }
-        });
+  var tablist = document.querySelector(".tour-tabs");
+  if (tablist) {
+    var tabs = Array.from(tablist.querySelectorAll("[data-tour]"));
+    var panels = Array.from(document.querySelectorAll("[data-panel]"));
+    function selectTab(index, focus) {
+      tabs.forEach(function (tab, i) {
+        tab.setAttribute("aria-selected", String(i === index));
+        tab.tabIndex = i === index ? 0 : -1;
       });
+      panels.forEach(function (panel) {
+        panel.hidden = panel.dataset.panel !== tabs[index].dataset.tour;
+      });
+      if (focus) tabs[index].focus();
     }
-  }
-
-  var walkthrough = document.querySelector(".hero-walkthrough");
-  if (walkthrough) {
-    var walkSteps = Array.prototype.slice.call(walkthrough.querySelectorAll(".walkthrough-step"));
-    var walkItems = Array.prototype.slice.call(walkthrough.querySelectorAll(".walkthrough-timeline li"));
-    var walkIndex = 0;
-    var walkDelay = 4200;
-    function setWalkthroughStep(nextIndex) {
-      walkIndex = nextIndex % walkSteps.length;
-      walkSteps.forEach(function (step, i) {
-        step.classList.toggle("active", i === walkIndex);
+    tablist.setAttribute("role", "tablist");
+    tabs.forEach(function (tab, index) {
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-controls", "panel-" + tab.dataset.tour);
+      tab.addEventListener("click", function () {
+        selectTab(index, false);
       });
-      walkItems.forEach(function (item, i) {
-        item.classList.toggle("active", i === walkIndex);
-        item.classList.toggle("done", i < walkIndex);
-        var bar = item.querySelector(".track b");
-        if (bar) {
-          bar.style.animation = "none";
-          bar.offsetHeight;
-          bar.style.animation = "";
+      tab.addEventListener("keydown", function (event) {
+        var next;
+        if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+        if (event.key === "ArrowLeft")
+          next = (index + tabs.length - 1) % tabs.length;
+        if (event.key === "Home") next = 0;
+        if (event.key === "End") next = tabs.length - 1;
+        if (next !== undefined) {
+          event.preventDefault();
+          selectTab(next, true);
         }
       });
-    }
-    setWalkthroughStep(0);
-    if (!reduceMotion && walkSteps.length > 1) {
-      window.setInterval(function () {
-        if (!motionPaused) setWalkthroughStep(walkIndex + 1);
-      }, walkDelay);
-    }
+    });
+    panels.forEach(function (panel) {
+      panel.setAttribute("role", "tabpanel");
+      panel.setAttribute("aria-labelledby", "tab-" + panel.dataset.panel);
+      panel.tabIndex = 0;
+    });
+    selectTab(0, false);
+    tablist.hidden = false;
   }
 
-  function inPlacement(app, where) {
-    return app.placement && app.placement.indexOf(where) !== -1;
-  }
-
-  function buildFooterItem(app) {
-    var li = document.createElement("li");
-    var a = document.createElement("a");
-    a.href = app.url;
-    a.target = "_blank";
-    a.rel = "noopener";
-    a.textContent = app.footerLabel || app.name;
-    li.appendChild(a);
-    return li;
-  }
-
-  function renderFooter(apps) {
-    var footUl = document.querySelector(".footer-apps");
-    if (!footUl) return;
-    footUl.innerHTML = "";
-    apps.filter(function (a) { return inPlacement(a, "footer"); })
-      .forEach(function (a) { footUl.appendChild(buildFooterItem(a)); });
-  }
-
-  function validateLinkedSurfaces(apps) {
-    apps.filter(function (a) { return inPlacement(a, "plate"); }).forEach(function (a) {
-      var surface = document.getElementById("app-" + a.id);
-      if (!surface) { console.warn("[apps] missing surface #app-" + a.id); return; }
-      var links = Array.prototype.slice.call(surface.querySelectorAll("a[href], area[href]"));
-      var direct = surface.getAttribute("href") === a.url;
-      var nested = links.some(function (l) { return l.getAttribute("href") === a.url; });
-      if (!direct && !nested) console.warn("[apps] surface #app-" + a.id + " has no link to " + a.url);
+  var dialog = document.querySelector(".image-dialog");
+  if (dialog && typeof dialog.showModal === "function") {
+    var image = dialog.querySelector("img");
+    var caption = dialog.querySelector("p");
+    var opener;
+    document.querySelectorAll("[data-enlarge]").forEach(function (link) {
+      link.addEventListener("click", function (event) {
+        if (
+          event.ctrlKey ||
+          event.metaKey ||
+          event.shiftKey ||
+          event.altKey ||
+          event.button !== 0
+        )
+          return;
+        event.preventDefault();
+        opener = link;
+        image.src = link.href;
+        image.alt = link.querySelector("img").alt;
+        caption.textContent = image.alt;
+        dialog.showModal();
+      });
+    });
+    dialog
+      .querySelector(".dialog-close")
+      .addEventListener("click", function () {
+        dialog.close();
+      });
+    dialog.addEventListener("click", function (event) {
+      var bounds = dialog.getBoundingClientRect();
+      if (
+        event.clientX < bounds.left ||
+        event.clientX > bounds.right ||
+        event.clientY < bounds.top ||
+        event.clientY > bounds.bottom
+      )
+        dialog.close();
+    });
+    dialog.addEventListener("close", function () {
+      if (opener) opener.focus();
     });
   }
 
-  if (window.fetch) {
+  var footer = document.querySelector(".footer-apps");
+  if (footer && window.fetch)
     fetch("apps.json", { cache: "no-cache" })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (data) {
-        if (!data || !data.apps) return;
-        renderFooter(data.apps);
-        validateLinkedSurfaces(data.apps);
+      .then(function (response) {
+        return response.ok ? response.json() : null;
       })
-      .catch(function () {});
-  }
+      .then(function (data) {
+        if (!data || !Array.isArray(data.apps)) return;
+        var list = document.createDocumentFragment();
+        data.apps
+          .filter(function (app) {
+            return app.placement.includes("footer");
+          })
+          .forEach(function (app) {
+            var item = document.createElement("li");
+            var link = document.createElement("a");
+            link.href = app.url;
+            link.target = "_blank";
+            link.rel = "noopener";
+            link.textContent = app.footerLabel || app.name;
+            item.appendChild(link);
+            list.appendChild(item);
+          });
+        footer.replaceChildren(list);
+      })
+      .catch(function () {
+        /* Static links remain available if the catalog cannot load. */
+      });
 })();
