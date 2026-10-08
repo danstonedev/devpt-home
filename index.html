@@ -40,6 +40,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="reasoning-demo.css" />
+    <link rel="stylesheet" href="demos/joint-preview.css" />
+    <link rel="stylesheet" href="experience.css" />
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-VTLNJW0KKX"
@@ -104,8 +107,11 @@
                   target="_blank"
                   rel="noopener"
                   >Open simLAB <span aria-hidden="true">↗</span></a
-                ><a href="#flow" class="btn btn-ghost btn-lg"
-                  >Take a look inside <span aria-hidden="true">↓</span></a
+                ><a
+                  href="#flow"
+                  class="btn btn-ghost btn-lg"
+                  data-open-reasoning
+                  >Explore the experience <span aria-hidden="true">↓</span></a
                 >
               </div>
               <p class="access-note">
@@ -123,33 +129,93 @@
                 />
               </div>
               <p class="mono">PART OF DEVPT</p>
-              <figure class="hero-product">
+              <section
+                class="encounter-preview"
+                aria-label="Guided patient interview demonstration"
+              >
                 <div class="product-chrome">
-                  <span class="chrome-dots" aria-hidden="true"
-                    ><i></i><i></i><i></i></span
-                  ><span>simLAB / the clinical workspace</span
-                  ><span class="chrome-right">PATIENT · EVIDENCE · PLAN</span>
+                  <span class="preview-label mono"
+                    >SIMLAB / PATIENT ENCOUNTER</span
+                  >
+                  <span class="preview-live">Interactive preview</span>
                 </div>
-                <a
-                  href="assets/shots/clinical-workspace.jpg"
-                  class="enlarge-image"
-                  data-enlarge
-                  aria-label="Enlarge the simLAB clinical workspace screenshot"
-                  ><img
-                    src="assets/shots/clinical-workspace.jpg"
-                    alt="Current simLAB patient encounter: a 3D virtual patient beside the clinical record and interview workspace"
-                    width="1280"
-                    height="720"
-                    fetchpriority="high"
-                  /><span class="enlarge-label"
-                    >View full screen <span aria-hidden="true">↗</span></span
-                  ></a
-                >
-                <figcaption>
-                  <span>A patient. A chart. A reason for every choice.</span
-                  ><span>Current simLAB interface · Demonstration case</span>
-                </figcaption>
-              </figure>
+                <div class="encounter-main">
+                  <div class="encounter-profile">
+                    <span class="encounter-avatar" aria-hidden="true">JR</span>
+                    <div>
+                      <strong>Jamie Reed · 51</strong
+                      ><span>Hip symptoms · Illustrative patient</span>
+                    </div>
+                  </div>
+                  <p class="encounter-student" hidden></p>
+                  <p class="encounter-response">
+                    “My hip has been bothering me. It’s starting to get in the
+                    way of my day.”
+                  </p>
+                  <div class="encounter-controls" hidden>
+                    <p class="encounter-prompt">
+                      YOUR TURN · WHAT WOULD YOU ASK?
+                    </p>
+                    <div
+                      class="encounter-questions"
+                      aria-label="Choose an interview question"
+                    >
+                      <button
+                        type="button"
+                        data-question="lateral"
+                        aria-pressed="false"
+                      >
+                        Where do you feel the pain?
+                        <span aria-hidden="true">↗</span>
+                      </button>
+                      <button
+                        type="button"
+                        data-question="stairs"
+                        aria-pressed="false"
+                      >
+                        What makes it worse? <span aria-hidden="true">↗</span>
+                      </button>
+                      <button
+                        type="button"
+                        data-question="stiffness"
+                        aria-pressed="false"
+                      >
+                        How does it feel in the morning?
+                        <span aria-hidden="true">↗</span>
+                      </button>
+                    </div>
+                  </div>
+                  <p class="encounter-nojs">
+                    In simLAB, your questions uncover the findings you’ll use to
+                    build your reasoning map.
+                  </p>
+                </div>
+                <div class="encounter-tray">
+                  <div class="encounter-tray-head">
+                    <span class="mono">EVIDENCE CAPTURED</span
+                    ><span class="encounter-count mono">0 / 3</span>
+                  </div>
+                  <div class="encounter-evidence">
+                    <span class="encounter-empty"
+                      >Ask a question to uncover a finding.</span
+                    >
+                  </div>
+                  <a class="encounter-next" href="#flow" data-open-reasoning
+                    >Take the evidence to your map
+                    <span aria-hidden="true">→</span></a
+                  >
+                </div>
+                <p
+                  class="encounter-status visually-hidden"
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                ></p>
+              </section>
+              <p class="encounter-footnote">
+                Guided demonstration with authored responses. Full simLAB
+                supports AI patient conversations.
+              </p>
               <div class="hero-principle">
                 <span aria-hidden="true">↳</span>
                 <p>
@@ -181,7 +247,8 @@
             </div>
             <p>
               What you ask, find, and decide belongs to the same patient story.
-              Explore the workspace from first conversation to class discussion.
+              Move a hypothesis, connect a finding, and reveal a class view. Try
+              it here.
             </p>
           </div>
           <div class="tour-tabs" hidden aria-label="Explore simLAB features">
@@ -245,21 +312,192 @@
                 <li>A starting point for feedback and discussion</li>
               </ul>
             </div>
-            <a
-              href="assets/shots/reasoning-map.jpg"
-              class="tour-image enlarge-image"
-              data-enlarge
-              aria-label="Enlarge the differential diagnosis reasoning map screenshot"
-              ><img
-                src="assets/shots/reasoning-map.jpg"
-                alt="simLAB differential diagnosis reasoning map with diagnoses and connections to clinical evidence"
-                width="1280"
-                height="720"
-                loading="lazy"
-              /><span class="enlarge-label"
-                >Enlarge <span aria-hidden="true">↗</span></span
-              ></a
+            <section
+              class="reasoning-demo"
+              tabindex="-1"
+              aria-label="Interactive reasoning map preview"
+              data-reasoning-demo
             >
+              <div class="rd-topline">
+                <span class="rd-preview-label"
+                  >Interactive preview · illustrative case</span
+                >
+                <button class="rd-restart" type="button" data-rd-restart hidden>
+                  Restart map <span aria-hidden="true">↺</span>
+                </button>
+              </div>
+              <div class="rd-heading">
+                <h4>Make your thinking visible.</h4>
+                <p id="rd-instructions">
+                  Move a working hypothesis on the likelihood band. Select it
+                  and a finding, then choose Supports or Challenges.
+                </p>
+              </div>
+              <div class="rd-map">
+                <svg
+                  class="rd-threads"
+                  data-rd-threads
+                  aria-hidden="true"
+                  focusable="false"
+                ></svg>
+                <div class="rd-hypothesis-column">
+                  <p class="rd-column-label">Working hypotheses</p>
+                  <span class="rd-band-end">More likely</span>
+                  <div class="rd-band" data-rd-band>
+                    <button
+                      class="rd-hypothesis"
+                      type="button"
+                      data-rd-hypothesis="hip"
+                      aria-label="Hip osteoarthritis"
+                      aria-describedby="rd-instructions rd-keyboard"
+                      disabled
+                      style="top: 42px"
+                    >
+                      <span>Hip osteoarthritis</span
+                      ><span class="rd-grip" aria-hidden="true">⠿</span>
+                    </button>
+                    <button
+                      class="rd-hypothesis"
+                      type="button"
+                      data-rd-hypothesis="trochanteric"
+                      aria-label="Greater trochanteric pain"
+                      aria-describedby="rd-instructions rd-keyboard"
+                      disabled
+                      style="top: 106px"
+                    >
+                      <span>Trochanteric pain</span
+                      ><span class="rd-grip" aria-hidden="true">⠿</span>
+                    </button>
+                    <button
+                      class="rd-hypothesis"
+                      type="button"
+                      data-rd-hypothesis="lumbar"
+                      aria-label="Lumbar referral"
+                      aria-describedby="rd-instructions rd-keyboard"
+                      disabled
+                      style="top: 170px"
+                    >
+                      <span>Lumbar referral</span
+                      ><span class="rd-grip" aria-hidden="true">⠿</span>
+                    </button>
+                  </div>
+                  <span class="rd-band-end">Less likely</span>
+                </div>
+                <div class="rd-evidence-column">
+                  <p class="rd-column-label">Clinical evidence</p>
+                  <div class="rd-evidence-stack">
+                    <button
+                      class="rd-evidence"
+                      type="button"
+                      data-rd-evidence="stairs"
+                      disabled
+                    >
+                      <span class="rd-finding-label">Pain with stairs</span
+                      ><small data-rd-source hidden>From interview</small
+                      ><span class="rd-port" aria-hidden="true"></span>
+                    </button>
+                    <button
+                      class="rd-evidence"
+                      type="button"
+                      data-rd-evidence="lateral"
+                      disabled
+                    >
+                      <span class="rd-finding-label">Lateral hip symptoms</span
+                      ><small data-rd-source hidden>From interview</small
+                      ><span class="rd-port" aria-hidden="true"></span>
+                    </button>
+                    <button
+                      class="rd-evidence"
+                      type="button"
+                      data-rd-evidence="stiffness"
+                      disabled
+                    >
+                      <span class="rd-finding-label">Morning stiffness</span
+                      ><small data-rd-source hidden>From interview</small
+                      ><span class="rd-port" aria-hidden="true"></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="rd-controls" data-rd-controls hidden>
+                <p class="rd-selection" data-rd-selection>
+                  Choose a hypothesis to begin.
+                </p>
+                <div class="rd-control-row">
+                  <div
+                    class="rd-link-actions"
+                    aria-label="Connect selected finding"
+                  >
+                    <button
+                      class="rd-support"
+                      type="button"
+                      data-rd-link="supports"
+                      disabled
+                    >
+                      <span aria-hidden="true">＋</span> Supports
+                    </button>
+                    <button
+                      class="rd-challenge"
+                      type="button"
+                      data-rd-link="challenges"
+                      disabled
+                    >
+                      <span aria-hidden="true">−</span> Challenges
+                    </button>
+                  </div>
+                  <div
+                    class="rd-move-actions"
+                    aria-label="Move selected hypothesis"
+                  >
+                    <button
+                      type="button"
+                      data-rd-move="up"
+                      aria-label="Move selected hypothesis toward more likely"
+                      disabled
+                    >
+                      ↑ <span>More likely</span>
+                    </button>
+                    <button
+                      type="button"
+                      data-rd-move="down"
+                      aria-label="Move selected hypothesis toward less likely"
+                      disabled
+                    >
+                      ↓ <span>Less likely</span>
+                    </button>
+                  </div>
+                </div>
+                <p class="rd-keyboard" id="rd-keyboard">
+                  Drag a hypothesis or focus it and use ↑ / ↓. Tap to select and
+                  connect.
+                </p>
+                <div class="rd-connections">
+                  <p class="rd-connections-title">
+                    Your connections <span data-rd-count>0</span>
+                  </p>
+                  <p class="rd-empty" data-rd-empty>
+                    No links yet. Add a connection to explain your thinking.
+                  </p>
+                  <ul class="rd-link-list" data-rd-link-list></ul>
+                </div>
+              </div>
+              <p class="rd-fallback" data-rd-fallback>
+                This is an illustrative reasoning workspace. In simLAB, learners
+                move hypotheses and connect supporting or challenging findings.
+                Enable JavaScript to try this preview.
+              </p>
+              <p class="rd-disclaimer">
+                Starting positions are illustrative. You author every link and
+                position; this preview does not assess a diagnosis.
+              </p>
+              <p
+                class="rd-sr-only"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                data-rd-live
+              ></p>
+            </section>
           </article>
           <article class="tour-panel" id="panel-care" data-panel="care">
             <div class="tour-copy">
@@ -308,25 +546,59 @@
                 <li>Live discussion around the same patient case</li>
               </ul>
             </div>
-            <a
-              href="assets/shots/live-class.jpg"
-              class="tour-image enlarge-image"
-              data-enlarge
-              aria-label="Enlarge the simLAB live class screenshot"
-              ><img
-                src="assets/shots/live-class.jpg"
-                alt="simLAB shared class screen with anonymous interview-question patterns"
-                width="1265"
-                height="897"
-                loading="lazy"
-              /><span class="enlarge-label"
-                >Enlarge <span aria-hidden="true">↗</span></span
-              ></a
-            >
+            <div class="class-preview">
+              <div class="class-preview-head">
+                <span>simLAB / shared class view</span
+                ><span class="mono">SAMPLE DATA</span>
+              </div>
+              <div class="class-stage">
+                <div class="class-cover" hidden>
+                  <span aria-hidden="true">◌</span>
+                  <h4>Different questions.<br />One patient story.</h4>
+                  <p>
+                    Faculty choose when to reveal the class’s thinking. Try the
+                    shared view.
+                  </p>
+                </div>
+                <div class="class-patterns" id="sample-class-patterns">
+                  <span class="pattern-medium">Where is the pain?</span
+                  ><span>Sleep</span
+                  ><span class="pattern-large">Daily activities</span
+                  ><span>Morning stiffness</span
+                  ><span class="pattern-medium">Patient goals</span
+                  ><span>What makes it better?</span
+                  ><span class="pattern-large">Symptoms</span
+                  ><span>Previous episodes</span
+                  ><span class="pattern-medium">Stairs</span
+                  ><span>Walking</span>
+                </div>
+              </div>
+              <div class="class-preview-footer">
+                <p>
+                  Illustrative question patterns. A starting point for a
+                  faculty-led discussion.
+                </p>
+                <button
+                  class="class-reveal"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="sample-class-patterns"
+                  hidden
+                >
+                  Reveal class patterns
+                </button>
+              </div>
+              <p
+                class="class-status visually-hidden"
+                role="status"
+                aria-live="polite"
+              ></p>
+            </div>
           </article>
           <p class="image-note">
-            Screens from simLAB's local demonstration environment. Available
-            tools and activities vary by case.
+            Interactive previews use illustrative content; screenshots show
+            simLAB’s local demonstration environment. Available tools and
+            activities vary by case.
           </p>
         </div>
       </section>
@@ -401,21 +673,151 @@
             </p>
           </div>
           <div class="labs-layout">
-            <a
-              href="assets/shots/movement-lab.jpg"
-              class="lab-image enlarge-image"
-              data-enlarge
-              aria-label="Enlarge the simLAB Movement lab screenshot"
-              ><img
-                src="assets/shots/movement-lab.jpg"
-                alt="simLAB Movement lab with an interactive 3D body and joint teaching controls"
-                width="1280"
-                height="720"
-                loading="lazy"
-              /><span class="enlarge-label"
-                >Inside Movement <span aria-hidden="true">↗</span></span
-              ></a
+            <section
+              class="joint-preview"
+              data-joint-preview
+              data-joint-state="idle"
+              data-joint-model="demos/knee.glb"
+              aria-labelledby="joint-preview-title"
             >
+              <header class="joint-preview__heading">
+                <span class="joint-preview__eyebrow"
+                  >From the simLAB Movement Lab</span
+                >
+                <h3 id="joint-preview-title">
+                  See the movement. Follow the joint.
+                </h3>
+                <p>
+                  Change the knee angle and explore the anatomy from every side.
+                </p>
+              </header>
+              <div class="joint-preview__stage" data-joint-viewport>
+                <div class="joint-preview__placeholder" aria-hidden="true">
+                  <span>3D</span><span>Right knee · interactive anatomy</span>
+                </div>
+                <button
+                  class="joint-preview__load"
+                  type="button"
+                  data-joint-load
+                  data-load-joint
+                  hidden
+                >
+                  Load 3D model <span aria-hidden="true">↗</span>
+                </button>
+              </div>
+              <p
+                class="joint-preview__status joint-load-status"
+                data-joint-status
+                role="status"
+              >
+                Load this model to explore a reference pose from simLAB.
+              </p>
+              <div class="joint-preview__controls">
+                <label for="joint-preview-angle"
+                  >Knee flexion
+                  <output
+                    id="joint-preview-angle-output"
+                    for="joint-preview-angle"
+                    data-joint-output
+                    >45°</output
+                  ></label
+                >
+                <input
+                  id="joint-preview-angle"
+                  type="range"
+                  min="0"
+                  max="90"
+                  step="1"
+                  value="45"
+                  data-joint-angle
+                  disabled
+                />
+                <div
+                  class="joint-preview__camera"
+                  role="group"
+                  aria-label="Knee view controls"
+                >
+                  <button
+                    type="button"
+                    data-joint-camera="left"
+                    aria-label="Rotate view left"
+                    disabled
+                  >
+                    ←
+                  </button>
+                  <button
+                    type="button"
+                    data-joint-camera="right"
+                    aria-label="Rotate view right"
+                    disabled
+                  >
+                    →
+                  </button>
+                  <button
+                    type="button"
+                    data-joint-camera="up"
+                    aria-label="Rotate view up"
+                    disabled
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    data-joint-camera="down"
+                    aria-label="Rotate view down"
+                    disabled
+                  >
+                    ↓
+                  </button>
+                  <button
+                    type="button"
+                    data-joint-camera="zoom-in"
+                    aria-label="Zoom in"
+                    disabled
+                  >
+                    +
+                  </button>
+                  <button
+                    type="button"
+                    data-joint-camera="zoom-out"
+                    aria-label="Zoom out"
+                    disabled
+                  >
+                    −
+                  </button>
+                  <button type="button" data-joint-camera="reset" disabled>
+                    Reset view
+                  </button>
+                </div>
+              </div>
+              <p class="joint-preview__scope">
+                Illustrative anatomy and reference movement for education.
+              </p>
+              <p class="joint-preview__credit">
+                Anatomy:
+                <a
+                  href="https://anatomytool.org/open3dmodel-learn"
+                  target="_blank"
+                  rel="noopener"
+                  >AnatomyTool Open 3D</a
+                >, LUMC and collaborators ·
+                <a
+                  href="https://creativecommons.org/licenses/by-sa/4.0/"
+                  target="_blank"
+                  rel="noopener"
+                  >CC BY-SA 4.0</a
+                >. Extracted and articulated for teaching.
+                <a href="demos/knee-attribution.md"
+                  >Model credits and modifications</a
+                >.
+              </p>
+              <a
+                class="joint-preview__link"
+                href="https://lab.devpt.app/?movements&joints=knee:flexion"
+                >Explore the Movement Lab in simLAB
+                <span aria-hidden="true">→</span></a
+              >
+            </section>
             <div class="lab-list">
               <a
                 href="https://lab.devpt.app/?movements"
@@ -777,5 +1179,7 @@
       <p></p>
     </dialog>
     <script src="app.js"></script>
+    <script src="reasoning-demo.js"></script>
+    <script src="experience.js"></script>
   </body>
 </html>

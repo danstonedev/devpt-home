@@ -1,0 +1,201 @@
+.joint-preview {
+  color: var(--ink, #142b28);
+  border: 1px solid var(--line, #d8e4de);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--panel, #f5f8f3);
+}
+.joint-preview__heading {
+  padding: 28px 28px 20px;
+}
+.joint-preview__eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--green-d, #006b46);
+}
+.joint-preview__heading h3 {
+  margin: 12px 0 10px;
+  font-size: clamp(23px, 2.3vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+.joint-preview__heading p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--muted, #52675e);
+}
+.joint-preview__stage {
+  position: relative;
+  width: 100%;
+  min-height: 280px;
+  height: clamp(310px, 38vw, 430px);
+  background: #142b28;
+  overflow: hidden;
+}
+.joint-preview__stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+.joint-preview__stage canvas:focus-visible {
+  outline: 3px solid #d5f495;
+  outline-offset: -6px;
+}
+.joint-preview__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 15px;
+  color: #afc2b7;
+  background: radial-gradient(ellipse at 50% 45%, #244c42, #142b28 70%);
+  pointer-events: none;
+}
+.joint-preview__placeholder > span:first-child {
+  font-size: 78px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.08em;
+  color: #90b5a2;
+}
+.joint-preview[data-joint-state="ready"] .joint-preview__placeholder,
+.joint-preview[data-joint-state="loading"]
+  canvas
+  + .joint-preview__placeholder {
+  display: none;
+}
+.joint-preview__load {
+  position: absolute;
+  z-index: 2;
+  top: 66%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  min-height: 48px;
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 8px;
+  background: #d5f495;
+  color: #142b28;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.joint-preview__load[hidden] {
+  display: none;
+}
+.joint-preview__load:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.joint-preview__status {
+  margin: 0;
+  padding: 14px 28px 0;
+  min-height: 40px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted, #52675e);
+}
+.joint-preview__controls {
+  padding: 18px 28px;
+}
+.joint-preview__controls > label {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.joint-preview__controls output {
+  font-variant-numeric: tabular-nums;
+  color: var(--green-d, #006b46);
+}
+.joint-preview__controls input[type="range"] {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  accent-color: var(--green-d, #006b46);
+  cursor: pointer;
+}
+.joint-preview__camera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+.joint-preview__camera button {
+  min-width: 40px;
+  min-height: 40px;
+  padding: 6px 10px;
+  border: 1px solid #cad7ce;
+  border-radius: 6px;
+  background: #fff;
+  color: #142b28;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.joint-preview__camera button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.joint-preview button:focus-visible,
+.joint-preview input:focus-visible,
+.joint-preview a:focus-visible {
+  outline: 3px solid #006b46;
+  outline-offset: 3px;
+}
+.joint-preview__scope,
+.joint-preview__credit {
+  margin: 0;
+  padding: 0 28px 14px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted, #52675e);
+}
+.joint-preview__credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.joint-preview__link {
+  display: block;
+  padding: 16px 28px;
+  border-top: 1px solid #d8e4de;
+  color: #006b46;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+@media (max-width: 600px) {
+  .joint-preview__heading {
+    padding: 22px 20px 18px;
+  }
+  .joint-preview__stage {
+    height: 330px;
+  }
+  .joint-preview__controls {
+    padding: 16px 20px;
+  }
+  .joint-preview__status {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .joint-preview__scope,
+  .joint-preview__credit,
+  .joint-preview__link {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .joint-preview__camera button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}

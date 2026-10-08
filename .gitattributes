@@ -1,0 +1,3 @@
+# Preserve the exact upstream Git blobs used by the native teaching sampler.
+demos/native-joints/*.ts -text
+demos/knee.meta.json -text

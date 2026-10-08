@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "joint": "knee",
+  "side": "right",
+  "units": "metres",
+  "sourceSha256": "5a889d5cae00421885aaf1841e72364e5f215f0c29fb0116ca5e9844ec4c5fe7",
+  "source": "AnatomyTool Open 3D Anatomical Model (LUMC et al.)",
+  "sourceUrl": "https://anatomytool.org/open3dmodel-learn",
+  "license": "CC BY-SA 4.0",
+  "centerSourceYup": [
+    -0.07489681243896484,
+    0.457912802696228,
+    -0.0316307358443737
+  ],
+  "hingeAxisSourceYup": [
+    0.9979720115661621,
+    -0.054858576506376266,
+    -0.032286886125802994
+  ],
+  "sourceToJointQuaternion": [
+    0.0,
+    -0.016151633113622665,
+    0.027443205937743187,
+    0.999492883682251
+  ],
+  "centerMethod": "Midpoint of posterior condylar cartilage sphere fits; fitted hinge axis aligned to +X",
+  "condyleFits": [
+    {
+      "condyle": "lateral",
+      "centerSourceYup": [
+        -0.0986117787142014,
+        0.4592164129404831,
+        -0.030863496536310625
+      ],
+      "radiusM": 0.025494270027321242,
+      "rmsResidualMm": 1.6592944724734853,
+      "vertices": 1335
+    },
+    {
+      "condyle": "medial",
+      "centerSourceYup": [
+        -0.05118184304070244,
+        0.4566092015940365,
+        -0.032397972718505065
+      ],
+      "radiusM": 0.025942816898510655,
+      "rmsResidualMm": 1.347873934493637,
+      "vertices": 1436
+    }
+  ],
+  "patellaCenter": [
+    -0.009991675149649382,
+    -0.014097400708124042,
+    0.036115954630076885
+  ],
+  "bounds": {
+    "Femur": {
+      "min": [
+        -0.09422850608825684,
+        -0.024295784533023834,
+        -0.0265695471316576
+      ],
+      "max": [
+        0.04235680401325226,
+        0.4249727725982666,
+        0.04935668036341667
+      ],
+      "vertices": 6827,
+      "segment": "femur"
+    },
+    "Tibia": {
+      "min": [
+        -0.037226997315883636,
+        -0.38086557388305664,
+        -0.028322288766503334
+      ],
+      "max": [
+        0.04873580113053322,
+        -0.023064106702804565,
+        0.03438989445567131
+      ],
+      "vertices": 3747,
+      "segment": "tibia"
+    },
+    "Fibula": {
+      "min": [
+        -0.045897405594587326,
+        -0.40182891488075256,
+        -0.028259150683879852
+      ],
+      "max": [
+        0.0069594355300068855,
+        -0.042690567672252655,
+        0.0034332782961428165
+      ],
+      "vertices": 1700,
+      "segment": "tibia"
+    },
+    "Patella": {
+      "min": [
+        -0.031528718769550323,
+        -0.03424621373414993,
+        0.02613922767341137
+      ],
+      "max": [
+        0.01154536847025156,
+        0.00605141231790185,
+        0.0460926815867424
+      ],
+      "vertices": 597,
+      "segment": "patella"
+    },
+    "Capsule": {
+      "min": [
+        -0.04452521353960037,
+        -0.07055085897445679,
+        -0.030325360596179962
+      ],
+      "max": [
+        0.04540535807609558,
+        0.03412588685750961,
+        0.04082890972495079
+      ],
+      "vertices": 6442,
+      "segment": null
+    },
+    "FemoralCartilage": {
+      "min": [
+        -0.034522149711847305,
+        -0.0247228741645813,
+        -0.026960307732224464
+      ],
+      "max": [
+        0.03845915198326111,
+        0.015392945148050785,
+        0.03455881029367447
+      ],
+      "vertices": 4694,
+      "segment": "femur"
+    },
+    "TibialCartilage": {
+      "min": [
+        -0.033709701150655746,
+        -0.03170056641101837,
+        -0.026559220626950264
+      ],
+      "max": [
+        0.037473421543836594,
+        -0.02302791178226471,
+        0.019349629059433937
+      ],
+      "vertices": 1472,
+      "segment": "tibia"
+    },
+    "PatellarCartilage": {
+      "min": [
+        -0.030847914516925812,
+        -0.032700881361961365,
+        0.025581851601600647
+      ],
+      "max": [
+        0.011171511374413967,
+        0.005487815011292696,
+        0.03944520652294159
+      ],
+      "vertices": 400,
+      "segment": "patella"
+    },
+    "MedialMeniscus": {
+      "min": [
+        0.009670845232903957,
+        -0.029575519263744354,
+        -0.025396790355443954
+      ],
+      "max": [
+        0.03833970054984093,
+        -0.02068757638335228,
+        0.019769059494137764
+      ],
+      "vertices": 547,
+      "segment": "tibia"
+    },
+    "LateralMeniscus": {
+      "min": [
+        -0.033702388405799866,
+        -0.031149398535490036,
+        -0.01953043043613434
+      ],
+      "max": [
+        -0.000493279192596674,
+        -0.02088785171508789,
+        0.019843343645334244
+      ],
+      "vertices": 581,
+      "segment": "tibia"
+    }
+  },
+  "structures": {
+    "Femur.r": {
+      "mesh": "Femur",
+      "segment": "femur"
+    },
+    "Tibia.r": {
+      "mesh": "Tibia",
+      "segment": "tibia"
+    },
+    "Fibula.r": {
+      "mesh": "Fibula",
+      "segment": "tibia"
+    },
+    "Patella.r": {
+      "mesh": "Patella",
+      "segment": "patella"
+    },
+    "Articular capsule of knee joint.r": {
+      "mesh": "Capsule",
+      "segment": null
+    },
+    "Art cart of femur distal end.r": {
+      "mesh": "FemoralCartilage",
+      "segment": "femur"
+    },
+    "Art cart of tibia proximal end.r": {
+      "mesh": "TibialCartilage",
+      "segment": "tibia"
+    },
+    "Art cart of patella.r": {
+      "mesh": "PatellarCartilage",
+      "segment": "patella"
+    },
+    "Medial meniscus.r": {
+      "mesh": "MedialMeniscus",
+      "segment": "tibia"
+    },
+    "Lateral meniscus.r": {
+      "mesh": "LateralMeniscus",
+      "segment": "tibia"
+    }
+  },
+  "limitations": [
+    "Single atlas anatomy",
+    "Derived idealized hinge, not a measured instantaneous axis",
+    "Authored patellar tracking",
+    "Visual capsule, no tissue resistance or contact solver"
+  ],
+  "blenderVersion": "4.4.0"
+}
