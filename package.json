@@ -6,6 +6,8 @@
   "scripts": {
     "prestart": "node scripts/ensure-fresh-main.mjs",
     "start": "npx http-server -c-1 -p 8099",
+    "prepreview": "node scripts/ensure-fresh-main.mjs --preview",
+    "preview": "http-server -c-1 -p 8109 -a 127.0.0.1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
