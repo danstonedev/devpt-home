@@ -166,7 +166,7 @@
         if (current === "movement") {
           var selected = gallery.contentDocument
             .querySelector(
-              '[role="group"][aria-label="Show"] button[aria-pressed="true"] span',
+            '[role="group"][aria-label="Show"] button[aria-pressed="true"] > span:last-child',
             )
             ?.textContent.trim();
           if (selected === "Joints") {
