@@ -1,0 +1,1 @@
+const e="male",t="left",n=[{id:"lab-medial-knee-left",family:"deep",intensity:5,note:"Movement lab: inner knee (joint line), left side.",strokes:[{mode:"paint",radius:.05,at:17672256e5,points:[[.79314,.25377]]}]}],a={bodyVariant:e,view:t,marks:n};export{e as bodyVariant,a as default,n as marks,t as view};

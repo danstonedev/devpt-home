@@ -1,0 +1,1 @@
+const t="male",i="front",o=[{id:"lab-groin-right",family:"deep",intensity:5,note:"Movement lab: front of the hip (groin), right side.",strokes:[{mode:"paint",radius:.07,at:17672256e5,points:[[.1852,.45785],[.18939,.45783],[.19362,.45798],[.19778,.45789]]}]}],n={bodyVariant:t,view:i,marks:o};export{t as bodyVariant,n as default,o as marks,i as view};

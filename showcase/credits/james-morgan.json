@@ -1,0 +1,74 @@
+{
+  "patientId": "patient-james-morgan",
+  "scenarioId": "hip-groin-64",
+  "caseIdentity": {
+    "name": "James Morgan",
+    "age": 64,
+    "pronouns": "he/him",
+    "occupation": "Retired plumber"
+  },
+  "appearance": {
+    "skinTone": "Warm light-medium; art direction, not authored case fact",
+    "hair": "Receding short salt-and-pepper hair, visible thinning crown",
+    "garments": [
+      "Muted blue cotton crew-neck short-sleeve shirt",
+      "Charcoal above-knee exercise shorts"
+    ],
+    "feet": "Bare for examination"
+  },
+  "attribution": {
+    "body": "Derivative presentation of the existing project Character Creator / CC_Base_Body runtime mannequin. Source body geometry and rig are retained exactly; this script does not claim original authorship of them.",
+    "newOriginalWork": "Procedural skin textures and age surface details, cotton/twill textures, fitted rigged garment shells and sewn rims, short hair strands, thinning hair surface and eyebrows.",
+    "externalDownloads": "None"
+  },
+  "authoring": {
+    "blenderVersion": "4.4.0",
+    "scriptSha256": "42bd714153ef3415cc9932e1584487eb585fe49809622c525f9016a01733951a",
+    "decodedAuthoringSource": "source-import.glb",
+    "preview": "Neutral A-pose standing presentation; temporary eyes only in blend/render"
+  },
+  "source": {
+    "file": "painmap3D_male.runtime.glb",
+    "sha256": "a9d69ded7a07d610cd3a4ff71e98028dfbf68b3b18c5cb7a546e0c1e70a1e92a",
+    "bytes": 712200,
+    "binaryChunkSha256": "79a514400210b880509f93bd9faf572b2a5e1db65696bc6fc9ddbe12c6c8d9f1"
+  },
+  "preservation": {
+    "originalCompressedBinaryExactPrefix": true,
+    "bodyAccessorsExact": true,
+    "bodyPrimitiveIndicesAndAttributesExact": true,
+    "skinWeightsExact": true,
+    "inverseBindMatricesExact": true,
+    "originalSkeletonNodesAndTransformsExact": true,
+    "baseBodyRemainsFirstSkinnedMesh": true,
+    "originalSkinJointCount": 101,
+    "originalNodeCount": 103,
+    "originalImportedVertexCount": 15602,
+    "originalMeshCount": 1,
+    "newAccessoryMeshes": [
+      "James_Shirt",
+      "James_Shirt_Sewn_Rims",
+      "James_Exercise_Shorts",
+      "James_Exercise_Shorts_Sewn_Rims",
+      "James_Crew_Neck_Collar",
+      "James_Receding_Hair_Base",
+      "James_Salt_Pepper_Short_Hair",
+      "James_Grey_Eyebrows"
+    ],
+    "originalSkinMaterialsReplacedByPBR": true
+  },
+  "delivery": {
+    "glbSha256": "d0347ab1f842cd587d5fb7a442ab1a386a94d49cc221ca4261abae9b4f356cee",
+    "bytes": 12313420,
+    "embeddedImages": 13,
+    "textureCount": 13,
+    "skinCount": 1,
+    "nodeCount": 111,
+    "meshCount": 9
+  },
+  "limitations": [
+    "Procedural authored surface appearance; not a photographic scan.",
+    "Clinical geometry, identity facts and movements are unchanged.",
+    "Eyes are supplied by the application gaze layer and are excluded from delivered GLB."
+  ]
+}

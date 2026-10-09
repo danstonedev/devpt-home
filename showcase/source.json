@@ -1,0 +1,6 @@
+{
+  "repository": "danstonedev/simlab",
+  "commit": "61a664ca5706c19cddb8842fbfec1f0118121917",
+  "submodules": "13f9095bc08826dc5298382714eb4ac59704885a apps/painmap (remotes/origin/claude/pose-engine-streamline-optimize-n7f46l-1-g13f9095)\n 0a5f11ffb0844c9eea4e4a78aa3be1186b01e4be apps/painmap/pose-engine (0a5f11f)\n 2252d655ad12cbc22ca9aec1ca5df3e1c06787ad apps/simvitals (remotes/origin/fix/native-scene-temperature-label-1-g2252d65)\n f66070c964ce9560ec21aa18101973f0f14f71d0 apps/simvitals/pose-engine (f66070c)\n 6280fba2e37d9ee4e682b60e61d8cefb894e92a0 apps/simvitals/scenario-engine (6280fba)\n 0a5f11ffb0844c9eea4e4a78aa3be1186b01e4be pose-engine (v0.1.0-473-g0a5f11f)\n ce212a093f40dbaa9c840299ace5656edafa09fa scenario-engine (remotes/origin/claude/laughing-hopper-xr01yc)",
+  "components": "Native Svelte components and renderer modules; homepage wrapper only."
+}

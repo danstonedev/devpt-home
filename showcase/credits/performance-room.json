@@ -1,0 +1,102 @@
+{
+  "asset": "performance-gym.glb",
+  "editable_source": "performance-gym.blend",
+  "generator": "scripts/blender/build-rehab-environments.py",
+  "generator_sha256": "65842a4295ff85fc8c4d024eae6afa5ef0449c9435b8cc64de74c773beeb642a",
+  "shared_authoring_sha256": "53824f71318e07b93e002defa17d1bfd6d94b31c9f07ee5876e629890b77c5c3",
+  "license": "Original project-authored geometry and generated textures; no third-party assets",
+  "blender_version": "4.4.0",
+  "units": "meters",
+  "gltf_up_axis": "Y",
+  "front": "+Z",
+  "floor_height": 0,
+  "interior_dimensions_m": {
+    "width": 14,
+    "depth": 12,
+    "ceiling_height": 4.2
+  },
+  "gltf_bounds_m": {
+    "min": [
+      -7.100000381469727,
+      -0.07000000029802322,
+      -6.100000381469727
+    ],
+    "max": [
+      7.100000381469727,
+      4.269999980926514,
+      6.0
+    ]
+  },
+  "mesh_count": 25,
+  "editable_source_mesh_count": 381,
+  "runtime_batching": "Original colors baked to normalized 8-bit vertex colors for shared finish classes (roughness/metallic rounded to 0.1); textured and emissive materials retained. Static geometry batched by finish and cullable parent. Runtime-only 0.60 detail reduction and recomputed normals on batches above 200 triangles; full separately named geometry and exact materials retained in editable master.",
+  "triangle_count": 50240,
+  "editable_source_triangle_count": 82496,
+  "texture_count": 4,
+  "texture_images": [
+    {
+      "name": "oak_grain_512",
+      "width": 512,
+      "height": 512,
+      "source": "original deterministic generated pixels; embedded in GLB"
+    },
+    {
+      "name": "paint_microtexture_256",
+      "width": 256,
+      "height": 256,
+      "source": "original deterministic generated pixels; embedded in GLB"
+    },
+    {
+      "name": "rubber_fleck_512",
+      "width": 512,
+      "height": 512,
+      "source": "original deterministic generated pixels; embedded in GLB"
+    },
+    {
+      "name": "turf_weave_256",
+      "width": 256,
+      "height": 256,
+      "source": "original deterministic generated pixels; embedded in GLB"
+    }
+  ],
+  "cullable_groups": [
+    "wall_back",
+    "wall_left",
+    "wall_right",
+    "ceiling"
+  ],
+  "art_assumptions": [
+    "Original generic rehabilitation interior informed by the linked facility and design references.",
+    "Central X/Z +/-2m footprint remains free for the existing patient and live support furniture.",
+    "Equipment is presentation geometry; readings, loads, lines and room choice do not change case facts.",
+    "Full walls and ceiling retained in editable master and GLB; orbit view opens enclosing groups.",
+    "Original generated textures and geometry; no facility photos or third-party models copied."
+  ],
+  "design_references": [
+    {
+      "title": "VA Physical Medicine and Rehabilitation Services Design Guide",
+      "url": "https://cfm.va.gov/cfm/til/dGuide/dgPMRS.pdf",
+      "application": "Adjustable treatment support, hand hygiene, organized supplies and therapy work zones."
+    },
+    {
+      "title": "Shirley Ryan AbilityLab patient rooms",
+      "url": "https://www.sralab.org/experience/patient-rooms",
+      "application": "Privacy, personal storage, family seating, task lighting and mobility-oriented bedside space."
+    },
+    {
+      "title": "HSS Rehab and Performance facility features",
+      "url": "https://www.hss.edu/locations/ny/rehab/pediatrics/rehab-and-performance",
+      "application": "Distinct turf, strength, cardio, balance and movement-assessment zones."
+    },
+    {
+      "title": "HSS Sports Medicine Institute West Side",
+      "url": "https://news.hss.edu/hss-sports-medicine-institute-expands-to-nyc-west-side/",
+      "application": "Adult sports-performance facility with turf, motion capture and force plates."
+    }
+  ],
+  "verification": {
+    "review_render": "performance-gym-preview.png",
+    "embedded_textures": true,
+    "native_scale_no_runtime_resizing": true
+  }
+}
