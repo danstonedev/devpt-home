@@ -4,11 +4,11 @@
 
 Lead with "Clinical reasoning, made visible." Explain the current PT/PTA learning environment through the patient encounter, differential diagnosis map, care planning, live classes and focused learning labs. Give program faculty a clear demo path and make sign-in requirements visible before visitors open simLAB.
 
-Replace the expired September pilot estimate and old phase-by-phase screenshots. Keep DevPT's dark brand chrome, green accent and light editorial surfaces. Use deliberate feature selection and full-screen image inspection instead of automatic slides/video. Preserve a usable mobile menu and no-JavaScript fallback.
+Replace the expired September pilot estimate and old phase-by-phase presentation. Keep DevPT's dark brand chrome, green accent and light editorial surfaces. The current gallery embeds the actual native workspaces rather than simplified replicas of their controls. Preserve the sterile Body teaching view as the default, a usable mobile menu and no-JavaScript fallback.
 
 ## Verified product scope
 
-Reviewed current simLAB source at b69c3a6fc463f73a88e324688218484f4c0cf368 (October 8, 2026), particularly:
+Current native showcase source is pinned to **61a664ca5706c19cddb8842fbfec1f0118121917** (`61a664c`). The original product/screenshot audit used b69c3a6fc463f73a88e324688218484f4c0cf368 (October 8, 2026), particularly:
 
 - apps/mission-shell/src/lib/ddx/PatientInterview.svelte and ReasoningMap.svelte
 - DDx examination, care plan, follow-up and clinical instructor components
@@ -21,7 +21,7 @@ Case/library counts are intentionally omitted from marketing to avoid drift. Fac
 
 ## Screenshot provenance
 
-All six new JPEG images are direct browser screenshots of the current source running locally at the same product revision. The homepage identifies them as demonstration screens; local preview/tool labels are retained where present. No image was generated, composited or presented as a production student record.
+The six JPEG images below are historical supporting captures from b69c3a6, not the provenance of the new native build. They are direct browser screenshots of local demonstration source. The homepage retains movement-lab.jpg as a no-JavaScript fallback and faculty-workspace.jpg as supporting faculty imagery. No image was generated, composited or presented as a production student record.
 
 - clinical-workspace.jpg: James Morgan native hip case, Interview. One typed question using offline scripted practice.
 - reasoning-map.jpg: same fictional case. Two illustrative hypotheses and two findings from the scripted interview connected through normal UI controls. The expanded map also includes the illustrative goal from care planning. It illustrates interaction, not an instructor-approved answer.
@@ -33,19 +33,14 @@ Capture commands use pnpm 9.15.0, frozen dependencies and pinned submodules. Ord
 
 ## Verification
 
-Run `node --check app.js`, `node scripts/check-apps.mjs --no-ping`, and `git diff --check`. Inspect the homepage at desktop, tablet and phone widths, each tour panel, tab keyboard navigation, image dialog open/close/focus restoration, mobile navigation, footer catalog, all local assets and auxiliary pages. Use `npm run preview` so the draft must contain latest origin/main.
+Run `node --check app.js`, `node --check native-showcase.js`, `node scripts/check-apps.mjs --no-ping`, and `git diff --check`. After rebuilding, inspect the served homepage and native workspaces at desktop, tablet and phone widths. Check iframe/full-view navigation, scene loading, native picker/playback/camera keyboard access, mobile scrolling, image dialog focus, footer catalog, local assets and auxiliary pages. Use `npm run preview` so the draft must contain latest origin/main.
 
-## Interactive homepage extension
+## Native showcase replaces the earlier previews
 
-The public page now demonstrates interaction directly:
+The earlier Jamie Reed buttons, two-column DOM/SVG reasoning replica, fixed class-word reveal and custom knee-angle viewer are superseded. `experience.*`, `reasoning-demo.*` and `demos/` are not loaded by the current homepage. The native showcase uses the actual Svelte components, clinical case content and renderer modules from `61a664c`, with homepage framing and local demonstration state.
 
-- An authored, fictional Jamie Reed interview reveals three findings. Questions can be repeated without duplicating evidence. The next link selects and focuses the reasoning panel.
-- A native DOM/SVG reasoning map lets visitors reposition hypotheses, connect evidence as supporting or challenging, change/remove links and restart. Keyboard arrows and move buttons accompany dragging. Every link is authored by the visitor; starting positions are illustrative and have no diagnostic score. Findings are marked as samples until elicited in the interview.
-- A faculty reveal control toggles an explicitly labeled sample class question view. These patterns are authored examples, not observed learner results.
-- A lazy-loaded 3D knee viewer uses the unmodified simLAB anatomy asset and native joint sampler from the same revision audited above. Angle, orbit, zoom and reset controls render actual segment transforms. No automatic animation loop runs. Attribution and source hashes are in `demos/`.
+The default gallery starts with the sterile Movement lab teaching baseline. Visitors can also explore native patient/environment presentation, PatientInterview, ReasoningMap, JointLab, EyeLab, NeuroLab, AquaticLab and LiveVitalsLab. Component details, pinned submodules, service boundaries and reproducible build steps are documented in [Native showcase](native-showcase.md).
 
-The patient and class previews are authored demonstrations of the product workflow, not full application sessions. They use local memory and do not require accounts or AI provider calls. Existing analytics configuration is preserved.
+The public interview uses the actual James Morgan case and native authored replies, with **Scripted case practice** displayed. Native selected-text evidence capture and reasoning controls share one in-memory Session. Switching views, another gallery area or an offscreen pause retains that case state; changing the patient or explicitly resetting starts a new sample. No AI API/account capability or persistent learner record is supplied by the showcase host. Browser Talk/dictation can use the browser speech service only after explicit activation; native notices describe that path. Existing homepage analytics remains configured.
 
-Design references informed the interaction patterns, with original page implementation and no copied third-party website assets: [Brilliant](https://brilliant.org/) for guided choices, [BioDigital](https://www.biodigital.com/p/customer-showcase) for contextual embedded anatomy, and [PhET](https://phet.colorado.edu/en/inclusive-design/features) for immediate feedback and alternative inputs.
-
-Additional checks cover evidence continuity, both link effects, link removal/restart, pointer and keyboard movement, hypothesis rank announcements, narrow viewport overflow, class reveal/hide, model load and 0–90 degree control bounds. The bundle is committed for Azure's static deployment; regenerate it with `npm run build:demos` after source edits.
+Additional checks cover typed authored responses, native evidence capture/flags, diagnosis picker and connection controls, transcript source navigation, reset, session retention, scene cleanup and native model credits. The checked-in `showcase/` build is deployed by Azure without a build step. Regenerate it with `npm run build:native`, then review and commit its output with wrapper changes. `build:demos` remains only for the older asset adapter.

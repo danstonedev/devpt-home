@@ -9,14 +9,21 @@
     "prepreview": "node scripts/ensure-fresh-main.mjs --preview",
     "preview": "http-server -c-1 -p 8109 -a 127.0.0.1",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:demos": "node scripts/build-demos.mjs"
+    "build:demos": "node scripts/build-demos.mjs",
+    "build:native": "node --experimental-strip-types scripts/build-native-showcase.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "5.1.1",
     "esbuild": "0.25.12",
     "http-server": "^14.1.1",
-    "three": "0.183.2"
+    "lz-string": "1.5.0",
+    "svelte": "5.56.4",
+    "three": "0.183.2",
+    "three-mesh-bvh": "0.9.10",
+    "vite": "6.4.3",
+    "zod": "3.25.76"
   }
 }

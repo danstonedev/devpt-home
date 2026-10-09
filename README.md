@@ -4,19 +4,20 @@ The master home page and hub for **DevPT**: a growing platform of simulation and
 assessment tools for physical therapy education, built at the University of North
 Dakota.
 
-It's a single, self-contained static site (no build step). The app catalog is
+It's a static deployment with a locally compiled native simLAB showcase. The app catalog is
 data-driven: **[`apps.json`](apps.json) is the single source of truth**, and
 `app.js` renders the footer tool list from it.
 
 ## Stack
 
-- `index.html` — homepage content, product tour, student/faculty sections and lab links
+- `index.html` — homepage content, embedded native showcase, student/faculty sections and lab links
 - `apps.json` — **canonical app registry** (id, name, live URL, backing repo, status, placement)
 - `styles.css` — light editorial theme, UND-green accent
-- `app.js` — accessible product tabs, screenshot dialog, mobile menu and footer catalog
-- `experience.js` / `experience.css` — guided interview and sample class reveal
-- `reasoning-demo.js` / `reasoning-demo.css` — draggable, keyboard-accessible evidence map
-- `demos/` — lazy-loaded native simLAB knee model, sampler, viewer and attribution
+- `app.js` — screenshot dialog, mobile menu and footer catalog
+- `native-showcase.js` / `native-showcase.css` — homepage gallery navigation and iframe visibility coordination
+- `showcase-src/` — homepage framing around imported, unmodified simLAB components
+- `scripts/build-native-showcase.mjs` — pinned-source Vite build and native asset/credit packaging
+- `showcase/` — checked-in generated showcase, models, credits and `source.json` provenance
 - `assets/` — logo, demo videos/posters, screenshots
 - `CV - Dan Stone.pdf` — linked from the About section
 
@@ -24,30 +25,55 @@ Fonts (Hanken Grotesk + JetBrains Mono) load from Google Fonts; product imagery 
 
 ## Homepage product story
 
-The homepage presents the current simLAB learning environment: native patient encounters and DDx reasoning maps,
-care planning, live/scheduled classes, faculty review, and integrated learning labs. `index.html` owns the product
-tour copy; `app.js` adds keyboard-accessible tabs and a screenshot dialog. Visitors can ask authored interview
-questions, carry the findings into an interactive reasoning map, create supporting/challenging links, reveal an
-illustrative class view, and manipulate the actual Movement Lab knee model. The previews use local browser state
-and do not call the AI or account services. Sample findings remain available for visitors who go directly to the map.
+The homepage embeds the actual simLAB patient presentation, interview, reasoning map and learning-lab components,
+compiled from simLAB **61a664ca5706c19cddb8842fbfec1f0118121917** (`61a664c`). Native labels, controls, teaching notes,
+models and playback come from that source. The homepage owns the surrounding navigation and demonstration state;
+it does not recreate the product UI. See [the refresh record](docs/homepage-refresh.md) for component provenance.
 
-Without JavaScript, all four tour panels, explanatory fallbacks and static footer links remain available. Screenshots
-are real captures of synthetic localhost demonstrations, not production student records. Capture and interaction
-provenance are recorded in `docs/homepage-refresh.md`.
+The default gallery opens the **sterile Movement lab teaching view**. Its clean Body stage remains the baseline;
+native patient identities and Outpatient PT, Inpatient room and Performance gym are separate presentation choices.
+The gallery also exposes the native Joint, Eye, Neuro, Aquatic Therapy and Live Vitals workspaces.
 
-The 3D viewer and 1.42 MB model load when the visitor presses **Load 3D model**. Rendering runs after controls
-change and pauses offscreen or when the document is hidden. The knee motion sampler and anatomy asset are copied
-unchanged from simLAB; `demos/UPSTREAM.md` records their origin and scope. Preserve the visible model credits.
+The public case uses the real James Morgan scenario and native authored patient replies. Its interview and reasoning
+views share an in-memory session, native transcript and selected-text evidence capture. It displays **Scripted case
+practice**, has no AI API or account-service access, and does not save a learner record. Browser Talk/dictation, if
+explicitly activated, can use the browser's speech-recognition service; it is not simLAB's protected realtime AI.
+Offscreen case children unmount while their demonstration session remains available when visitors return.
 
-After changing the viewer source, regenerate the checked-in ESM bundle:
+Without JavaScript, descriptive content, the Movement screenshot fallback and static footer links remain available.
+The remaining screenshots are direct captures of synthetic local demonstrations, not production student records.
+Preserve the native teaching notes, source links and packaged model credits.
+
+The earlier `experience.*`, `reasoning-demo.*` and `demos/` previews are superseded and are not loaded by the current
+homepage. `build:demos` remains for those historical assets; use `build:native` for the current product showcase.
+
+## Build the native showcase
+
+Serving checked-in files needs no simLAB checkout. Rebuilding requires the pinned source and its recorded recursive
+submodules at the default sibling path `../simlab-native-source`, plus frozen dependencies in both repositories.
+The build was tested with Node.js 22.19.0; `build:native` enables TypeScript stripping for native plugin imports.
+Use pnpm 9.15.0, as declared by the simLAB source.
+
+From this homepage repository, prepare a fresh source checkout and build:
 
 ```bash
+git clone https://github.com/danstonedev/simlab.git ../simlab-native-source
+git -C ../simlab-native-source checkout --detach 61a664ca5706c19cddb8842fbfec1f0118121917
+git -C ../simlab-native-source submodule update --init --recursive
+pnpm --dir ../simlab-native-source install --frozen-lockfile --ignore-scripts
 npm ci
-npm run build:demos
+npm run build:native
 ```
 
-Azure serves the committed static files without a build step. Three.js and esbuild are pinned development
-dependencies; the browser loads the local bundle rather than a CDN runtime.
+For an existing checkout, inspect its changes before changing its revision. Keep the recorded submodule commits;
+do not update them with `--remote`. `SIMLAB_SOURCE_DIR` can point the builder to another prepared source directory.
+The builder checks the pinned HEAD and tracked source cleanliness, prepares gitignored SvelteKit config stubs,
+then regenerates only `showcase/` and the root `simlab-logo.png` asset. `showcase/source.json` records the full source
+commit and recursive submodule status. Homepage adapters do not alter the simLAB source.
+
+Commit the generated `showcase/` files and `simlab-logo.png` with source changes after inspecting the build. Azure
+uses `skip_app_build: true`: it uploads these committed HTML, JavaScript, CSS and model assets from the repository
+root and does not run npm, pnpm or Vite during deployment. Source files alone do not update the deployed showcase.
 
 ## Run locally
 
@@ -83,10 +109,10 @@ as a local file, the page falls back to the static nav/footer lists in `index.ht
    - `repo` — the backing GitHub repo (`owner/name`)
    - `status` — `live` | `live-unlisted` | `internal`
    - `placement` — any of `hero`, `nav`, `plate`, `footer`
-2. The **"Practice tools" nav** and the **footer list** re-render automatically from `apps.json`.
+2. The **footer list** re-renders automatically from `apps.json`; homepage gallery navigation is maintained separately.
 3. For a full marketing **plate**, also add an `<article class="plate" id="app-<id>">`
-   block in `index.html` (copy an existing one). `app.js` logs a console warning if a
-   plate's link doesn't match the `url` in `apps.json`.
+   surface in `index.html` that links to its canonical URL. `scripts/check-apps.mjs`
+   checks the matching plate ID and URL.
 
 Apps not yet surfaced on the hub (e.g. `scope-or-nope`, `wellness`,
 `anatomy-database-app`, `MASH`) are tracked under `unlisted` in `apps.json` so the
@@ -125,7 +151,6 @@ this repo. Two things to know:
   network-path issues (DNS cache or a TLS-intercepting campus/office wifi proxy),
   which HSTS makes un-bypassable — a different host (a `*.devpt.app` subdomain) is
   the quickest workaround.
-- **PainMap alternate URL.** `pain.devpt.app` is being added as a resilient alternate
-  to `pain3d.com` (recorded under the `painmap` entry's `aliases` in `apps.json`).
-  The full diagnosis, the provisioning script, and the apex-hardening steps are in
-  the pain map repo: **`danstonedev/3DPainMap` → `docs/access-and-domains.md`**.
+- **PainMap canonical URL.** The registry advertises `https://www.3dpain.app`, with
+  `https://pain3d.com` retained as its legacy alias. `pain.devpt.app` is not an advertised
+  alias. Keep links aligned with `apps.json` and the PainMap repository's `docs/access-and-domains.md`.

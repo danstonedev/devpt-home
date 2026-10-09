@@ -1,0 +1,1 @@
+const e="female",t="right",a=[{id:"lab-lateral-hip-left",family:"deep",intensity:5,note:"Movement lab: side of the hip, left side.",strokes:[{mode:"paint",radius:.07,at:17672256e5,points:[[.33493,.4822],[.33882,.48256],[.34272,.48331],[.34434,.45453],[.3402,.4534],[.33593,.45267]]}]}],i={bodyVariant:e,view:t,marks:a};export{e as bodyVariant,i as default,a as marks,t as view};
