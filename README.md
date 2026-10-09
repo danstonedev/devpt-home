@@ -51,7 +51,7 @@ homepage. `build:demos` remains for those historical assets; use `build:native` 
 
 Serving checked-in files needs no simLAB checkout. Rebuilding requires the pinned source and its recorded recursive
 submodules at the default sibling path `../simlab-native-source`, plus frozen dependencies in both repositories.
-The build was tested with Node.js 24.19.0; its native plugin imports require Node's built-in TypeScript support.
+The build was tested with Node.js 22.19.0; `build:native` enables TypeScript stripping for native plugin imports.
 Use pnpm 9.15.0, as declared by the simLAB source.
 
 From this homepage repository, prepare a fresh source checkout and build:
