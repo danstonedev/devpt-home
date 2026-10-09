@@ -151,7 +151,7 @@
           });
         });
       },
-      { threshold: 0 },
+      { threshold: 0, rootMargin: "600px 0px" },
     );
     frames.forEach(function (frame) {
       observer.observe(frame);
