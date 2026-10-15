@@ -1,5 +1,5 @@
 {
-  "_comment": "Single source of truth for the DevPT app catalog. The footer list is rendered from this file by app.js. Apps with placement 'plate' must have a visible id=\"app-<id>\" surface in index.html that links to the app URL. placement values: 'hero' | 'nav' | 'plate' | 'footer'.",
+  "_comment": "Canonical DevPT app registry and three product-line destinations. Source-owned showcases supply their own live chapter catalogs and UI.",
   "domain": "https://devpt.app",
   "deploy": "Azure Static Web Apps (.github/workflows/azure-static-web-apps-black-tree-0e898330f.yml)",
   "apps": [
@@ -14,6 +14,30 @@
       "status": "live",
       "placement": ["nav", "plate", "footer"],
       "blurb": "An integrated clinical simulation workspace with native DDx cases, patient and instructor conversations, examination, documentation, debrief, and live classes."
+    },
+    {
+      "id": "probonoemr",
+      "name": "proBonoEMR",
+      "tag": "probonoemr",
+      "footerLabel": "proBonoEMR",
+      "category": "platform",
+      "url": "https://emr.devpt.app",
+      "repo": "danstonedev/devpt-emr-platform",
+      "status": "live",
+      "placement": ["footer"],
+      "blurb": "Patient records and team documentation for teaching clinics."
+    },
+    {
+      "id": "emrsim",
+      "name": "simEMR",
+      "tag": "emrsim",
+      "footerLabel": "simEMR",
+      "category": "platform",
+      "url": "https://simemr.devpt.app",
+      "repo": "danstonedev/devpt-emr-platform",
+      "status": "live",
+      "placement": ["footer"],
+      "blurb": "Documentation practice with fictional patient records."
     },
     {
       "id": "movements",
@@ -69,16 +93,16 @@
     },
     {
       "id": "painmap",
-      "name": "PainMap",
+      "name": "3Dpain.app",
       "tag": "painmap",
-      "footerLabel": "PainMap",
+      "footerLabel": "3Dpain.app",
       "category": "research",
       "url": "https://www.3dpain.app",
       "aliases": ["https://pain3d.com"],
       "repo": "danstonedev/3DPainMap",
       "status": "live",
       "placement": ["plate", "footer"],
-      "blurb": "Development and validation work for 3D symptom mapping beyond the 0-10 scale.",
+      "blurb": "Describe symptom location, quality and intensity on a three-dimensional body.",
       "note": "www.3dpain.app is the canonical URL. The `www.` is required: the bare 3dpain.app apex has no DNS address record and does not resolve, and .app is HSTS-preloaded so it fails unbypassably rather than warning. pain3d.com is the retired brand domain, kept as an alias because it 301s to the canonical host. The previously-listed pain.devpt.app alias was never provisioned and has been dropped. See 3DPainMap/docs/access-and-domains.md."
     },
     {
@@ -107,18 +131,6 @@
     }
   ],
   "unlisted": [
-    {
-      "id": "emrsim",
-      "name": "simNOTE",
-      "tag": "simemr",
-      "footerLabel": "simNOTE",
-      "category": "simulation",
-      "url": "https://emrsim.devpt.app",
-      "repo": "danstonedev/simnote",
-      "status": "live-unlisted",
-      "blurb": "Documentation that behaves like a real chart.",
-      "note": "Legacy standalone documentation tool retained in the portfolio registry; the homepage now leads with documentation inside simLAB."
-    },
     {
       "id": "vspx",
       "name": "simCHAT",
@@ -154,7 +166,39 @@
     {
       "id": "vspx-3d-assets",
       "repo": "danstonedev/vspx-3d-assets",
-      "role": "Intended canonical mannequin GLB assets — currently UNCONSUMED (apps copy GLBs from pose-engine/models instead). Resolve the source of truth."
+      "role": "Intended canonical mannequin GLB assets \u2014 currently UNCONSUMED (apps copy GLBs from pose-engine/models instead). Resolve the source of truth."
+    }
+  ],
+  "productLines": [
+    {
+      "id": "simlab",
+      "name": "simLAB",
+      "walkthrough": "/simlab/",
+      "appIds": ["lab"],
+      "showcase": {
+        "url": "https://lab.devpt.app/showcase/",
+        "localPort": 5180
+      }
+    },
+    {
+      "id": "emrs",
+      "name": "EMRs",
+      "walkthrough": "/emrs/",
+      "appIds": ["emrsim", "probonoemr"],
+      "showcase": {
+        "url": "https://simemr.devpt.app/showcase/",
+        "localPort": 5181
+      }
+    },
+    {
+      "id": "painmap",
+      "name": "3Dpain.app",
+      "walkthrough": "/3dpain/",
+      "appIds": ["painmap"],
+      "showcase": {
+        "url": "https://www.3dpain.app/showcase/",
+        "localPort": 5182
+      }
     }
   ]
 }

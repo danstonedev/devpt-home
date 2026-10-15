@@ -100,27 +100,38 @@
 
   var footer = document.querySelector(".footer-apps");
   if (footer && window.fetch)
-    fetch("apps.json", { cache: "no-cache" })
+    fetch("/apps.json", { cache: "no-cache" })
       .then(function (response) {
         return response.ok ? response.json() : null;
       })
       .then(function (data) {
         if (!data || !Array.isArray(data.apps)) return;
         var list = document.createDocumentFragment();
-        data.apps
-          .filter(function (app) {
-            return app.placement.includes("footer");
-          })
-          .forEach(function (app) {
-            var item = document.createElement("li");
-            var link = document.createElement("a");
-            link.href = app.url;
-            link.target = "_blank";
-            link.rel = "noopener";
-            link.textContent = app.footerLabel || app.name;
-            item.appendChild(link);
-            list.appendChild(item);
-          });
+        var apps = data.apps.filter(function (app) {
+          return app.placement.includes("footer");
+        });
+        if (footer.hasAttribute("data-product-launchers")) {
+          if (!Array.isArray(data.productLines)) return;
+          apps = data.productLines
+            .flatMap(function (line) {
+              return line.appIds.map(function (id) {
+                return data.apps.find(function (app) {
+                  return app.id === id;
+                });
+              });
+            })
+            .filter(Boolean);
+        }
+        apps.forEach(function (app) {
+          var item = document.createElement("li");
+          var link = document.createElement("a");
+          link.href = app.url;
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.textContent = app.footerLabel || app.name;
+          item.appendChild(link);
+          list.appendChild(item);
+        });
         footer.replaceChildren(list);
       })
       .catch(function () {

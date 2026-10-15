@@ -8,14 +8,16 @@
     "start": "npx http-server -c-1 -p 8099",
     "prepreview": "node scripts/ensure-fresh-main.mjs --preview",
     "preview": "http-server -c-1 -p 8109 -a 127.0.0.1",
-    "test": "node scripts/check-live-showcase.mjs && node scripts/check-apps.mjs --no-ping",
+    "test": "node scripts/check-live-showcase.mjs && node scripts/check-apps.mjs --no-ping && node --test scripts/wait-for-showcases.test.mjs",
     "build:demos": "node scripts/build-demos.mjs",
-    "check:walkthrough": "node scripts/check-live-showcase.mjs"
+    "check:walkthrough": "node scripts/check-live-showcase.mjs",
+    "test:ui": "playwright test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@sveltejs/vite-plugin-svelte": "5.1.1",
     "esbuild": "0.25.12",
     "http-server": "^14.1.1",
