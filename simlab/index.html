@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevPT simLAB — Clinical reasoning, made visible</title>
+    <meta
+      name="description"
+      content="simLAB brings AI patient encounters, differential diagnosis, interactive learning labs, and faculty-led classes into one clinical learning environment for PT and PTA education."
+    />
+    <meta name="theme-color" content="#000000" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="DevPT simLAB — Clinical reasoning, made visible"
+    />
+    <meta
+      property="og:description"
+      content="Meet the patient. Follow the evidence. Build a plan. Explore simLAB's connected clinical workspace, learning labs, and faculty-led classes."
+    />
+    <meta property="og:url" content="https://devpt.app/simlab/" />
+    <meta property="og:site_name" content="DevPT" />
+    <meta
+      property="og:image"
+      content="https://devpt.app/assets/shots/clinical-workspace.jpg"
+    />
+    <meta
+      property="og:image:alt"
+      content="The simLAB clinical workspace with a virtual patient and patient record"
+    />
+    <link rel="canonical" href="https://devpt.app/simlab/" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 4l11 6v12l-11 6-11-6V10z' fill='%2316191D'/%3E%3Cpath d='M16 4l11 6-11 6-11-6z' fill='%239aa7b2'/%3E%3Cpath d='M27 10v12l-11 6V16z' fill='%23c7d0d8'/%3E%3Cpath d='M5 10v12l11 6V16z' fill='%2377838d'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/native-showcase.css" />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-VTLNJW0KKX"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-VTLNJW0KKX");
+    </script>
+    <link rel="stylesheet" href="/emr-foundation.css" />
+    <link rel="stylesheet" href="/portfolio.css" />
+  </head>
+  <body class="homepage simlab-page">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="nav" id="top">
+      <div class="wrap nav-inner">
+        <a href="/" class="brand" aria-label="DevPT home"
+          ><img src="/assets/devpt-logo.png" alt="DevPT" width="89" height="28"
+        /></a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="/simlab/" aria-current="page">simLAB</a>
+          <a href="/emrs/">EMRs</a>
+          <a href="/3dpain/">3Dpain.app</a>
+          <a href="/#contact" class="btn btn-green cta-sm"
+            >Request a demo <span aria-hidden="true">↗</span></a
+          >
+        </nav>
+        <details class="nav-mobile">
+          <summary>Menu <span aria-hidden="true">＋</span></summary>
+          <nav aria-label="Mobile primary">
+            <a href="/simlab/" aria-current="page">simLAB</a>
+            <a href="/emrs/">EMRs</a>
+            <a href="/3dpain/">3Dpain.app</a>
+            <a href="/#contact">Request a demo</a>
+          </nav>
+        </details>
+      </div>
+    </header>
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="wrap">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <p class="eyebrow">
+                <span class="status-dot" aria-hidden="true"></span> Simulation
+                for PT &amp; PTA education
+              </p>
+              <h1 id="hero-title">
+                Clinical reasoning,<br /><span>made visible.</span>
+              </h1>
+              <p class="lede">
+                Meet the patient. Follow the evidence. Build a plan.
+              </p>
+              <p class="hero-description">
+                simLAB brings AI patient encounters, differential diagnosis,
+                interactive learning labs, and faculty-led classes into one
+                connected clinical learning environment.
+              </p>
+              <div class="hero-cta" id="app-lab">
+                <a
+                  href="https://lab.devpt.app"
+                  class="btn btn-green btn-lg"
+                  target="_blank"
+                  rel="noopener"
+                  >Open simLAB <span aria-hidden="true">↗</span></a
+                ><a
+                  href="#flow"
+                  class="btn btn-ghost btn-lg"
+                  data-start-walkthrough
+                  >Watch James’s visit <span aria-hidden="true">↓</span></a
+                >
+              </div>
+              <p class="access-note">
+                DevPT Microsoft sign-in and program access required.<br />Exploring
+                for your program? <a href="#contact">Request a walkthrough.</a>
+              </p>
+            </div>
+            <div class="hero-aside">
+              <div class="product-mark">
+                <img
+                  src="/assets/simlab-logo.png"
+                  alt="simLAB"
+                  width="4343"
+                  height="1081"
+                />
+              </div>
+              <p class="mono">PART OF DEVPT</p>
+              <figure class="hero-native">
+                <div class="product-chrome">
+                  <span>simLAB / meet James</span
+                  ><a
+                    href="https://lab.devpt.app/showcase/?chapter=meet"
+                    target="_blank"
+                    rel="noopener"
+                    >Open scene ↗</a
+                  >
+                </div>
+                <iframe
+                  data-live-showcase="teaser"
+                  referrerpolicy="origin"
+                  title="Meet James Morgan in simLAB"
+                  data-native-frame
+                  loading="lazy"
+                ></iframe>
+                <figcaption>
+                  James wants to get back to his Saturday walking group. Follow
+                  his visit, from the first question to the next step.
+                </figcaption>
+              </figure>
+              <div class="hero-principle">
+                <span aria-hidden="true">↳</span>
+                <p>
+                  One patient story.<br /><strong
+                    >Room to practice the whole visit.</strong
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="platform-strip" aria-label="simLAB capabilities">
+        <div class="wrap">
+          <span class="mono">ONE LEARNING ENVIRONMENT</span>
+          <p>
+            Patient encounters <span aria-hidden="true">/</span> Reasoning maps
+            <span aria-hidden="true">/</span> Live classes
+            <span aria-hidden="true">/</span> Learning labs
+          </p>
+        </div>
+      </section>
+      <section
+        class="block native-product-tour"
+        id="flow"
+        aria-labelledby="tour-title"
+      >
+        <div class="wrap">
+          <div class="section-head split-head">
+            <div>
+              <p class="eyebrow">Inside the simulator</p>
+              <h2 id="tour-title">
+                One patient.<br />The whole clinical story.
+              </h2>
+            </div>
+            <p>
+              Meet James, hear his story and watch his examination. Connect the
+              findings, build a plan, then explore the science in simLAB’s study
+              tools.
+            </p>
+          </div>
+          <nav
+            class="native-workspace-list story-chapters"
+            aria-label="James’s visit"
+            data-story-chapters
+          >
+            <a href="https://lab.devpt.app/showcase/"
+              >Open James’s walkthrough ↗</a
+            >
+          </nav>
+          <div class="native-gallery">
+            <header class="native-gallery-heading">
+              <span class="native-gallery-badge mono"
+                >A GUIDED SIMLAB WALKTHROUGH</span
+              >
+              <a
+                class="native-full-view"
+                href="https://lab.devpt.app/showcase/"
+                target="_blank"
+                rel="noopener"
+                >Open full view <span aria-hidden="true">↗</span></a
+              >
+            </header>
+            <iframe
+              id="native-gallery-frame"
+              data-live-showcase="tour"
+              referrerpolicy="origin"
+              title="James Morgan · a guided simLAB visit"
+              data-native-frame
+              loading="lazy"
+            ></iframe>
+            <p class="native-gallery-note">
+              Scripted case demonstration · explore freely · no sign-in required
+            </p>
+          </div>
+          <div class="native-baseline-note">
+            <strong>A case to follow. A lab to explore.</strong>
+            <p>
+              Open a study tool whenever a finding makes you curious. James’s
+              visit stays with you when you come back.
+            </p>
+          </div>
+          <noscript
+            ><p class="image-note">
+              JavaScript enables the native demonstrations. Explore the real
+              workspaces through the simLAB links below.
+            </p>
+            <img
+              src="/assets/shots/movement-lab.jpg"
+              alt="simLAB’s native Movement teaching workspace"
+              width="1280"
+              height="720"
+              loading="lazy"
+          /></noscript>
+        </div>
+      </section>
+      <section
+        class="block student-band"
+        id="student"
+        aria-labelledby="student-title"
+      >
+        <div class="wrap">
+          <div class="section-head split-head">
+            <div>
+              <p class="eyebrow">For students</p>
+              <h2 id="student-title">
+                A clinical visit,<br />with room to think.
+              </h2>
+            </div>
+            <p>
+              Practice through instructor-selected cases. Carry the findings
+              forward, make a defensible decision, and reflect on what you would
+              do next.
+            </p>
+          </div>
+          <ol class="learning-arc">
+            <li>
+              <span class="mono">01</span>
+              <h3>Understand</h3>
+              <p>
+                Read the chart. Hear the patient's story. Decide what needs a
+                closer look.
+              </p>
+            </li>
+            <li>
+              <span class="mono">02</span>
+              <h3>Investigate</h3>
+              <p>
+                Choose your exam, record the findings, and connect the evidence
+                to your differential.
+              </p>
+            </li>
+            <li>
+              <span class="mono">03</span>
+              <h3>Act</h3>
+              <p>
+                Document your reasoning. Build a plan and communicate with the
+                care team where the case calls for it.
+              </p>
+            </li>
+            <li>
+              <span class="mono">04</span>
+              <h3>Reflect</h3>
+              <p>
+                Review feedback and discuss the decisions that should guide your
+                next attempt.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+      <section class="block labs" id="labs" aria-labelledby="labs-title">
+        <div class="wrap">
+          <div class="section-head split-head">
+            <div>
+              <p class="eyebrow">Integrated learning labs</p>
+              <h2 id="labs-title">
+                Explore the science<br />behind the findings.
+              </h2>
+            </div>
+            <p>
+              Step into focused, interactive teaching spaces for movement,
+              anatomy, neurologic function, and physiology. Build understanding
+              alongside case practice.
+            </p>
+          </div>
+          <div class="native-lab-cards" data-live-study-tools>
+            <a class="native-lab-card" href="#flow" data-open-native="movement"
+              ><span class="mono">01 / MOVEMENT</span>
+              <h3>A clear teaching baseline.</h3>
+              <p>
+                Whole-body demonstrations, examination adaptations, hands,
+                instruments and controlled playback.
+              </p>
+              <span
+                >Body and examination<span aria-hidden="true">↗</span></span
+              ></a
+            >
+            <a class="native-lab-card" href="#flow" data-open-native="joints"
+              ><span class="mono">02 / JOINT MECHANICS</span>
+              <h3>Bones. Capsule. Technique.</h3>
+              <p>
+                Hip, knee, ankle and foot; reference layers, bone shapes, and
+                synchronized manual-technique views.
+              </p>
+              <span
+                >Explore joint mechanics<span aria-hidden="true">↗</span></span
+              ></a
+            >
+            <a class="native-lab-card" href="#flow" data-open-native="eyes"
+              ><span class="mono">03 / EYE EXAMINATIONS</span>
+              <h3>See the finding unfold.</h3>
+              <p>
+                A patient examination and synchronized eye close-up, with
+                vestibular demonstrations and native playback.
+              </p>
+              <span
+                >Explore eye examinations<span aria-hidden="true"
+                  >↗</span
+                ></span
+              ></a
+            >
+            <a class="native-lab-card" href="#flow" data-open-native="neuro"
+              ><span class="mono">04 / NEURO</span>
+              <h3>Follow the signal.</h3>
+              <p>
+                Bedside stimulus, neural anatomy, sensory endings and lesion
+                placement in one workspace.
+              </p>
+              <span>Explore Neuro<span aria-hidden="true">↗</span></span></a
+            >
+            <a class="native-lab-card" href="#flow" data-open-native="aquatic"
+              ><span class="mono">05 / AQUATIC THERAPY</span>
+              <h3>Change the environment.</h3>
+              <p>
+                Immersion and dose controls, pool movement, and model-derived
+                physiologic responses.
+              </p>
+              <span>Explore Aquatic<span aria-hidden="true">↗</span></span></a
+            >
+            <a class="native-lab-card" href="#flow" data-open-native="vitals"
+              ><span class="mono">06 / LIVE VITALS</span>
+              <h3>Watch the response.</h3>
+              <p>
+                Authored patient profiles, posture, effort and time, with the
+                program’s actual readings and trends.
+              </p>
+              <span
+                >Explore Live Vitals<span aria-hidden="true">↗</span></span
+              ></a
+            >
+          </div>
+          <p class="image-note">
+            Learning labs use educational models. Anatomy and imaging tools are
+            also available within the clinical workspace.
+          </p>
+        </div>
+      </section>
+      <section
+        class="block faculty-band"
+        id="faculty"
+        aria-labelledby="faculty-title"
+      >
+        <div class="wrap faculty-layout">
+          <div>
+            <p class="eyebrow">For faculty</p>
+            <h2 id="faculty-title">
+              Teach the decisions.<br />See the thinking.
+            </h2>
+            <p class="faculty-lede">
+              Bring simLAB into a live class or schedule case work for your
+              learners. Keep the context, the evidence, and the teaching
+              conversation together.
+            </p>
+            <ul class="faculty-features">
+              <li>
+                <strong>Organize your teaching</strong
+                ><span
+                  >Manage groups, choose scenarios, and schedule practice or
+                  graded case work.</span
+                >
+              </li>
+              <li>
+                <strong>See the reasoning</strong
+                ><span
+                  >Review attempt records and class patterns to identify what
+                  deserves discussion.</span
+                >
+              </li>
+              <li>
+                <strong>Keep faculty judgment central</strong
+                ><span
+                  >Review or enter grades and guide the debrief. Native DDx
+                  cases support formative feedback without an automatic
+                  score.</span
+                >
+              </li>
+            </ul>
+            <a href="#contact" class="text-link"
+              >Walk through the faculty experience
+              <span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <div class="faculty-visual">
+            <p class="mono">YOUR CLASS. YOUR CASE. YOUR DEBRIEF.</p>
+            <a
+              href="/assets/shots/faculty-workspace.jpg"
+              class="enlarge-image"
+              data-enlarge
+              aria-label="Enlarge the simLAB faculty workspace screenshot"
+              ><img
+                src="/assets/shots/faculty-workspace.jpg"
+                alt="Current simLAB faculty workspace with class scheduling and learner management"
+                width="1265"
+                height="712"
+                loading="lazy"
+              /><span class="enlarge-label"
+                >Enlarge <span aria-hidden="true">↗</span></span
+              ></a
+            >
+            <p class="image-note">
+              Faculty workspace shown with demonstration data.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section
+        class="block research"
+        id="research-opportunities"
+        aria-labelledby="research-title"
+      >
+        <div class="wrap research-grid">
+          <div>
+            <p class="eyebrow">Beyond the classroom</p>
+            <h2 id="research-title">Built to ask<br />better questions.</h2>
+            <p>
+              DevPT's research direction connects clinical reasoning,
+              educational feedback, and 3D symptom mapping. Collaborate on
+              questions about practice, assessment, and the evidence behind
+              learning.
+            </p>
+            <a
+              href="mailto:daniel.j.stone@und.edu?subject=DevPT%20research%20collaboration"
+              class="text-link"
+              >Discuss a research collaboration
+              <span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <article class="research-card" id="app-painmap">
+            <span class="mono">DEVPT / PAINMAP</span>
+            <h3>More than a single pain score.</h3>
+            <p>
+              Explore 3D symptom mapping and the development of visual profiles
+              of symptom location, spread, intensity, and change over time.
+            </p>
+            <a
+              href="https://www.3dpain.app"
+              target="_blank"
+              rel="noopener"
+              class="text-link"
+              >Explore PainMap <span aria-hidden="true">↗</span></a
+            >
+            <p class="research-note">
+              Measurement and educational outcomes remain research questions;
+              these tools are not presented as validated outcome measures.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="contact" id="contact" aria-labelledby="contact-title">
+        <div class="wrap contact-layout">
+          <div>
+            <p class="eyebrow">Let's bring it into your program</p>
+            <h2 id="contact-title">See simLAB<br />in context.</h2>
+          </div>
+          <div>
+            <p>
+              Walk through a patient case, a live class, and the learning labs.
+              We'll discuss where simLAB could fit your PT or PTA curriculum.
+            </p>
+            <a
+              href="mailto:daniel.j.stone@und.edu?subject=simLAB%20program%20demo&body=Institution%3A%0AProgram%20or%20course%3A%0AWhat%20you%27d%20like%20to%20explore%3A%0A"
+              class="btn btn-light btn-lg"
+              >Request a program demo <span aria-hidden="true">↗</span></a
+            ><a href="mailto:daniel.j.stone@und.edu" class="contact-email"
+              >daniel.j.stone@und.edu</a
+            >
+          </div>
+        </div>
+      </section>
+      <section class="refs" id="references">
+        <div class="wrap">
+          <details>
+            <summary>Educational background &amp; research references</summary>
+            <p>
+              These publications inform the broader educational context. They
+              are not evaluations of simLAB.
+            </p>
+            <ol>
+              <li>
+                Cook DA, et al. Technology-enhanced simulation for health
+                professions education. <em>JAMA.</em> 2011.
+                <a
+                  href="https://pubmed.ncbi.nlm.nih.gov/21900138/"
+                  target="_blank"
+                  rel="noopener"
+                  >PubMed</a
+                >
+              </li>
+              <li>
+                Simulated patients in physical therapy education: a systematic
+                review and meta-analysis. <em>Physical Therapy.</em> 2016.
+                <a
+                  href="https://pubmed.ncbi.nlm.nih.gov/26939603/"
+                  target="_blank"
+                  rel="noopener"
+                  >PubMed</a
+                >
+              </li>
+              <li>
+                Plackett R, et al. Virtual patient educational tools and
+                clinical reasoning skills: a systematic review.
+                <em>BMC Medical Education.</em> 2022.
+                <a
+                  href="https://bmcmededuc.biomedcentral.com/articles/10.1186/s12909-022-03410-x"
+                  target="_blank"
+                  rel="noopener"
+                  >Full text</a
+                >
+              </li>
+            </ol>
+          </details>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="wrap footer-shell">
+        <section class="footer-brand" aria-label="DevPT summary">
+          <a class="brand" href="/" aria-label="DevPT home"
+            ><img
+              src="/assets/devpt-logo.png"
+              alt="DevPT"
+              width="108"
+              height="34"
+          /></a>
+          <p>
+            Clinical reasoning, made visible.<br />Built for PT and PTA
+            education.
+          </p>
+          <a class="footer-email" href="mailto:daniel.j.stone@und.edu"
+            >daniel.j.stone@und.edu</a
+          >
+        </section>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <section>
+            <h2>simLAB</h2>
+            <ul>
+              <li><a href="#flow">Inside the workspace</a></li>
+              <li><a href="#student">For students</a></li>
+              <li><a href="#faculty">For faculty</a></li>
+              <li><a href="#labs">Learning labs</a></li>
+              <li><a href="#contact">Request a demo</a></li>
+            </ul>
+          </section>
+          <section>
+            <h2>Explore DevPT</h2>
+            <ul class="footer-products">
+              <li>
+                <a href="/simlab/" aria-current="page">simLAB walkthrough</a>
+              </li>
+              <li><a href="/emrs/">EMR walkthrough</a></li>
+              <li><a href="/3dpain/">3Dpain.app walkthrough</a></li>
+              <li><a href="/">DevPT home</a></li>
+            </ul>
+          </section>
+          <section>
+            <h2>About</h2>
+            <ul>
+              <li><a href="#research-opportunities">Research</a></li>
+              <li>
+                <a href="/CV - Dan Stone.pdf" target="_blank" rel="noopener"
+                  >Curriculum vitae</a
+                >
+              </li>
+              <li><a href="#references">References</a></li>
+              <li><a href="/privacy.html">Privacy</a></li>
+              <li><a href="/terms.html">Terms</a></li>
+              <li><a href="/accessibility.html">Accessibility</a></li>
+              <li><a href="/sitemap.html">Sitemap</a></li>
+            </ul>
+          </section>
+        </nav>
+      </div>
+      <div class="wrap footer-bottom">
+        <p>
+          © <span id="year">2026</span> DevPT · Built by Dan Stone, PT, DPT,
+          MS.
+        </p>
+        <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
+      </div>
+    </footer>
+    <dialog class="image-dialog" aria-label="Enlarged simLAB screenshot">
+      <button type="button" class="dialog-close" autofocus>
+        Close <span aria-hidden="true">×</span></button
+      ><img alt="Selected simLAB screenshot" />
+      <p></p>
+    </dialog>
+    <script src="/app.js"></script>
+    <script src="/walkthrough.js"></script>
+  </body>
+</html>

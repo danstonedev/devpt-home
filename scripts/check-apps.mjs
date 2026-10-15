@@ -11,7 +11,7 @@
  * unless --strict, so a transient outage or an intentionally-inert subdomain
  * does not break CI).
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -19,10 +19,26 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const strict = process.argv.includes("--strict");
 const noPing = process.argv.includes("--no-ping");
 
-const CATEGORIES = new Set(["research", "simulation", "imaging", "platform", "motion"]);
+const CATEGORIES = new Set([
+  "research",
+  "simulation",
+  "imaging",
+  "platform",
+  "motion",
+]);
 const STATUSES = new Set(["live", "live-unlisted", "internal", "soon"]);
 const PLACEMENTS = new Set(["hero", "nav", "plate", "footer"]);
-const REQUIRED = ["id", "name", "tag", "footerLabel", "category", "url", "repo", "status", "blurb"];
+const REQUIRED = [
+  "id",
+  "name",
+  "tag",
+  "footerLabel",
+  "category",
+  "url",
+  "repo",
+  "status",
+  "blurb",
+];
 
 const errors = [];
 const warnings = [];
@@ -45,45 +61,135 @@ const ids = new Set();
 for (const a of data.apps) {
   const id = a && typeof a.id === "string" ? a.id : "(missing id)";
   for (const k of REQUIRED) {
-    if (typeof a[k] !== "string" || a[k].length === 0) errors.push(`${id}: "${k}" must be a non-empty string`);
+    if (typeof a[k] !== "string" || a[k].length === 0)
+      errors.push(`${id}: "${k}" must be a non-empty string`);
   }
   if (ids.has(a.id)) errors.push(`${id}: duplicate id`);
   ids.add(a.id);
   if (typeof a.category === "string" && !CATEGORIES.has(a.category))
-    errors.push(`${id}: category "${a.category}" not in {${[...CATEGORIES].join(", ")}}`);
+    errors.push(
+      `${id}: category "${a.category}" not in {${[...CATEGORIES].join(", ")}}`,
+    );
   if (typeof a.status === "string" && !STATUSES.has(a.status))
-    errors.push(`${id}: status "${a.status}" not in {${[...STATUSES].join(", ")}}`);
+    errors.push(
+      `${id}: status "${a.status}" not in {${[...STATUSES].join(", ")}}`,
+    );
   if (typeof a.url === "string" && !/^https:\/\/\S+$/.test(a.url))
     errors.push(`${id}: url must be a valid https URL`);
   if (typeof a.repo === "string" && !/^danstonedev\/\S+$/.test(a.repo))
-    warnings.push(`${id}: repo "${a.repo}" is not in the form danstonedev/<name>`);
+    warnings.push(
+      `${id}: repo "${a.repo}" is not in the form danstonedev/<name>`,
+    );
   if (!Array.isArray(a.placement) || a.placement.length === 0)
     errors.push(`${id}: "placement" must be a non-empty array`);
-  else for (const p of a.placement)
-    if (!PLACEMENTS.has(p)) errors.push(`${id}: placement "${p}" not in {${[...PLACEMENTS].join(", ")}}`);
+  else
+    for (const p of a.placement)
+      if (!PLACEMENTS.has(p))
+        errors.push(
+          `${id}: placement "${p}" not in {${[...PLACEMENTS].join(", ")}}`,
+        );
 
   // Page consistency: a "plate" app must have its <article id="app-<id>"> and link its url.
   if (Array.isArray(a.placement) && a.placement.includes("plate")) {
     if (!html.includes(`id="app-${a.id}"`))
-      errors.push(`${id}: placement includes "plate" but index.html has no id="app-${a.id}"`);
+      errors.push(
+        `${id}: placement includes "plate" but index.html has no id="app-${a.id}"`,
+      );
     if (typeof a.url === "string" && !html.includes(a.url))
-      warnings.push(`${id}: plate exists but index.html does not link ${a.url}`);
+      warnings.push(
+        `${id}: plate exists but index.html does not link ${a.url}`,
+      );
   }
 }
 
 // Light checks on the auxiliary sections (urls may legitimately be TBD).
+const productIds = new Set(["simlab", "emrs", "painmap"]);
+if (
+  !Array.isArray(data.productLines) ||
+  data.productLines.length !== productIds.size
+) {
+  errors.push("The hub must declare all three product lines.");
+} else {
+  for (const product of data.productLines) {
+    if (!productIds.delete(product.id))
+      errors.push(`Unknown or duplicate product line: ${product.id}`);
+    if (typeof product.name !== "string" || !product.name.trim())
+      errors.push(`${product.id}: missing product name`);
+    if (
+      !Array.isArray(product.appIds) ||
+      !product.appIds.length ||
+      product.appIds.some((id) => !ids.has(id))
+    ) {
+      errors.push(
+        `${product.id}: every product must reference registered applications`,
+      );
+    }
+    if (
+      typeof product.walkthrough !== "string" ||
+      !/^\/[a-z0-9-]+\/$/.test(product.walkthrough)
+    ) {
+      errors.push(`${product.id}: walkthrough must be a local product page`);
+      continue;
+    }
+    const productPage = join(root, product.walkthrough.slice(1), "index.html");
+    if (!existsSync(productPage))
+      errors.push(`${product.id}: walkthrough page is missing`);
+    if (
+      !html.includes(`data-product="${product.id}"`) ||
+      !html.includes(`href="${product.walkthrough}"`)
+    ) {
+      errors.push(
+        `${product.id}: the homepage must visibly link its product walkthrough`,
+      );
+    }
+    try {
+      const source = new URL(product.showcase.url);
+      const app = data.apps.find((app) => app.id === product.appIds[0]);
+      if (
+        source.origin !== new URL(app.url).origin ||
+        source.pathname !== "/showcase/" ||
+        source.search ||
+        source.hash
+      ) {
+        errors.push(
+          `${product.id}: showcase must belong to its canonical product origin`,
+        );
+      }
+      if (
+        !Number.isInteger(product.showcase.localPort) ||
+        product.showcase.localPort < 5180 ||
+        product.showcase.localPort > 5182
+      ) {
+        errors.push(`${product.id}: local showcase port is invalid`);
+      }
+    } catch {
+      errors.push(`${product.id}: invalid source-owned showcase URL`);
+    }
+  }
+}
+
 for (const u of data.unlisted || []) {
-  if (!u.id || !u.repo) warnings.push(`unlisted entry missing id/repo: ${JSON.stringify(u).slice(0, 60)}`);
+  if (!u.id || !u.repo)
+    warnings.push(
+      `unlisted entry missing id/repo: ${JSON.stringify(u).slice(0, 60)}`,
+    );
 }
 for (const e of data.engines || []) {
-  if (!e.id || !e.repo || !e.role) warnings.push(`engines entry missing id/repo/role: ${JSON.stringify(e).slice(0, 60)}`);
+  if (!e.id || !e.repo || !e.role)
+    warnings.push(
+      `engines entry missing id/repo/role: ${JSON.stringify(e).slice(0, 60)}`,
+    );
 }
 
 async function ping(url) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 12000);
   try {
-    const res = await fetch(url, { redirect: "follow", signal: ctrl.signal, headers: { "user-agent": "devpt-hub-check" } });
+    const res = await fetch(url, {
+      redirect: "follow",
+      signal: ctrl.signal,
+      headers: { "user-agent": "devpt-hub-check" },
+    });
     return res.status;
   } catch {
     return 0;
@@ -102,7 +208,10 @@ if (!noPing && typeof fetch === "function" && errors.length === 0) {
     // URL the hub tells people to use.
     const targets = [
       { url: a.url, kind: "url" },
-      ...(Array.isArray(a.aliases) ? a.aliases : []).map((url) => ({ url, kind: "alias" })),
+      ...(Array.isArray(a.aliases) ? a.aliases : []).map((url) => ({
+        url,
+        kind: "alias",
+      })),
     ];
     for (const { url, kind } of targets) {
       if (typeof url !== "string" || !url) continue;
@@ -111,8 +220,13 @@ if (!noPing && typeof fetch === "function" && errors.length === 0) {
       const status = await ping(url);
       const ok = status >= 200 && status < 400;
       const label = kind === "alias" ? `${a.id} (alias)` : String(a.id);
-      console.log(`  ${ok ? "✓" : "✗"} ${label.padEnd(18)} ${url} -> ${status || "unreachable"}`);
-      if (!ok) (strict ? errors : warnings).push(`${label}: ${url} returned ${status || "unreachable"}`);
+      console.log(
+        `  ${ok ? "✓" : "✗"} ${label.padEnd(18)} ${url} -> ${status || "unreachable"}`,
+      );
+      if (!ok)
+        (strict ? errors : warnings).push(
+          `${label}: ${url} returned ${status || "unreachable"}`,
+        );
     }
   }
 }
@@ -127,4 +241,6 @@ if (errors.length) {
   console.error(`\n✗ apps.json check failed - ${errors.length} error(s).`);
   process.exit(1);
 }
-console.log(`\n✓ apps.json OK - ${data.apps.length} listed app(s), ${(data.unlisted || []).length} unlisted, ${warnings.length} warning(s).`);
+console.log(
+  `\n✓ apps.json OK - ${data.apps.length} listed app(s), ${(data.unlisted || []).length} unlisted, ${warnings.length} warning(s).`,
+);

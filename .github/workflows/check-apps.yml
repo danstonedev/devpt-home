@@ -22,5 +22,13 @@ jobs:
           node-version: "20"
       - name: Validate apps.json + check links
         run: node scripts/check-apps.mjs
-      - name: Check live simLAB integration
+      - name: Check source-owned walkthrough integration
         run: node scripts/check-live-showcase.mjs
+      - name: Check coordinated release gate
+        run: node --test scripts/wait-for-showcases.test.mjs
+      - name: Check committed EMR foundation contract
+        run: node scripts/sync-emr-foundation.mjs --check --snapshot-only
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Check product journeys and trusted walkthrough bridges
+        run: npm run test:ui

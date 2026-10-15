@@ -1,0 +1,697 @@
+/* Public product framing follows the active EMR's section and control language.
+   Shared values are generated in emr-foundation.css from the EMR's active theme. */
+.icon-arrow {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.portfolio-hero {
+  padding: 24px 0 0;
+  background: var(--color-editor-bg);
+}
+.portfolio-intro {
+  margin: 0 0 24px;
+}
+.portfolio-intro h1 {
+  margin: 0 0 12px;
+  font-size: clamp(1.65rem, 2.4vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+.product-jump {
+  display: none;
+}
+.product-directory,
+.contact-panel {
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: white;
+}
+.directory-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 12px 16px;
+  background: var(--color-brand-green-onwhite);
+  color: white;
+}
+.directory-heading h2 {
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.4;
+  color: white;
+  margin: 0;
+}
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+}
+.product-tile {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: white;
+  border: 0;
+  border-radius: 0;
+}
+.product-tile + .product-tile {
+  border-left: 1px solid var(--color-neutral-300);
+}
+.product-heading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 112px;
+  gap: 8px;
+  padding: 16px 20px;
+  color: white;
+  background: linear-gradient(
+    180deg,
+    var(--color-section-header-start),
+    var(--color-section-header-end)
+  );
+  border-bottom: 2px solid var(--color-brand-green);
+}
+.product-heading h2 {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: white;
+}
+.product-heading h2 > img {
+  width: auto;
+  height: 36px;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left;
+}
+.product-heading p {
+  color: white;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0;
+}
+.product-heading .emr-logo-pair {
+  display: grid;
+  grid-template-columns: 1027fr 1475fr;
+  align-items: center;
+  gap: 12px;
+  width: min(100%, 325px);
+}
+.product-heading .emr-logo-pair > img {
+  width: 100%;
+  height: auto;
+  max-height: 32px;
+  min-width: 0;
+  object-fit: contain;
+  object-position: left;
+}
+.product-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  flex: 1;
+}
+.feature-gallery {
+  display: grid;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.feature-preview {
+  min-width: 0;
+  margin: 0;
+}
+.feature-preview figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 44px;
+  margin-bottom: 8px;
+}
+.feature-preview h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.feature-play {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  font-size: 0.8125rem;
+}
+.feature-media {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-sm);
+  aspect-ratio: 1.6;
+  background: var(--color-neutral-100);
+}
+.feature-still {
+  display: block;
+  height: 100%;
+}
+.feature-still img,
+.feature-media video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.feature-still:focus-visible {
+  outline-offset: -4px;
+}
+.feature-recording-note {
+  display: none;
+}
+.feature-preview:has(video:not([hidden])) .feature-recording-note {
+  display: block;
+}
+.feature-preview [data-feature-status],
+.feature-recording-note {
+  margin: 8px 0 0;
+  color: var(--color-text);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+.portfolio-home .image-dialog {
+  border-color: var(--color-neutral-500);
+  border-radius: var(--radius-card);
+  background: var(--color-topbar-end);
+}
+.portfolio-home .image-dialog::backdrop {
+  background: rgb(0 0 0 / 80%);
+}
+.product-description {
+  color: black;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin: 0 0 12px;
+  flex: 1;
+}
+.product-walkthrough {
+  width: 100%;
+  margin-top: auto;
+}
+.portfolio-home .contact {
+  color: black;
+  background: var(--color-editor-bg);
+  padding: 24px 0;
+}
+.portfolio-home .contact-layout {
+  padding: 20px;
+}
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+.portfolio-home .contact .contact-email {
+  color: black;
+  font-size: 0.875rem;
+  margin: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.product-page-hero {
+  padding: 24px 0;
+  background: white;
+  border-bottom: 1px solid var(--color-neutral-300);
+}
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+  color: black;
+  font-size: 0.875rem;
+}
+.breadcrumb a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.product-page-title {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.65fr) 1.4fr;
+  gap: 32px;
+  align-items: start;
+}
+.product-page-title .eyebrow {
+  margin-bottom: 8px;
+}
+.product-page-title h1 {
+  margin: 0;
+  color: black;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.product-page-title > div:last-child > p {
+  color: black;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+.product-page-title .hero-cta {
+  margin: 0;
+  gap: 8px;
+}
+.product-page .hero-cta .icon-arrow {
+  margin-left: 0;
+}
+.tour-section {
+  padding: 24px 0;
+  background: var(--color-editor-bg);
+}
+.tour-section .section-head {
+  display: block;
+  margin: 0 0 16px;
+}
+.tour-section .section-head .eyebrow {
+  margin: 0 0 4px;
+  font-size: 0.875rem;
+}
+.tour-section h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: black;
+}
+.product-chapters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+.product-chapters button,
+.product-chapters > a {
+  min-height: 44px;
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-button);
+  padding: 10px 12px;
+  color: black;
+  background: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: left;
+}
+.product-chapters button[aria-current="step"] {
+  background: #e6f5ed;
+  border-color: var(--color-brand-green-onwhite);
+  box-shadow: inset 3px 0 var(--color-brand-green-onwhite);
+  color: black;
+}
+.product-chapters button:hover {
+  border-color: var(--color-control-hover-border);
+}
+.product-chapter-number {
+  display: none;
+}
+.product-chapter-cue {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 400;
+  margin-top: 4px;
+  max-width: 34ch;
+  color: black;
+}
+.product-tour-window {
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: white;
+}
+.product-tour-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  min-height: 44px;
+  padding: 12px 16px;
+  color: white;
+  background: linear-gradient(
+    180deg,
+    var(--color-section-header-start),
+    var(--color-section-header-end)
+  );
+  border-bottom: 2px solid var(--color-brand-green);
+}
+.product-tour-bar .mono {
+  font-family: var(--font-family-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.product-tour-bar a {
+  color: white;
+  font-size: 0.8125rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+[data-product-frame] {
+  display: block;
+  width: 100%;
+  height: 760px;
+  border: 0;
+  background: white;
+}
+.painmap-page [data-product-frame] {
+  height: 790px;
+}
+.product-tour-status {
+  min-height: 40px;
+  color: black;
+  background: white;
+  padding: 10px 16px;
+  margin: 0;
+  border-top: 1px solid var(--color-neutral-300);
+  font-size: 0.8125rem;
+}
+.tour-caption {
+  color: black;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin: 12px 0 0;
+}
+.product-context {
+  padding: 0 0 24px;
+  background: var(--color-editor-bg);
+}
+.product-context-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.product-context article {
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: white;
+  padding: 20px;
+}
+.product-context article:has(.emr-product-brand) {
+  padding: 0;
+}
+.emr-product-brand {
+  display: flex;
+  align-items: center;
+  min-height: 72px;
+  padding: 16px 20px;
+  background: linear-gradient(
+    180deg,
+    var(--color-section-header-start),
+    var(--color-section-header-end)
+  );
+  border-bottom: 2px solid var(--color-brand-green);
+}
+.product-context .emr-product-brand h2 {
+  margin: 0;
+}
+#probonoemr .emr-product-brand {
+  border-bottom-color: var(--color-brand-orange);
+}
+.emr-product-brand img {
+  height: 32px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left;
+}
+.emr-product-content {
+  padding: 20px;
+}
+.product-context .eyebrow,
+.product-context .mono {
+  color: black;
+  font-family: var(--font-family-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.product-context h2 {
+  color: black;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  margin: 0 0 12px;
+}
+.product-context p,
+.product-context li {
+  color: black;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+.product-context ul {
+  padding-left: 20px;
+  margin: 12px 0 16px;
+}
+.product-context li {
+  margin: 4px 0;
+}
+.product-safety {
+  border-left: 3px solid var(--color-brand-green-onwhite);
+  background: #e6f5ed;
+  padding: 10px 12px;
+  font-weight: 600;
+}
+#probonoemr .product-safety {
+  border-color: var(--color-brand-orange);
+  background: var(--color-neutral-100);
+}
+.product-context .btn {
+  margin-top: 4px;
+}
+.product-context .wrap > .tour-caption {
+  margin-top: 16px;
+}
+.product-next {
+  padding: 16px 0;
+  background: white;
+  border-top: 1px solid var(--color-neutral-300);
+}
+.product-next > .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+.product-next p {
+  margin: 0;
+  color: black;
+  font-size: 0.875rem;
+}
+.product-next nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.product-next a {
+  color: black;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.simlab-page .hero {
+  padding: 24px 0;
+  background: white;
+}
+.simlab-page .hero h1 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.simlab-page .hero h1 span {
+  color: black;
+}
+.simlab-page .hero-grid {
+  gap: 32px;
+}
+.simlab-page .hero-description,
+.simlab-page .access-note,
+.simlab-page .image-note {
+  color: black;
+}
+.simlab-page .hero-principle,
+.simlab-page .hero-aside > .mono {
+  color: black;
+}
+.simlab-page .platform-strip {
+  background: var(--color-editor-bg);
+  color: black;
+}
+.simlab-page .block {
+  padding: 32px 0;
+}
+.simlab-page .section-head {
+  margin-bottom: 24px;
+}
+.simlab-page .section-head h2,
+.simlab-page .faculty-layout h2,
+.simlab-page .research h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.simlab-page .student-band,
+.simlab-page .faculty-band,
+.simlab-page .research {
+  background: var(--color-editor-bg);
+}
+.simlab-page .native-lab-card {
+  border: 1px solid var(--color-neutral-300);
+  background: white;
+  color: black;
+}
+.simlab-page .native-lab-card p,
+.simlab-page .native-lab-card .mono {
+  color: black;
+}
+.simlab-page .contact {
+  background: var(--color-brand-green-onwhite);
+  padding: 32px 0;
+}
+.simlab-page .contact h2 {
+  font-size: 1.75rem;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+@media (max-width: 1000px) {
+  .product-content {
+    padding: 16px;
+  }
+  .product-heading {
+    padding-inline: 16px;
+  }
+  .product-description {
+    font-size: 0.875rem;
+  }
+}
+@media (max-width: 760px) {
+  .portfolio-hero {
+    padding-top: 20px;
+  }
+  .portfolio-intro {
+    margin-bottom: 16px;
+  }
+  .product-jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .product-jump a {
+    padding: 8px 12px;
+    min-height: 40px;
+    border: 1px solid var(--color-input-border);
+    border-radius: var(--radius-button);
+    color: black;
+    background: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+  .product-tile + .product-tile {
+    border-left: 0;
+    border-top: 1px solid var(--color-neutral-300);
+  }
+  .product-heading {
+    min-height: 96px;
+  }
+  .product-heading h2 {
+    height: 36px;
+  }
+  .product-content {
+    padding: 16px;
+  }
+  .product-description {
+    font-size: 0.9375rem;
+  }
+  .portfolio-home .contact-layout {
+    padding: 16px;
+  }
+  .product-page-title {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .product-page-title h1 {
+    font-size: 1.75rem;
+  }
+  .product-context-grid {
+    grid-template-columns: 1fr;
+  }
+  .product-chapter-cue {
+    display: none;
+  }
+  .product-chapters button,
+  .product-chapters > a {
+    padding: 10px;
+    font-size: 0.8125rem;
+  }
+  .product-tour-bar {
+    padding: 12px;
+  }
+  .product-tour-bar .mono {
+    max-width: 28ch;
+    font-size: 0.75rem;
+  }
+  .product-tour-bar a {
+    font-size: 0.75rem;
+  }
+  [data-product-frame],
+  .painmap-page [data-product-frame] {
+    height: 780px;
+  }
+  .product-context article {
+    padding: 16px;
+  }
+  .product-context article:has(.emr-product-brand) {
+    padding: 0;
+  }
+  .emr-product-content {
+    padding: 16px;
+  }
+  .simlab-page .hero-grid {
+    gap: 20px;
+  }
+}

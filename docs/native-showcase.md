@@ -1,102 +1,39 @@
-# Native simLAB showcase
+# Live simLAB walkthrough
 
-## Source and scope
+The DevPT walkthrough at **`/simlab/`** embeds **`https://lab.devpt.app/showcase/`**. The public entry is built and deployed by `danstonedev/simlab` alongside the signed-in application. Its native components, patient case, study tools and runtime assets remain in that repository. DevPT does not build or pin another simulator.
 
-Repository: `danstonedev/simlab`.
+The old locally generated showcase and `showcase-src/` have been removed. `showcase/index.html` remains only as a redirect for earlier public bookmarks. The historical files under `demos/` are not loaded by the homepage or dedicated walkthrough.
 
-Pinned commit: **61a664ca5706c19cddb8842fbfec1f0118121917** (`61a664c`).
+## Ownership and versioned contract
 
-`showcase-src/` owns only homepage framing, scene selection and demonstration state. It imports the real components
-and renderer modules from the clean source checkout at `../simlab-native-source`; product source is not modified.
-Native labels, controls, teaching notes, clinical bounds and attribution remain native.
+DevPT owns the surrounding product story, chapter navigation, frame visibility and full-view link. The simLAB frame announces `simlab-showcase-ready` with its deployed build and a `schemaVersion: 1` manifest. That manifest supplies the chapter labels and study-tool catalogue; the parent does not maintain another list of active product controls.
 
-| Area                      | Source under `apps/mission-shell/src/lib`                | Native behavior                                                                                      |
-| ------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Patients & environments   | `ddx/InterviewPatient.svelte`, `ddx/RoomSelector.svelte` | Patient renderer, room selection, camera controls and clinical environments                          |
-| Patient interview         | `ddx/PatientInterview.svelte`                            | Type/Talk, composer/send, planned questions, transcript and selected-text evidence capture           |
-| Reasoning & evidence      | `ddx/ReasoningMap.svelte`                                | Diagnosis/finding pickers, ports, Supports/Weakens, flags, pins, likelihood and interview-plan lanes |
-| Sterile teaching baseline | `lab/MovementLab.svelte`                                 | Native catalog, presets, Body stage, examiner aids, findings, tailoring and playback                 |
-| Joint mechanics           | `lab/JointLab.svelte`                                    | Anatomy layers, authored motion, teaching notes and synchronized technique views where available     |
-| Eye examinations          | `lab/EyeLab.svelte`                                      | Native patient/eye views, vestibular presets and examination/playback controls                       |
-| Neuro lab                 | `neuro/NeuroLab.svelte`                                  | Stimulus, pathways, sensory endings, anatomy and lesion controls                                     |
-| Aquatic Therapy           | `aquatic/AquaticLab.svelte`                              | Pool scene, immersion/dose/movement, modeled responses and documentation                             |
-| Live Vitals               | `liveVitals/LiveVitalsLab.svelte`                        | Authored profiles, posture, effort, time, readings and response trends                               |
+The guest case is James Morgan (`patient-james-morgan`). simLAB's story, native session helpers and renderer implement the interview, symptom map, observed examinations, reasoning, plan and study tools. The scripted sample does not call protected AI or account APIs or persist a learner attempt. Selecting another product is navigation to another page, not a shared patient or student session.
 
-The gallery opens Movement lab's **sterile teaching view**. Its Body baseline remains unchanged: `labPlayer` creates
-the default `createMovementStage` without a clinical room. Native patient identity and rooms are optional
-presentation layers, not changes to the movement sampler. Room choices are Outpatient PT, Inpatient room and
-Performance gym. `labcuration.ts` selects existing demonstrations instead of creating new clinical exercises.
+`walkthrough.js` accepts messages only from the configured exact simLAB origin and the actual iframe window. The child accepts commands only from its trusted parent window and allowed origin. Production parents are `https://devpt.app` and `https://www.devpt.app`; the product's CSP uses the same `frame-ancestors` restriction. Moving the parent from `/` to `/simlab/` retains this origin boundary.
 
-`PatientScene.svelte` supplies a labeled presentation sequence around the actual patient renderer. Its listening,
-thinking and answering signals demonstrate gestures and appearance; they are not a live AI conversation or learner
-record. Identities and opening words come from the native case catalog. Native room/camera controls remain intact.
+Both the tour and teaser iframe must keep **`referrerpolicy="origin"`**. simLAB establishes its trusted parent from `document.referrer`. A stricter page-level referrer policy otherwise hides that origin and leaves the embedded walkthrough paused. Only the origin is supplied, without the page path or query.
 
-## Public case and service boundaries
+## Playback and state
 
-`CaseWorkspace.svelte` mounts the real interview and reasoning components with one in-memory native Session. James
-Morgan, 64 (`hip-groin-64`), is the default. The starting referral pins, diagnoses and interview-plan questions are
-example selections from native data, not an assessed answer or seeded correct ranking.
+The parent sends only versioned selection and visibility messages. Chapter selection updates the full-view URL; child-reported state updates the parent navigation without echoing another selection, which would pause the walkthrough. Modified clicks retain ordinary link behavior.
 
-The host uses native `createSession`, `patientReply`, `validPlannedQuestionContext`, `captureEvidence`,
-`toggleFindingPin`, `addHypothesis` and `getFindingFlagColors`. Authored replies produce native messages and disclosed
-findings; visitors capture excerpts with native `EvidenceText` controls. The same state is used in ReasoningMap.
+Autoplay begins only after the visitor selects **Watch James’s visit** or the native play control. Reduced-motion preferences suppress automatic playback. Intersection and document-visibility changes pause offscreen or background frames. Native renderers are released while inactive, while the guest case session remains in memory when the visitor returns. A separate full view starts a separate local demonstration.
 
-View changes do not recreate the Session. `active=false` unmounts native children while the outer host retains its
-case state across other gallery areas/offscreen pauses. Selecting another patient or **Reset demonstration** starts
-a new sample. Native child editor state resets with the new session. No learner attempt is persisted or submitted.
+## Local integration preview
 
-The public case passes `aiConfigured=false`, displays **Scripted case practice**, and receives only an authored reply
-callback. It does not mount `AuthGate` or `DdxActivity`, provide API/token callbacks, or enable protected realtime or
-`/api/speak` access. Production authentication is unchanged. Native Talk/dictation may use browser speech recognition
-after explicit activation; native notices explain that behavior. Existing homepage analytics remains configured.
+Start simLAB's mission-shell development server on `127.0.0.1:5180`, then start this repository with `npm run preview` and open:
 
-The same-origin homepage and iframe coordinate selected areas and visibility using messages checked against the
-expected window. One lab workspace is mounted at a time; case state is retained separately. Native full-view routes
-also work without the homepage iframe. Wrapper sizing provides the native `.ddx-body` container and scrolling,
-while the product's controls and layouts remain unchanged.
-
-Offscreen lab/scene suspension releases the renderer; returning mounts a fresh exploration. The sample case Session
-survives, including its transcript, captured evidence and map. Opening a separate full view starts a separate local
-demonstration, preserving the selected area and URL-backed joint selection rather than the in-memory exploration.
-
-## Frozen source and build
-
-The build was tested with Node.js 22.19.0. The build script enables TypeScript stripping for native plugin imports.
-Use pnpm 9.15.0, as declared by simLAB.
-From this homepage checkout:
-
-```bash
-git clone https://github.com/danstonedev/simlab.git ../simlab-native-source
-git -C ../simlab-native-source checkout --detach 61a664ca5706c19cddb8842fbfec1f0118121917
-git -C ../simlab-native-source submodule update --init --recursive
-pnpm --dir ../simlab-native-source install --frozen-lockfile
-npm ci
-npm run build:native
+```text
+http://127.0.0.1:8109/simlab/?simlab=http://127.0.0.1:5180
 ```
 
-For an existing checkout, inspect its changes before switching revisions. `SIMLAB_SOURCE_DIR` overrides the default
-sibling path. Preserve recorded submodule commits; do not update them with `--remote`. Relevant root pins are:
+The override is accepted only on a loopback DevPT host, for an HTTP loopback source on port `5180`. The child accepts local DevPT parents on ports `8109` or `8099` only in development. Production always uses the live simLAB public entry. Arbitrary preview domains are not added to the trusted-parent list.
 
-| Submodule         | Commit                                     |
-| ----------------- | ------------------------------------------ |
-| `pose-engine`     | `0a5f11ffb0844c9eea4e4a78aa3be1186b01e4be` |
-| `scenario-engine` | `ce212a093f40dbaa9c840299ace5656edafa09fa` |
-| `apps/painmap`    | `13f9095bc08826dc5298382714eb4ac59704885a` |
-| `apps/simvitals`  | `2252d655ad12cbc22ca9aec1ca5df3e1c06787ad` |
+## Verification and rollout
 
-`showcase/source.json` records the full commit and all recursive/nested submodule statuses. The builder verifies the
-pinned HEAD and tracked source cleanliness, prepares ignored SvelteKit config stubs for source submodules, and runs
-Vite. Native asset plugins retain the pose-engine, PainMap and Aquatic runtime assets under `/showcase/`.
+`npm run check:walkthrough` verifies the dedicated route, both trusted live frames, root-relative assets, shared product navigation, live catalogue, origin/source checks and visibility coordination. It also rejects a vendored simulator or a walkthrough that has drifted back onto the DevPT homepage.
 
-## Generated deployment assets
+In a browser, check the teaser, every chapter, native play/pause, study tools, full view, mobile chapter scrolling, reduced motion, offscreen/background suspension and case retention. Inspect desktop and phone widths. simLAB's `apps/mission-shell/e2e/public-showcase.spec.ts` covers the real guest story; its showcase unit tests cover the trusted-parent and command boundary.
 
-The builder regenerates `showcase/`: HTML, hashed JavaScript/CSS, models/runtime assets, `source.json` and `credits/`.
-It also copies root `simlab-logo.png`. The packaged credits include joint anatomy attribution, patient/room metadata
-and Svelte/Three.js licenses. Preserve native on-screen source links and teaching/model caveats.
-
-Review and commit generated output with source-wrapper changes. Azure uploads the repository root with
-`skip_app_build: true`; it does not fetch simLAB or run npm/pnpm/Vite during deployment. Source edits alone do not
-update the deployed showcase. Serving already checked-in output does not require the sibling source checkout.
-
-The superseded `experience.*`, `reasoning-demo.*` and `demos/` adapters are not loaded by the current homepage.
-`build:demos` remains for those historical assets. Use **`build:native`** for the current product showcase.
+For a contract change, deploy the compatible simLAB public entry first, confirm the guest walkthrough, then deploy DevPT. Ordinary simLAB deployments update the embedded experience without another DevPT build. Signed-in access and API admission remain owned by simLAB.

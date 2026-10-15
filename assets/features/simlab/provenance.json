@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 1,
+  "product": "simlab",
+  "surface": "actual-student-workspace",
+  "repository": "danstonedev/simlab",
+  "sourceCommit": "292497b7249045b27edd86bfcb3c58fecb2026fe",
+  "liveReleaseProof": {
+    "url": "https://lab.devpt.app/assets/App-DR7ms4-0.js",
+    "sourceRevision": "292497b7249045b27edd86bfcb3c58fecb2026fe",
+    "sourceRevisionFoundInBundle": true,
+    "bundleSha256": "68f14c6680547469b61a60d460f10ab43ca188cb5032485c948ae0a4151927e3",
+    "checkedAt": "2026-10-15T17:32:21.680Z"
+  },
+  "capturedAt": "2026-10-15T17:29:42.640Z",
+  "productEntry": "https://lab.devpt.app/",
+  "entry": "/",
+  "encounterRoute": "/?classSession=cs_b2ad67d75b06744a871431e5&mission=hip-ddx-practice",
+  "missionId": "hip-ddx-practice",
+  "nativePatientId": "patient-james-morgan",
+  "caseId": "hip-groin-64",
+  "actor": {
+    "key": "dpt-alex",
+    "displayName": "Alex DPT Student",
+    "role": "student"
+  },
+  "authentication": "Plain production frontend built from verified live-deployed source, served locally through a Host-preserving preview proxy. Supported dev:users synthetic actor cookies and real in-memory API handlers; ordinary faculty class creation and student code join. These are not literal signed-in production recordings.",
+  "submodules": [
+    "bb0418e0ff90c1f5c53c1f77ea732f9f6f9d0f7f apps/painmap (bb0418e)",
+    "79a3e9ad12079f0883d25a04d602741d9ffb6bc9 apps/painmap/pose-engine (79a3e9a)",
+    "2252d655ad12cbc22ca9aec1ca5df3e1c06787ad apps/simvitals (2252d65)",
+    "f66070c964ce9560ec21aa18101973f0f14f71d0 apps/simvitals/pose-engine (f66070c)",
+    "6280fba2e37d9ee4e682b60e61d8cefb894e92a0 apps/simvitals/scenario-engine (6280fba)",
+    "db90f127d2361d388ba01c9ee6ff4a7fa933f755 pose-engine (heads/main)",
+    "ce212a093f40dbaa9c840299ace5656edafa09fa scenario-engine (ce212a0)"
+  ],
+  "capture": {
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "deviceScaleFactor": 1,
+    "browser": "System Chromium headless",
+    "renderer": "SwiftShader; native software-render budget retained",
+    "durationSeconds": 12,
+    "processing": "Trim original browser recording and transcode to silent H.264. No UI overlays, cropping, source edits, mocked responses, or localStorage writes. Native Continue anyway advisories are used to review this incomplete synthetic educational encounter; no completion or clinical acceptance is claimed."
+  },
+  "pageErrors": [],
+  "providerCalls": [],
+  "localApiResponses": [
+    {
+      "path": "/api/user",
+      "status": 200
+    },
+    {
+      "path": "/api/health",
+      "status": 500
+    },
+    {
+      "path": "/api/class-join",
+      "status": 200
+    },
+    {
+      "path": "/api/class-join",
+      "status": 200
+    },
+    {
+      "path": "/api/user",
+      "status": 200
+    },
+    {
+      "path": "/api/health",
+      "status": 500
+    },
+    {
+      "path": "/api/class-join",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/mine",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/facts",
+      "status": 200
+    },
+    {
+      "path": "/api/speak",
+      "status": 503
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/facts",
+      "status": 200
+    },
+    {
+      "path": "/api/ddx/patient/voice-instructions",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/mine",
+      "status": 200
+    },
+    {
+      "path": "/api/learner-trace",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/facts",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/mine",
+      "status": 200
+    },
+    {
+      "path": "/api/learner-trace",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/mine",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/facts",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/facts",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/facts",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/facts",
+      "status": 200
+    },
+    {
+      "path": "/api/learner-trace",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/mine",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/facts",
+      "status": 200
+    },
+    {
+      "path": "/api/learner-trace",
+      "status": 200
+    },
+    {
+      "path": "/api/class-sessions/cs_b2ad67d75b06744a871431e5/mine",
+      "status": 200
+    }
+  ],
+  "assets": [
+    {
+      "id": "differentials",
+      "poster": "differentials.png",
+      "video": "differentials.mp4",
+      "proof": {
+        "route": "/?classSession=cs_b2ad67d75b06744a871431e5&mission=hip-ddx-practice",
+        "studentIdentity": "Alex DPT Student",
+        "role": "Student",
+        "nativeDdx": true,
+        "publicShowcase": false
+      },
+      "caption": "Connect charted findings to working differentials.",
+      "stage": "Chart review & plan",
+      "workflow": "A real student pins the native referral finding, adds three native diagnoses, then connects the chart finding to two working differentials with native ports. These are illustrative student-entered hypotheses, not a graded conclusion.",
+      "width": 1280,
+      "height": 800,
+      "durationSeconds": 11.96,
+      "bytes": 212736,
+      "posterBytes": 122535,
+      "audio": false,
+      "sha256": {
+        "poster": "f17797f2a94268d97cb5fe18c8056b84b4373ee9a7a74b9c2d10a6766e9bceb0",
+        "video": "333e68502c341737c7717f38fdd67dd0fbdedc8945ca7c2bd91b9c6e44b1b460"
+      }
+    },
+    {
+      "id": "interview",
+      "poster": "interview.png",
+      "video": "interview.mp4",
+      "proof": {
+        "route": "/?classSession=cs_b2ad67d75b06744a871431e5&mission=hip-ddx-practice",
+        "studentIdentity": "Alex DPT Student",
+        "role": "Student",
+        "nativeDdx": true,
+        "publicShowcase": false
+      },
+      "caption": "Interview the native 3D patient inside the student encounter.",
+      "stage": "Interview",
+      "workflow": "Actual production student PatientInterview with native 3D patient, original case opening and an unsent student question. Patient voice is muted with the native control. No AI answer is requested or fabricated; the full student app chrome remains visible.",
+      "width": 1280,
+      "height": 800,
+      "durationSeconds": 12,
+      "bytes": 441752,
+      "posterBytes": 536016,
+      "audio": false,
+      "sha256": {
+        "poster": "2aecbfd930f8a5a998de44fe3d56e4158778c752a250df727b17d961228f12e4",
+        "video": "229448f076f43c5ac0276a0f7e33887da2817712c5855ece34f4ae5d0f9e2cf2"
+      },
+      "posterFrameSeconds": 0.5
+    },
+    {
+      "id": "passive-rom",
+      "poster": "passive-rom.png",
+      "video": "passive-rom.mp4",
+      "proof": {
+        "route": "/?classSession=cs_b2ad67d75b06744a871431e5&mission=hip-ddx-practice",
+        "studentIdentity": "Alex DPT Student",
+        "role": "Student",
+        "nativeDdx": true,
+        "publicShowcase": false
+      },
+      "caption": "Observe passive hip range of motion in the student Examination workspace.",
+      "stage": "Examination",
+      "workflow": "The student plans and performs native right-hip PROM using the native typed Objective command with supported sitting position and ordinary individual admission/observation, then replays that completed test with native Loop and timeline controls. No written fallback, accelerated reveal or stage injection.",
+      "examId": "bx-prom-hip-ir-right",
+      "builder": {
+        "kind": "prom",
+        "itemId": "hip-ir",
+        "side": "right",
+        "position": "sitting"
+      },
+      "width": 1280,
+      "height": 800,
+      "durationSeconds": 12,
+      "bytes": 407758,
+      "posterBytes": 313056,
+      "audio": false,
+      "sha256": {
+        "poster": "961aa7eee4872a34993376871edffeddcb567f46aac0e1cd6c615fe7cf06d60d",
+        "video": "2b442a8c8e899bb398207bcd9c1fac8549b433a0f7b8e261abeceac0896fe76a"
+      },
+      "observation": {
+        "examId": "bx-prom-hip-ir-right",
+        "durationSeconds": 6,
+        "performedAt": "2026-10-15T17:29:15.970Z",
+        "reviewedAt": "2026-10-15T17:29:23.572Z",
+        "revealMethod": "individual",
+        "timing": {
+          "basis": "animation",
+          "testSeconds": 6,
+          "transitionSeconds": 0,
+          "fromPosition": "sitting",
+          "endPosition": "sitting"
+        },
+        "position": "sitting",
+        "awaitingObservation": false
+      }
+    }
+  ],
+  "servedBuildProof": {
+    "appPath": "/assets/App-BSr6fe1O.js",
+    "sourceRevision": "292497b7249045b27edd86bfcb3c58fecb2026fe",
+    "sourceRevisionFoundInBundle": true,
+    "bundleSha256": "80b54b65c9fb2ceead21116847e810101b2d10ecc112a607ce4d8ac41df9f790"
+  },
+  "runtimeLimitations": [
+    "The locally served production frontend uses the official synthetic in-memory user/class API, with AI/EMR pass-through pointed at unused loopback port 65530. The recordings are not literal signed-in production sessions.",
+    "The native automatic voice preparation reads authored persona instructions; local health and spoken-audio requests are unavailable (500/503, recorded below). No AI answer, realtime token, microphone, EMR relay or external provider is used. The interview clip types an unsent question.",
+    "SwiftShader software rendering retains the product adaptive budget; 3D resolution can soften. The interview poster is the original native frame 0.5 seconds into the encoded clip, before typing, with no cropping or sharpening."
+  ]
+}
