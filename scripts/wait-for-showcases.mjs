@@ -1,9 +1,33 @@
 #!/usr/bin/env node
-/** Release the hub only after both newly introduced native entries are deployed. */
+/** Release the hub only after all required source-owned entries are deployed. */
 import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 const parents = ["https://devpt.app", "https://www.devpt.app"];
+
+export function releaseTargets(registry) {
+  const ids = ["simlab", "emrs", "painmap"];
+  const products = registry.productLines.filter((product) =>
+    ids.includes(product.id),
+  );
+  if (products.length !== 3 || new Set(products.map((p) => p.id)).size !== 3)
+    throw new Error(
+      "All three source-owned product entries must be registered.",
+    );
+  return products.map((product) => {
+    if (product.id !== "simlab") return product;
+    const workspace = product.showcase.workspace;
+    if (
+      workspace?.url !==
+        "https://lab.devpt.app/showcase/?presentation=workspace" ||
+      workspace.contract !== "simlab-workspace:v1"
+    )
+      throw new Error(
+        "The native simLAB workspace contract must be registered.",
+      );
+    return { ...product, showcase: workspace };
+  });
+}
 
 export function permitsDevPT(csp) {
   if (!csp) return false;
@@ -38,8 +62,10 @@ export async function probeShowcase(product, fetcher = fetch) {
     if (!permitsDevPT(response.headers.get("content-security-policy")))
       return `${product.id}: DevPT framing is not enabled`;
     const html = await response.text();
+    const contract = product.showcase.contract || `${product.id}:v1`;
+    const literal = contract.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const marker = new RegExp(
-      `<meta\\b(?=[^>]*\\bname=["']devpt-showcase["'])(?=[^>]*\\bcontent=["']${product.id}:v1["'])[^>]*>`,
+      `<meta\\b(?=[^>]*\\bname=["']devpt-showcase["'])(?=[^>]*\\bcontent=["']${literal}["'])[^>]*>`,
       "i",
     );
     return marker.test(html)
@@ -58,7 +84,7 @@ export async function waitForShowcases(products, timeoutSeconds = 0) {
     ).filter(Boolean);
     if (!pending.length) {
       console.log(
-        "Both source-owned walkthroughs are deployed and allow DevPT framing.",
+        "All source-owned product entries are deployed and allow DevPT framing.",
       );
       return true;
     }
@@ -77,14 +103,7 @@ if (
   const registry = JSON.parse(
     readFileSync(new URL("../apps.json", import.meta.url), "utf8"),
   );
-  const products = registry.productLines.filter((product) =>
-    ["emrs", "painmap"].includes(product.id),
-  );
-  if (
-    products.length !== 2 ||
-    new Set(products.map((product) => product.id)).size !== 2
-  )
-    throw new Error("Both source-owned walkthroughs must be registered.");
+  const products = releaseTargets(registry);
   const timeout = Number(
     process.argv[process.argv.indexOf("--timeout-seconds") + 1] || 0,
   );

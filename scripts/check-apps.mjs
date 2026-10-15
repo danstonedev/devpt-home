@@ -162,6 +162,18 @@ if (
       ) {
         errors.push(`${product.id}: local showcase port is invalid`);
       }
+      if (product.id === "simlab") {
+        const workspace = product.showcase.workspace;
+        const nativeUrl = new URL(workspace.url);
+        if (
+          nativeUrl.origin !== source.origin ||
+          nativeUrl.pathname !== source.pathname ||
+          nativeUrl.search !== "?presentation=workspace" ||
+          nativeUrl.hash ||
+          workspace.contract !== "simlab-workspace:v1"
+        )
+          errors.push("simlab: native workspace URL or contract is invalid");
+      }
     } catch {
       errors.push(`${product.id}: invalid source-owned showcase URL`);
     }

@@ -209,6 +209,130 @@
 .portfolio-home .image-dialog::backdrop {
   background: rgb(0 0 0 / 80%);
 }
+.simlab-feature-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  min-height: 220px;
+  padding: 18px;
+  aspect-ratio: auto;
+  overflow: visible;
+}
+.simlab-feature-intro p {
+  margin: 0;
+  color: black;
+}
+.simlab-case-label {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+.simlab-feature-cue {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.simlab-feature-copy {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.simlab-direct-link {
+  margin-top: auto;
+  color: black;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.simlab-live-dialog {
+  width: min(1440px, calc(100vw - 32px));
+  height: min(1000px, calc(100dvh - 32px));
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-neutral-500);
+  border-radius: var(--radius-card);
+  color: black;
+  background: white;
+}
+.simlab-live-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.simlab-live-dialog[data-state="unavailable"] {
+  height: auto;
+}
+.simlab-live-dialog::backdrop {
+  background: rgb(0 0 0 / 80%);
+}
+.simlab-live-toolbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px;
+  color: white;
+  background: black;
+}
+.simlab-live-toolbar h2 {
+  margin: 0;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.simlab-live-toolbar button {
+  flex-shrink: 0;
+}
+.simlab-live-notice {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-neutral-300);
+  background: var(--color-neutral-100);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+.simlab-live-notice[hidden] {
+  display: none;
+}
+.simlab-live-notice p {
+  flex: 1 1 260px;
+  margin: 0;
+}
+.simlab-live-notice a {
+  color: black;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.simlab-live-stage {
+  flex: 1;
+  min-height: 0;
+}
+[data-simlab-live-frame] {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: white;
+}
+body:has(.simlab-live-dialog[open]) {
+  overflow: hidden;
+}
+@media (max-width: 600px) {
+  .simlab-live-dialog {
+    width: calc(100vw - 16px);
+    height: calc(100dvh - 16px);
+  }
+}
 .product-description {
   color: black;
   font-size: 0.9375rem;

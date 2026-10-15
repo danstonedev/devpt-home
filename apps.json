@@ -177,7 +177,11 @@
       "appIds": ["lab"],
       "showcase": {
         "url": "https://lab.devpt.app/showcase/",
-        "localPort": 5180
+        "localPort": 5180,
+        "workspace": {
+          "url": "https://lab.devpt.app/showcase/?presentation=workspace",
+          "contract": "simlab-workspace:v1"
+        }
       }
     },
     {

@@ -38,14 +38,14 @@ Existing photographs and screenshots are supporting imagery; they are not a repl
 
 ## Homepage feature previews
 
-The homepage introduces each product with three native feature screenshots and optional recorded clips:
+The homepage introduces three features from each product:
 
 - simLAB: patient interview, connecting differentials and passive range of motion.
 - EMRs: note workspace, a student clinic schedule and faculty feedback with comments.
 - 3Dpain.app: symptom mapping, pose/movement and timeline review of a pain progression.
 
-Keep captures under `assets/features/{simlab,emrs,painmap}/`, with the owning repository's revision and capture details alongside them. Use the product's real interface and synthetic demonstration data. Refresh these exports from the native workflows when the feature changes; do not recreate interfaces in the homepage or relabel a different feature to fill a gap.
+simLAB's three actions open its real public practice workspace in one full-size iframe dialog. The source-owned URL is `/showcase/?presentation=workspace&section=interview|reason|examine` on `lab.devpt.app`. It mounts the native patient toolbar, encounter activity and guest header with a fictional James Morgan case. The interview, reasoning map and observation-gated examination use the same components as the application. Practice state stays in memory; this public entry requests no account, learner records or AI provider credentials. The dedicated guided `/simlab/` walkthrough remains separate.
 
-Capture simLAB's homepage features from the actual student application: its own app header, encounter workspace, reasoning tools and examination controls. Verify the source revision against the live application's build before recording, then use a production build with the supported local student/class backend and synthetic data. Development builds can expose demonstration controls that do not appear in the live experience. Preserve the native workspace context and record the build and capture method with the assets. The public guided visit remains the dedicated `/simlab/` walkthrough.
+No simulator loads on the homepage until a visitor selects **Try live**. The dialog owns one iframe, validates its exact origin, source window and `simlab-workspace` manifest, and pauses when the page is hidden. Closing removes the iframe and returns focus to its trigger. A full-view source link remains available without JavaScript or if the embed fails. The release workflow requires the deployed source's `simlab-workspace:v1` marker and DevPT framing policy before uploading the homepage; the older guided manifest cannot satisfy that gate. The former software-rendered simLAB captures are retired from the homepage.
 
-Screenshots can be enlarged and remain available without JavaScript. Clips load only when requested, use native video controls and never start or loop automatically. The homepage pauses a clip when another starts, when it leaves view or when the page is hidden. Keep the complete native frame visible, including portrait recordings inside the landscape preview; never stretch product UI to fit.
+The six EMR and 3Dpain.app previews retain their native screenshots and optional recorded clips under `assets/features/{emrs,painmap}/`, with source revisions and capture details alongside them. Use synthetic demonstration data and refresh exports from the owning workflows when those features change. Screenshots can be enlarged and remain available without JavaScript. Clips load only when requested, use native video controls and never start or loop automatically. The homepage pauses a clip when another starts, when it leaves view or when the page is hidden. Keep the complete native frame visible without stretching its interface.

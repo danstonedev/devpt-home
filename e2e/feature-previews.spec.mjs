@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const origin = "http://127.0.0.1:8109";
-const productIds = ["simlab", "emrs", "painmap"];
+const productIds = ["emrs", "painmap"];
 
 function figures(page, product) {
   return page.locator(
@@ -108,7 +108,7 @@ test("native playback pauses other clips and scrolling away never resumes them a
   page,
 }) => {
   await page.goto("/");
-  const group = figures(page, "simlab");
+  const group = figures(page, "emrs");
   const first = group.nth(0);
   const second = group.nth(1);
   const top = await first
@@ -260,13 +260,13 @@ test("an external video source never replaces the native screenshot", async ({
     await route.fulfill({
       response,
       body: html.replace(
-        'src="/assets/features/simlab/interview.mp4"',
+        'src="/assets/features/emrs/workspace.mp4"',
         'src="https://untrusted.example/clip.mp4"',
       ),
     });
   });
   await page.goto("/");
-  const figure = figures(page, "simlab").first();
+  const figure = figures(page, "emrs").first();
   await expect(figure.locator("[data-feature-play]")).toBeHidden();
   await expect(figure.locator(".feature-still")).toBeVisible();
   await expect(figure.locator("video")).toBeHidden();
@@ -278,7 +278,7 @@ test.describe("without JavaScript", () => {
     page,
   }) => {
     await page.goto("/");
-    await expect(page.locator("[data-feature-preview]")).toHaveCount(9);
+    await expect(page.locator("[data-feature-preview]")).toHaveCount(6);
     await expect(page.locator("[data-feature-play]:visible")).toHaveCount(0);
     await expect(page.locator("[data-feature-video]:visible")).toHaveCount(0);
     for (const product of productIds) {

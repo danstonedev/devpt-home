@@ -149,14 +149,22 @@ test("the homepage introduces three distinct product lines and destinations", as
       product.path,
     );
     await expect(card.locator(".feature-preview")).toHaveCount(3);
-    await expect
-      .poll(() =>
-        card
-          .locator(".feature-still img")
-          .first()
-          .evaluate((image) => image.naturalWidth),
-      )
-      .toBeGreaterThan(0);
+    if (product.id === "simlab") {
+      await expect(card.locator("[data-simlab-preview]")).toHaveCount(3);
+      await expect(card.locator("[data-simlab-try]:visible")).toHaveCount(3);
+      await expect(
+        card.locator(".feature-gallery img, .feature-gallery video"),
+      ).toHaveCount(0);
+    } else {
+      await expect
+        .poll(() =>
+          card
+            .locator(".feature-still img")
+            .first()
+            .evaluate((image) => image.naturalWidth),
+        )
+        .toBeGreaterThan(0);
+    }
     boxes.push(await card.boundingBox());
   }
   if (testInfo.project.name === "phone") {
