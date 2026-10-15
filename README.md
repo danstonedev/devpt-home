@@ -42,6 +42,11 @@ versioned ready message. Updating the catalogue in simLAB updates the homepage
 navigation and study cards without another homepage build. Iframes pause and
 release their native views while offscreen; the guest's case state remains.
 
+The two walkthrough iframes explicitly use `referrerpolicy="origin"`. The
+production site's `Referrer-Policy: same-origin` otherwise hides devPT's origin
+from the trusted bridge and leaves the embed paused. This frame policy sends
+only the origin, without the homepage path or query.
+
 The old `showcase/` URL is a bookmark redirect to the live entry. The former
 generated assets, `showcase-src/` adapters and pinned-source build script have
 been retired. `node scripts/check-live-showcase.mjs` runs in CI to prevent a
