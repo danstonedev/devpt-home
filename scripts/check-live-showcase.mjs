@@ -6,6 +6,8 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = file => readFileSync(resolve(root, file), 'utf8');
 const page = read('index.html'), bridge = read('walkthrough.js');
 assert(page.includes('data-live-showcase="tour"') && page.includes('data-live-showcase="teaser"'), 'Both homepage scenes must load the live public entry.');
+const frames = [...page.matchAll(/<iframe\b[^>]*data-live-showcase="(?:tour|teaser)"[^>]*>/g)].map(match => match[0]);
+assert(frames.length === 2 && frames.every(frame => frame.includes('referrerpolicy="origin"')), 'Trusted walkthrough frames must identify the homepage origin even when the site suppresses cross-origin referrers.');
 assert(page.includes('src="walkthrough.js"'), 'The live bridge must be loaded.');
 assert(!page.includes('src="showcase/') && !page.includes('native-showcase.js'), 'The homepage must not load a vendored simulator.');
 assert(bridge.includes('https://lab.devpt.app/showcase/'), 'The production walkthrough must come from simLAB.');
