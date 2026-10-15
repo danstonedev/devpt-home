@@ -1,0 +1,204 @@
+{
+  "capturedAt": "2026-10-15T16:12:21.968Z",
+  "source": {
+    "repository": "danstonedev/devpt-emr-platform",
+    "commit": "0d80673ef1e074c673921c1432f3bc6c802539d8",
+    "branch": "codex/public-emr-walkthrough"
+  },
+  "capture": {
+    "browser": "Chromium via Playwright",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "finalVideo": {
+      "width": 1280,
+      "height": 800
+    },
+    "durationSeconds": 11,
+    "operations": "Native navigation, native slot picker, native faculty comment add/edit. Only initial loading footage trimmed; H.264 encoded for delivery. No DOM replacement, UI overlays or fabricated records."
+  },
+  "fixture": {
+    "backend": "Loopback Vite local-god-mode plugin, real API handlers over in-memory harness store",
+    "schedule": {
+      "startDate": "2026-10-19",
+      "weeks": 14,
+      "groups": [
+        {
+          "groupId": "local-group-dpt-1",
+          "weekday": 1,
+          "times": ["09:00", "10:00"]
+        },
+        {
+          "groupId": "local-group-dpt-2",
+          "weekday": 1,
+          "times": ["09:00", "10:00"]
+        },
+        {
+          "groupId": "local-group-pta-1",
+          "weekday": 3,
+          "times": ["10:45", "11:30"]
+        },
+        {
+          "groupId": "local-group-pta-2",
+          "weekday": 3,
+          "times": ["10:45", "11:30"]
+        },
+        {
+          "groupId": "local-group-interdisciplinary",
+          "weekday": 3,
+          "times": ["10:45", "11:30"]
+        }
+      ]
+    },
+    "bookings": [
+      {
+        "patientId": "patient_local_ada",
+        "templateId": "pt-outpatient-follow-up",
+        "visitDate": "2026-10-19",
+        "visitTime": "09:00",
+        "intent": "schedule"
+      },
+      {
+        "patientId": "patient_local_ellen",
+        "templateId": "pt-outpatient-follow-up",
+        "visitDate": "2026-10-26",
+        "visitTime": "09:00",
+        "intent": "schedule"
+      },
+      {
+        "patientId": "patient_local_ada",
+        "templateId": "pt-outpatient-follow-up",
+        "visitDate": "2026-11-02",
+        "visitTime": "10:00",
+        "intent": "schedule"
+      }
+    ],
+    "occupancy": {
+      "visibleSlots": 6,
+      "booked": 3,
+      "available": 3,
+      "fractionBooked": 0.5
+    },
+    "feedback": {
+      "patient": "Ben Carter (patient_local_ben)",
+      "actor": "Dr. DPT Faculty (local-dev-faculty)",
+      "state": "Private faculty review draft; no feedback release or co-sign performed",
+      "teamComment": "Good connection between the patient’s goals and functional limitations. Add a measurable baseline for overhead reach and explain how you will reassess progress.",
+      "passageComment": "Make this baseline measurable: record height, repetitions or activity duration so you can compare the next visit."
+    }
+  },
+  "assets": [
+    {
+      "id": "workspace",
+      "sourceRoute": "http://127.0.0.1:5181/showcase/",
+      "actor": null,
+      "durationSeconds": 11,
+      "video": {
+        "width": 1280,
+        "height": 800,
+        "codec": "h264",
+        "audio": false
+      },
+      "poster": {
+        "width": 1440,
+        "height": 900
+      },
+      "externalRequestOrigins": [],
+      "files": [
+        {
+          "file": "workspace.png",
+          "bytes": 142968,
+          "sha256": "de014a19aa38d735e02516b3f16aa7c558717ab0e62aaf030f5f3c902a2fc8b2"
+        },
+        {
+          "file": "workspace.mp4",
+          "bytes": 355802,
+          "sha256": "0160066a0598ad7b238861fbfe01a52bb6c36e1b71f99dcd5a0793a66fd17eea"
+        }
+      ],
+      "verifiedActor": null
+    },
+    {
+      "id": "student-schedule",
+      "sourceRoute": "http://127.0.0.1:3001/workspace/scheduling",
+      "actor": "local-dev-student",
+      "durationSeconds": 10.958333,
+      "video": {
+        "width": 1280,
+        "height": 800,
+        "codec": "h264",
+        "audio": false
+      },
+      "poster": {
+        "width": 1440,
+        "height": 900
+      },
+      "externalRequestOrigins": ["https://fonts.googleapis.com"],
+      "files": [
+        {
+          "file": "student-schedule.png",
+          "bytes": 78207,
+          "sha256": "953cac07674bf6068771e5242e18d161883612e4fedcd40fc883f5d235053e0b"
+        },
+        {
+          "file": "student-schedule.mp4",
+          "bytes": 204338,
+          "sha256": "c639c1b01720cc7fa58d237ca94490eea7a06d5b12c88dc280d074351106c055"
+        }
+      ],
+      "verifiedActor": {
+        "id": "local-dev-student",
+        "displayName": "Alex DPT Student",
+        "role": "student",
+        "studentType": "DPT",
+        "oversightProgram": null,
+        "patientId": null
+      }
+    },
+    {
+      "id": "faculty-feedback",
+      "sourceRoute": "http://127.0.0.1:3001/oversight/review",
+      "actor": "local-dev-faculty",
+      "durationSeconds": 11,
+      "video": {
+        "width": 1280,
+        "height": 800,
+        "codec": "h264",
+        "audio": false
+      },
+      "poster": {
+        "width": 1440,
+        "height": 900
+      },
+      "externalRequestOrigins": ["https://fonts.googleapis.com"],
+      "files": [
+        {
+          "file": "faculty-feedback.png",
+          "bytes": 197969,
+          "sha256": "622b941ab6346d12935c77436e46a9ff002b3898a01e6fd20ce59a5a89c80d87"
+        },
+        {
+          "file": "faculty-feedback.mp4",
+          "bytes": 338746,
+          "sha256": "8a60d60fbee761ea5432a484b65423badcf6e4d3aa40536669076865d37a27ae"
+        }
+      ],
+      "verifiedActor": {
+        "id": "local-dev-faculty",
+        "displayName": "Dr. DPT Faculty",
+        "role": "faculty",
+        "studentType": null,
+        "oversightProgram": "DPT",
+        "patientId": null
+      }
+    }
+  ],
+  "validation": {
+    "nativeActorRoles": "Confirmed from the local actor endpoint and visible Student/Faculty profile headers.",
+    "schedule": "Native DOM asserted 6 configured term slots, 3 booked visits and 3 Available slots before recording.",
+    "feedback": "Native DOM asserted 2 actual added draft comments; passage highlight and saved status visually inspected.",
+    "media": "All MP4s decoded without errors; first, middle and last frames extracted for review; all posters visually inspected. Byte counts and SHA-256 digests verified.",
+    "productCheckout": "No product source changes made during media capture."
+  }
+}

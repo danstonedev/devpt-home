@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "capturedAtDate": "2026-10-15",
+  "product": "3Dpain.app",
+  "repository": "https://github.com/danstonedev/3DPainMap",
+  "source": {
+    "checkoutCommit": "b8669ea13ff6dff318e237d9d57a3bd72a9c3210",
+    "mergedMainCommit": "42286bbdbcabbbde19a3758c0030d75d4bd2bba4",
+    "identicalTree": "b745d2f038274d4ba199e06b73ee7c876ec6eef8",
+    "poseEngineCommit": "db90f127d2361d388ba01c9ee6ff4a7fa933f755",
+    "unchangedProductWorktree": true
+  },
+  "capture": {
+    "baseUrl": "http://localhost:5182",
+    "serverMode": "e2e",
+    "viewport": {
+      "width": 1280,
+      "height": 800,
+      "deviceScaleFactor": 1
+    },
+    "browser": "Chromium headless",
+    "ui": "native, without style or control replacement",
+    "helper": "capture.mjs",
+    "fixtureHelper": "e2e/paintedMap.ts",
+    "fixture": "e2e/fixtures/painted-map.json",
+    "fixtureSha256": "83e1dd47e3e1b3a87c1bda4633dc99f6059f06ce157b965dd8ce0627751ca889",
+    "fixtureIdentity": "Synthetic Painted Fixture / BC-FIXTURE. Source geometry has no patient identity or notes.",
+    "newStrokesOrPoseDragsDispatched": false
+  },
+  "features": {
+    "mapping": {
+      "caption": "Map symptoms on the body",
+      "alt": "Native 3Dpain workspace showing a synthetic painted body map and symptom findings.",
+      "posterRoute": "/app/patients/painted-fixture/assessments/feature-mapping",
+      "posterSource": "owner-authored fixture loaded through the sanctioned native test helper",
+      "clipSource": "static/hero/workspace-paint.mp4",
+      "clipMethod": "byte-identical copy of the committed native recording",
+      "sourceRecorder": "scripts/capture-homepage-demos.mjs",
+      "sourceCatalog": "src/lib/marketing/v2/siteContent.ts",
+      "publicWalkthrough": "/showcase/?chapter=paint",
+      "png": {
+        "file": "mapping.png",
+        "bytes": 190269,
+        "sha256": "2a0300f8a1eeef876f8a6461540909ee732c8c13a556260ae9e0226c0a8345a1",
+        "width": 1280,
+        "height": 800,
+        "mimeType": "image/png"
+      },
+      "mp4": {
+        "file": "mapping.mp4",
+        "bytes": 112007,
+        "sha256": "5d400b688f9b1bff25283107d461954c3325e742b07af34d706a5b09dca2d00d",
+        "width": 390,
+        "height": 720,
+        "codec": "h264",
+        "frameRate": "25/1",
+        "durationSeconds": 11.16,
+        "mimeType": "video/mp4",
+        "audio": false
+      }
+    },
+    "movement": {
+      "caption": "Position the body with the Pose tool",
+      "alt": "Native 3Dpain Pose tool showing green joint handles on a full-body mannequin.",
+      "posterRoute": "/app/patients/painted-fixture/assessments/feature-mapping",
+      "posterSource": "native pose_move assessment, Pose tool active, native Home camera reset and zoom out",
+      "clipSource": "static/hero/workspace-pose.mp4",
+      "clipMethod": "byte-identical copy of the committed native joint-handle positioning recording",
+      "sourceRecorder": "scripts/capture-homepage-demos.mjs",
+      "sourceCatalog": "src/lib/marketing/v2/siteContent.ts",
+      "publicWalkthrough": "/showcase/?chapter=pose",
+      "limitation": "The clip demonstrates the Pose tool, not the separate Movement preset workflow. Reused portrait video and fresh landscape poster use separate sample workspaces.",
+      "png": {
+        "file": "movement.png",
+        "bytes": 183256,
+        "sha256": "2f8d593b0178cfbf252e1ed142d77c839891dfa13d5d8a30d25182373f3f5b7f",
+        "width": 1280,
+        "height": 800,
+        "mimeType": "image/png"
+      },
+      "mp4": {
+        "file": "movement.mp4",
+        "bytes": 112752,
+        "sha256": "fa1168dbae1947de8bca0fb519f6b06aa264364166e59c6d3d6f15ff6804aab3",
+        "width": 390,
+        "height": 720,
+        "codec": "h264",
+        "frameRate": "25/1",
+        "durationSeconds": 11.88,
+        "mimeType": "video/mp4",
+        "audio": false
+      }
+    },
+    "timeline": {
+      "caption": "Review maps over time",
+      "alt": "Native History preview and snapshot playback controls for three synthetic saved symptom maps.",
+      "route": "/app/patients/painted-fixture/assessments/feature-timeline/progress",
+      "sourceComponent": "src/lib/components/HistorySnapshotPreview.svelte",
+      "persistenceSource": "src/lib/services/symptomMapPersistence.ts",
+      "syntheticVisits": [
+        {
+          "label": "Sample visit 1",
+          "savedAt": "2026-10-01T14:00:00.000Z",
+          "existingFixtureFindingCount": 1
+        },
+        {
+          "label": "Sample visit 2",
+          "savedAt": "2026-10-08T14:00:00.000Z",
+          "existingFixtureFindingCount": 3
+        },
+        {
+          "label": "Sample visit 3",
+          "savedAt": "2026-10-15T14:00:00.000Z",
+          "existingFixtureFindingCount": 5
+        }
+      ],
+      "clipMethod": "Native Play plus snapshot button selection; actual saved geometry changes 1→2→3. Whole native viewport, no cropping. H.264, yuv420p, faststart, no audio.",
+      "rawRecording": "/tmp/devpt-painmap-feature-capture/page@36ac0389eff1a00be743076b60e59b03.webm",
+      "rawTrimStartSeconds": 50.229,
+      "rawTrimDurationSeconds": 29.013,
+      "playbackSpeedMultiplier": 2.072357,
+      "limitation": "Synthetic stored-state examples, not a real clinical course. No metric values supplied; native Metrics unavailable labels remain visible. Recorded in local e2e mode.",
+      "png": {
+        "file": "timeline.png",
+        "bytes": 99653,
+        "sha256": "154344fd9a4808547bf58044213bd42c5706e0dd94c798e6e8ebeb0618cb7833",
+        "width": 1280,
+        "height": 800,
+        "mimeType": "image/png"
+      },
+      "mp4": {
+        "file": "timeline.mp4",
+        "bytes": 261948,
+        "sha256": "885545ee3f1601d00dc0939d5586ba46e1b9dbff0fcdd232bc6ba2f15230340b",
+        "width": 1280,
+        "height": 800,
+        "codec": "h264",
+        "frameRate": "25/1",
+        "durationSeconds": 14.08,
+        "mimeType": "video/mp4",
+        "audio": false
+      }
+    }
+  }
+}

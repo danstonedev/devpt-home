@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "product": "simlab",
+  "repository": "danstonedev/simlab",
+  "sourceCommit": "c08e40a54b8401e1b9b082cb23d2b2b8598ecc3b",
+  "capturedAt": "2026-10-15T16:14:50.905Z",
+  "publicEntry": "https://lab.devpt.app/showcase/",
+  "nativePatientId": "patient-james-morgan",
+  "caseId": "hip-groin-64",
+  "submodules": [
+    "bb0418e0ff90c1f5c53c1f77ea732f9f6f9d0f7f apps/painmap (bb0418e)",
+    "79a3e9ad12079f0883d25a04d602741d9ffb6bc9 apps/painmap/pose-engine (79a3e9a)",
+    "2252d655ad12cbc22ca9aec1ca5df3e1c06787ad apps/simvitals (2252d65)",
+    "f66070c964ce9560ec21aa18101973f0f14f71d0 apps/simvitals/pose-engine (f66070c)",
+    "6280fba2e37d9ee4e682b60e61d8cefb894e92a0 apps/simvitals/scenario-engine (6280fba)",
+    "db90f127d2361d388ba01c9ee6ff4a7fa933f755 pose-engine (heads/main)",
+    "ce212a093f40dbaa9c840299ace5656edafa09fa scenario-engine (ce212a0)"
+  ],
+  "capture": {
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "deviceScaleFactor": 1,
+    "browser": "System Chromium headless",
+    "renderer": "SwiftShader; native adaptive software-render budget retained",
+    "video": "Approximately 12 seconds, H.264/yuv420p, 25fps container, no audio; original temporal playback retained",
+    "processing": "Trim loading/preparation before the clip; transcode original browser video only. No compositing, substitute UI, source edits or fabricated records."
+  },
+  "assets": [
+    {
+      "id": "interview",
+      "route": "/showcase/?chapter=listen",
+      "poster": "interview.png",
+      "video": "interview.mp4",
+      "caption": "Ask James about the activities and symptoms that matter to him.",
+      "workflow": "Native PatientInterview, scripted authored questions/replies, Type mode. No microphone, voice API or account.",
+      "durationSeconds": 11.96,
+      "bytes": 384841,
+      "width": 1280,
+      "height": 800,
+      "audio": false,
+      "pageErrors": [],
+      "protectedApiRequests": [],
+      "startRoute": "/showcase/?chapter=listen",
+      "posterBytes": 336567,
+      "sha256": {
+        "poster": "89c10e00983c8cb1101f4fe34c9200f903fdfa8ff09f33f08fbef6fc0334e164",
+        "video": "340f058a986f21d0c83faceb19a6a45853f915277c2698cdfdda3f87a62a1e68"
+      }
+    },
+    {
+      "id": "differentials",
+      "route": "/showcase/?chapter=reason",
+      "poster": "differentials.png",
+      "video": "differentials.mp4",
+      "caption": "Connect disclosed findings to an illustrative working differential.",
+      "workflow": "Native ReasoningMap. The public sample’s own authored evidence-to-hypothesis connection is removed and restored with native accessible controls.",
+      "durationSeconds": 12,
+      "bytes": 150327,
+      "width": 1280,
+      "height": 800,
+      "audio": false,
+      "pageErrors": [],
+      "protectedApiRequests": [],
+      "startRoute": "/showcase/?chapter=listen",
+      "assessment": "Illustrative working hypotheses, not an assessed answer or instructor endorsement.",
+      "posterBytes": 79748,
+      "sha256": {
+        "poster": "e37eb624819727727d785b6fa87862fccc882c2720d5607295f2a575ef776795",
+        "video": "41be6ad0067d151a9e4eaedd342b747ef3321f42a0802b1999fc4ba05186f37b"
+      }
+    },
+    {
+      "id": "passive-rom",
+      "route": "/showcase/?chapter=examine",
+      "poster": "passive-rom.png",
+      "video": "passive-rom.mp4",
+      "caption": "Observe the native right-hip passive range-of-motion examination.",
+      "workflow": "Loop James’s actual native supine PROM test with its own playback controls after the original observed examination finishes. No result is released ahead of the original observation.",
+      "examName": "PROM · Right hip flexion",
+      "builder": {
+        "kind": "prom",
+        "itemId": "hip-flexion",
+        "side": "right",
+        "position": "supine"
+      },
+      "durationSeconds": 11.96,
+      "bytes": 430655,
+      "width": 1280,
+      "height": 800,
+      "audio": false,
+      "pageErrors": [],
+      "protectedApiRequests": [],
+      "startRoute": "/showcase/?chapter=examine",
+      "examId": "bx-prom-hip-flexion-right",
+      "posterBytes": 417686,
+      "sha256": {
+        "poster": "9fb1582e468a2b6acb8f1ea53cdd7271782d839c83fbf9c898277a93fa7474f9",
+        "video": "6cd3bb278594f1dffc92c8adcc4e39f1cc36450947722c04802f63f167289337"
+      }
+    }
+  ]
+}

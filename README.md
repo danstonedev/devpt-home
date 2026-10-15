@@ -20,8 +20,10 @@ The homepage is the shared introduction. Each product has a dedicated walkthroug
 - `emr-foundation.css` — selected active EMR tokens and established shared chrome, refreshed by `scripts/sync-emr-foundation.mjs`.
 - `walkthrough.js` and `native-showcase.css` — the existing simLAB live catalogue, chapter navigation and frame visibility bridge.
 - `product-walkthrough.js` — public walkthrough bridge for the EMR and 3Dpain.app entries.
+- `feature-previews.js` — click-to-play native feature recordings, screenshot recovery and playback suspension.
 - `showcase/index.html` — compatibility redirect for earlier simLAB bookmarks.
 - `assets/` — brand marks and supporting screenshots.
+- `assets/features/` — three screenshots and recorded feature clips per product, with source provenance and capture instructions.
 
 Fonts load from Google Fonts; supporting imagery is local. Product public entries use sample demonstration data. Protected production workspaces retain their normal sign-in and access requirements.
 
@@ -70,6 +72,7 @@ PLAYWRIGHT_CHROMIUM_PATH=/usr/bin/chromium npm run test:ui
 node --check app.js
 node --check walkthrough.js
 node --check product-walkthrough.js
+node --check feature-previews.js
 node scripts/check-apps.mjs --no-ping
 git diff --check
 ```
@@ -77,6 +80,8 @@ git diff --check
 `check:walkthrough` verifies the dedicated simLAB page, both trusted live frames, root-relative assets, preserved live catalogue and visibility bridge. It rejects a walkthrough on the three-product homepage or a vendored simulator. The app checks validate the registry, product pages and launch links. CI additionally checks advertised URLs; temporary reachability failures warn unless strict mode is selected.
 
 Inspect all four routes at desktop and phone widths. Check shared navigation, chapter selection, full view, local assets, reduced motion and unavailable-frame links. The real demonstration and its clinical behavior are tested in the owning product repository. See [Product introduction](docs/homepage-refresh.md) for the editorial and ownership rules.
+
+The homepage media browser checks decode every real clip, verify that no clips load before a click, and exercise screenshot enlargement, video controls, error recovery, playback suspension and the JavaScript-free image links. Re-export feature media from the native workflows recorded in each product's `assets/features/` directory when those screens change.
 
 ## Deployment and compatibility
 

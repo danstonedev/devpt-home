@@ -85,7 +85,9 @@
       <section class="portfolio-hero" aria-labelledby="hero-title">
         <div class="wrap">
           <div class="portfolio-intro">
-            <h1 id="hero-title">Clinical tools for learning and practice.</h1>
+            <h1 id="hero-title">
+              Developing Clinical Reasoning &amp; Readiness
+            </h1>
           </div>
           <nav class="product-jump" aria-label="Choose a DevPT product">
             <a href="#app-lab">simLAB</a><a href="#app-emrs">EMRs</a
@@ -115,17 +117,152 @@
                   <p>Clinical simulation</p>
                 </header>
                 <div class="product-content">
-                  <a
-                    class="product-preview"
-                    href="/simlab/"
-                    tabindex="-1"
-                    aria-hidden="true"
-                    ><img
-                      src="/assets/shots/simlab-encounter.png"
-                      alt=""
-                      width="1440"
-                      height="900"
-                  /></a>
+                  <div class="feature-gallery">
+                    <figure class="feature-preview" data-feature-preview>
+                      <figcaption>
+                        <h3 id="simlab-interview">Patient interview</h3>
+                        <button
+                          type="button"
+                          class="feature-play btn btn-green"
+                          data-feature-play
+                          hidden
+                          aria-controls="simlab-interview-video"
+                          aria-expanded="false"
+                        >
+                          Play clip
+                        </button>
+                      </figcaption>
+                      <div class="feature-media">
+                        <a
+                          class="feature-still"
+                          href="/assets/features/simlab/interview.png"
+                          data-enlarge
+                          aria-label="Enlarge patient interview screenshot"
+                        >
+                          <img
+                            src="/assets/features/simlab/interview.png"
+                            alt="simLAB patient interview with a virtual patient and clinical history workspace."
+                            width="1280"
+                            height="800"
+                            loading="eager"
+                            decoding="async"
+                          />
+                        </a>
+                        <video
+                          id="simlab-interview-video"
+                          data-feature-video
+                          hidden
+                          controls
+                          playsinline
+                          preload="none"
+                          poster="/assets/features/simlab/interview.png"
+                          aria-labelledby="simlab-interview"
+                        >
+                          <source
+                            src="/assets/features/simlab/interview.mp4"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
+                      <p data-feature-status role="status" hidden></p>
+                    </figure>
+                    <figure class="feature-preview" data-feature-preview>
+                      <figcaption>
+                        <h3 id="simlab-differentials">Connect differentials</h3>
+                        <button
+                          type="button"
+                          class="feature-play btn btn-green"
+                          data-feature-play
+                          hidden
+                          aria-controls="simlab-differentials-video"
+                          aria-expanded="false"
+                        >
+                          Play clip
+                        </button>
+                      </figcaption>
+                      <div class="feature-media">
+                        <a
+                          class="feature-still"
+                          href="/assets/features/simlab/differentials.png"
+                          data-enlarge
+                          aria-label="Enlarge connect differentials screenshot"
+                        >
+                          <img
+                            src="/assets/features/simlab/differentials.png"
+                            alt="simLAB reasoning workspace connecting patient findings with differential diagnoses."
+                            width="1280"
+                            height="800"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </a>
+                        <video
+                          id="simlab-differentials-video"
+                          data-feature-video
+                          hidden
+                          controls
+                          playsinline
+                          preload="none"
+                          poster="/assets/features/simlab/differentials.png"
+                          aria-labelledby="simlab-differentials"
+                        >
+                          <source
+                            src="/assets/features/simlab/differentials.mp4"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
+                      <p data-feature-status role="status" hidden></p>
+                    </figure>
+                    <figure class="feature-preview" data-feature-preview>
+                      <figcaption>
+                        <h3 id="simlab-passive-rom">Passive range of motion</h3>
+                        <button
+                          type="button"
+                          class="feature-play btn btn-green"
+                          data-feature-play
+                          hidden
+                          aria-controls="simlab-passive-rom-video"
+                          aria-expanded="false"
+                        >
+                          Play clip
+                        </button>
+                      </figcaption>
+                      <div class="feature-media">
+                        <a
+                          class="feature-still"
+                          href="/assets/features/simlab/passive-rom.png"
+                          data-enlarge
+                          aria-label="Enlarge passive range of motion screenshot"
+                        >
+                          <img
+                            src="/assets/features/simlab/passive-rom.png"
+                            alt="simLAB passive range-of-motion examination of a virtual patient’s hip."
+                            width="1280"
+                            height="800"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </a>
+                        <video
+                          id="simlab-passive-rom-video"
+                          data-feature-video
+                          hidden
+                          controls
+                          playsinline
+                          preload="none"
+                          poster="/assets/features/simlab/passive-rom.png"
+                          aria-labelledby="simlab-passive-rom"
+                        >
+                          <source
+                            src="/assets/features/simlab/passive-rom.mp4"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
+                      <p data-feature-status role="status" hidden></p>
+                    </figure>
+                  </div>
                   <p class="product-description">
                     Patient encounters, examinations, clinical reasoning and
                     learning labs in one teaching environment.
@@ -153,17 +290,152 @@
                   <p>Documentation experience</p>
                 </header>
                 <div class="product-content">
-                  <a
-                    class="product-preview"
-                    href="/emrs/"
-                    tabindex="-1"
-                    aria-hidden="true"
-                    ><img
-                      src="/assets/shots/emr-showcase.png"
-                      alt=""
-                      width="1440"
-                      height="900"
-                  /></a>
+                  <div class="feature-gallery">
+                    <figure class="feature-preview" data-feature-preview>
+                      <figcaption>
+                        <h3 id="emrs-workspace">Clinical workspace</h3>
+                        <button
+                          type="button"
+                          class="feature-play btn btn-green"
+                          data-feature-play
+                          hidden
+                          aria-controls="emrs-workspace-video"
+                          aria-expanded="false"
+                        >
+                          Play clip
+                        </button>
+                      </figcaption>
+                      <div class="feature-media">
+                        <a
+                          class="feature-still"
+                          href="/assets/features/emrs/workspace.png"
+                          data-enlarge
+                          aria-label="Enlarge clinical workspace screenshot"
+                        >
+                          <img
+                            src="/assets/features/emrs/workspace.png"
+                            alt="simEMR note workspace with structured documentation and the Note Guide."
+                            width="1280"
+                            height="800"
+                            loading="eager"
+                            decoding="async"
+                          />
+                        </a>
+                        <video
+                          id="emrs-workspace-video"
+                          data-feature-video
+                          hidden
+                          controls
+                          playsinline
+                          preload="none"
+                          poster="/assets/features/emrs/workspace.png"
+                          aria-labelledby="emrs-workspace"
+                        >
+                          <source
+                            src="/assets/features/emrs/workspace.mp4"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
+                      <p data-feature-status role="status" hidden></p>
+                    </figure>
+                    <figure class="feature-preview" data-feature-preview>
+                      <figcaption>
+                        <h3 id="emrs-student-schedule">Student schedule</h3>
+                        <button
+                          type="button"
+                          class="feature-play btn btn-green"
+                          data-feature-play
+                          hidden
+                          aria-controls="emrs-student-schedule-video"
+                          aria-expanded="false"
+                        >
+                          Play clip
+                        </button>
+                      </figcaption>
+                      <div class="feature-media">
+                        <a
+                          class="feature-still"
+                          href="/assets/features/emrs/student-schedule.png"
+                          data-enlarge
+                          aria-label="Enlarge student schedule screenshot"
+                        >
+                          <img
+                            src="/assets/features/emrs/student-schedule.png"
+                            alt="Student clinic schedule with booked visits and available appointment times, using practice patients."
+                            width="1280"
+                            height="800"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </a>
+                        <video
+                          id="emrs-student-schedule-video"
+                          data-feature-video
+                          hidden
+                          controls
+                          playsinline
+                          preload="none"
+                          poster="/assets/features/emrs/student-schedule.png"
+                          aria-labelledby="emrs-student-schedule"
+                        >
+                          <source
+                            src="/assets/features/emrs/student-schedule.mp4"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
+                      <p data-feature-status role="status" hidden></p>
+                    </figure>
+                    <figure class="feature-preview" data-feature-preview>
+                      <figcaption>
+                        <h3 id="emrs-faculty-feedback">Faculty feedback</h3>
+                        <button
+                          type="button"
+                          class="feature-play btn btn-green"
+                          data-feature-play
+                          hidden
+                          aria-controls="emrs-faculty-feedback-video"
+                          aria-expanded="false"
+                        >
+                          Play clip
+                        </button>
+                      </figcaption>
+                      <div class="feature-media">
+                        <a
+                          class="feature-still"
+                          href="/assets/features/emrs/faculty-feedback.png"
+                          data-enlarge
+                          aria-label="Enlarge faculty feedback screenshot"
+                        >
+                          <img
+                            src="/assets/features/emrs/faculty-feedback.png"
+                            alt="Faculty feedback on a practice patient note with instructional comments."
+                            width="1280"
+                            height="800"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </a>
+                        <video
+                          id="emrs-faculty-feedback-video"
+                          data-feature-video
+                          hidden
+                          controls
+                          playsinline
+                          preload="none"
+                          poster="/assets/features/emrs/faculty-feedback.png"
+                          aria-labelledby="emrs-faculty-feedback"
+                        >
+                          <source
+                            src="/assets/features/emrs/faculty-feedback.mp4"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
+                      <p data-feature-status role="status" hidden></p>
+                    </figure>
+                  </div>
                   <p class="product-description">
                     Practice documentation with Virtual Standardized Patients
                     (VSPs) in simEMR, or support authorized clinic care with
@@ -189,17 +461,159 @@
                   <p>3D symptom mapping</p>
                 </header>
                 <div class="product-content">
-                  <a
-                    class="product-preview"
-                    href="/3dpain/"
-                    tabindex="-1"
-                    aria-hidden="true"
-                    ><img
-                      src="/assets/shots/painmap.png"
-                      alt=""
-                      width="1440"
-                      height="900"
-                  /></a>
+                  <div class="feature-gallery">
+                    <figure class="feature-preview" data-feature-preview>
+                      <figcaption>
+                        <h3 id="painmap-mapping">Map symptoms</h3>
+                        <button
+                          type="button"
+                          class="feature-play btn btn-green"
+                          data-feature-play
+                          hidden
+                          aria-controls="painmap-mapping-video"
+                          aria-expanded="false"
+                        >
+                          Play clip
+                        </button>
+                      </figcaption>
+                      <div class="feature-media">
+                        <a
+                          class="feature-still"
+                          href="/assets/features/painmap/mapping.png"
+                          data-enlarge
+                          aria-label="Enlarge map symptoms screenshot"
+                        >
+                          <img
+                            src="/assets/features/painmap/mapping.png"
+                            alt="3Dpain.app body map showing a sample pain region."
+                            width="1280"
+                            height="800"
+                            loading="eager"
+                            decoding="async"
+                          />
+                        </a>
+                        <video
+                          id="painmap-mapping-video"
+                          data-feature-video
+                          hidden
+                          controls
+                          playsinline
+                          preload="none"
+                          poster="/assets/features/painmap/mapping.png"
+                          aria-labelledby="painmap-mapping"
+                        >
+                          <source
+                            src="/assets/features/painmap/mapping.mp4"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
+                      <p data-feature-status role="status" hidden></p>
+                    </figure>
+                    <figure class="feature-preview" data-feature-preview>
+                      <figcaption>
+                        <h3 id="painmap-movement">Pose &amp; movement</h3>
+                        <button
+                          type="button"
+                          class="feature-play btn btn-green"
+                          data-feature-play
+                          hidden
+                          aria-controls="painmap-movement-video"
+                          aria-expanded="false"
+                        >
+                          Play clip
+                        </button>
+                      </figcaption>
+                      <div class="feature-media">
+                        <a
+                          class="feature-still"
+                          href="/assets/features/painmap/movement.png"
+                          data-enlarge
+                          aria-label="Enlarge pose &amp; movement screenshot"
+                        >
+                          <img
+                            src="/assets/features/painmap/movement.png"
+                            alt="3Dpain.app pose and movement features on a three-dimensional body."
+                            width="1280"
+                            height="800"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </a>
+                        <video
+                          id="painmap-movement-video"
+                          data-feature-video
+                          hidden
+                          controls
+                          playsinline
+                          preload="none"
+                          poster="/assets/features/painmap/movement.png"
+                          aria-labelledby="painmap-movement"
+                        >
+                          <source
+                            src="/assets/features/painmap/movement.mp4"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
+                      <p data-feature-status role="status" hidden></p>
+                    </figure>
+                    <figure class="feature-preview" data-feature-preview>
+                      <figcaption>
+                        <h3 id="painmap-timeline">Pain progression</h3>
+                        <button
+                          type="button"
+                          class="feature-play btn btn-green"
+                          data-feature-play
+                          hidden
+                          aria-controls="painmap-timeline-video"
+                          aria-expanded="false"
+                        >
+                          Play clip
+                        </button>
+                      </figcaption>
+                      <div class="feature-media">
+                        <a
+                          class="feature-still"
+                          href="/assets/features/painmap/timeline.png"
+                          data-enlarge
+                          aria-label="Enlarge pain progression screenshot"
+                        >
+                          <img
+                            src="/assets/features/painmap/timeline.png"
+                            alt="3Dpain.app timeline reviewing changes in a sample pain map over time."
+                            width="1280"
+                            height="800"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </a>
+                        <video
+                          id="painmap-timeline-video"
+                          data-feature-video
+                          hidden
+                          controls
+                          playsinline
+                          preload="none"
+                          poster="/assets/features/painmap/timeline.png"
+                          aria-labelledby="painmap-timeline"
+                          aria-describedby="painmap-timeline-speed"
+                        >
+                          <source
+                            src="/assets/features/painmap/timeline.mp4"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </div>
+                      <p
+                        class="feature-recording-note"
+                        id="painmap-timeline-speed"
+                      >
+                        Timeline recording shown at about 2× speed.
+                      </p>
+                      <p data-feature-status role="status" hidden></p>
+                    </figure>
+                  </div>
                   <p class="product-description">
                     Describe symptom location, quality and intensity on a
                     three-dimensional body, and explore how maps change over
@@ -351,7 +765,15 @@
         <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
       </div>
     </footer>
+    <dialog class="image-dialog" aria-label="Enlarged product screenshot">
+      <button type="button" class="dialog-close btn btn-green" autofocus>
+        Close <span aria-hidden="true">×</span>
+      </button>
+      <img alt="Selected product screenshot" />
+      <p></p>
+    </dialog>
     <script src="/app.js"></script>
+    <script src="/feature-previews.js"></script>
     <script src="/portfolio.js"></script>
   </body>
 </html>

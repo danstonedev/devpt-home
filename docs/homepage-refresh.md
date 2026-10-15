@@ -35,3 +35,15 @@ The app registry in `apps.json` records canonical launch URLs and repositories. 
 Run `npm test`, JavaScript syntax checks and `git diff --check`. Inspect the homepage and all three product routes at desktop and phone widths, including navigation, local resources, full-view links and unavailable-embed fallbacks. Use `npm run preview` so a draft contains the latest `origin/main`.
 
 Existing photographs and screenshots are supporting imagery; they are not a replacement for a product's live public walkthrough. Do not claim validated learning gains, clinical measurement validity, replacement clinical hours or biomechanics accuracy without evidence.
+
+## Homepage feature previews
+
+The homepage introduces each product with three native feature screenshots and optional recorded clips:
+
+- simLAB: patient interview, connecting differentials and passive range of motion.
+- EMRs: note workspace, a student clinic schedule and faculty feedback with comments.
+- 3Dpain.app: symptom mapping, pose/movement and timeline review of a pain progression.
+
+Keep captures under `assets/features/{simlab,emrs,painmap}/`, with the owning repository's revision and capture details alongside them. Use the product's real interface and synthetic demonstration data. Refresh these exports from the native workflows when the feature changes; do not recreate interfaces in the homepage or relabel a different feature to fill a gap.
+
+Screenshots can be enlarged and remain available without JavaScript. Clips load only when requested, use native video controls and never start or loop automatically. The homepage pauses a clip when another starts, when it leaves view or when the page is hidden. Keep the complete native frame visible, including portrait recordings inside the landscape preview; never stretch product UI to fit.

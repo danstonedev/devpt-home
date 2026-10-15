@@ -148,10 +148,12 @@ test("the homepage introduces three distinct product lines and destinations", as
       "href",
       product.path,
     );
+    await expect(card.locator(".feature-preview")).toHaveCount(3);
     await expect
       .poll(() =>
         card
-          .locator(".product-preview img")
+          .locator(".feature-still img")
+          .first()
           .evaluate((image) => image.naturalWidth),
       )
       .toBeGreaterThan(0);
