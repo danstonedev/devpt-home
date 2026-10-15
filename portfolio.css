@@ -161,7 +161,7 @@
   font-weight: 700;
   letter-spacing: 0;
 }
-.feature-play {
+.feature-try {
   flex-shrink: 0;
   padding: 8px 12px;
   font-size: 0.8125rem;
@@ -175,11 +175,11 @@
   background: var(--color-neutral-100);
 }
 .feature-still {
+  position: relative;
   display: block;
   height: 100%;
 }
-.feature-still img,
-.feature-media video {
+.feature-still img {
   display: block;
   width: 100%;
   height: 100%;
@@ -188,26 +188,145 @@
 .feature-still:focus-visible {
   outline-offset: -4px;
 }
-.feature-recording-note {
-  display: none;
+.simlab-feature-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  min-height: 220px;
+  padding: 18px;
+  aspect-ratio: auto;
+  overflow: visible;
 }
-.feature-preview:has(video:not([hidden])) .feature-recording-note {
-  display: block;
+.simlab-feature-intro p {
+  margin: 0;
+  color: black;
 }
-.feature-preview [data-feature-status],
-.feature-recording-note {
-  margin: 8px 0 0;
-  color: var(--color-text);
-  font-size: 0.8125rem;
+.simlab-case-label {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+.simlab-feature-cue {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.simlab-feature-copy {
+  font-size: 0.875rem;
   line-height: 1.5;
 }
-.portfolio-home .image-dialog {
-  border-color: var(--color-neutral-500);
-  border-radius: var(--radius-card);
-  background: var(--color-topbar-end);
+.simlab-direct-link,
+.workspace-direct-link {
+  margin-top: auto;
+  color: black;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
-.portfolio-home .image-dialog::backdrop {
+.feature-launch-label {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 6px 9px;
+  border-radius: var(--radius-sm);
+  color: white;
+  background: black;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+.workspace-direct-link {
+  display: inline-block;
+  margin-top: 8px;
+}
+.workspace-live-dialog {
+  width: min(1440px, calc(100vw - 32px));
+  height: min(1000px, calc(100dvh - 32px));
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-neutral-500);
+  border-radius: var(--radius-card);
+  color: black;
+  background: white;
+}
+.workspace-live-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.workspace-live-dialog[data-state="unavailable"] {
+  height: auto;
+}
+.workspace-live-dialog::backdrop {
   background: rgb(0 0 0 / 80%);
+}
+.workspace-live-toolbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px;
+  color: white;
+  background: black;
+}
+.workspace-live-toolbar h2 {
+  margin: 0;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.workspace-live-toolbar button {
+  flex-shrink: 0;
+}
+.workspace-live-notice {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-neutral-300);
+  background: var(--color-neutral-100);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+.workspace-live-notice[hidden] {
+  display: none;
+}
+.workspace-live-notice p {
+  flex: 1 1 260px;
+  margin: 0;
+}
+.workspace-live-notice a {
+  color: black;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.workspace-live-stage {
+  flex: 1;
+  min-height: 0;
+}
+[data-workspace-frame] {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: white;
+}
+body:has(.workspace-live-dialog[open]) {
+  overflow: hidden;
+}
+@media (max-width: 600px) {
+  .workspace-live-dialog {
+    width: calc(100vw - 16px);
+    height: calc(100dvh - 16px);
+  }
 }
 .product-description {
   color: black;

@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { permitsDevPT, probeShowcase } from "./wait-for-showcases.mjs";
+import { readFileSync } from "node:fs";
+import {
+  permitsDevPT,
+  probeShowcase,
+  releaseTargets,
+} from "./wait-for-showcases.mjs";
 
 const csp =
   "default-src 'self'; frame-ancestors 'self' https://devpt.app https://www.devpt.app; object-src 'none'";
@@ -57,5 +62,110 @@ test("an auth shell, error, redirect or other product cannot release the homepag
       ),
     ),
     /framing/,
+  );
+});
+
+test("guided or scripted simLAB builds cannot release the three-exchange AI homepage", async () => {
+  const registry = JSON.parse(
+    readFileSync(new URL("../apps.json", import.meta.url)),
+  );
+  const targets = releaseTargets(registry);
+  assert.deepEqual(
+    new Set(targets.map((p) => p.id)),
+    new Set(["simlab", "emrs", "painmap"]),
+  );
+  const simlab = targets.find((p) => p.id === "simlab");
+  for (const product of targets.filter((p) => p.id !== "simlab")) {
+    const entry = (marker) => async (url) => {
+      assert.equal(new URL(url).search, "?presentation=workspace");
+      return new Response(`<meta name="devpt-showcase" content="${marker}">`, {
+        headers: { "content-security-policy": csp },
+      });
+    };
+    assert.match(
+      await probeShowcase(product, entry(`${product.id}:v1`)),
+      /not deployed/,
+    );
+    assert.equal(
+      await probeShowcase(product, entry(`${product.id}-workspace:v1`)),
+      null,
+    );
+  }
+  const response =
+    (
+      marker,
+      policy = csp,
+      status = 200,
+      readiness = { available: true, exchangeLimit: 3 },
+      apiStatus = 200,
+    ) =>
+    async (url) => {
+      if (url === "https://lab.devpt.app/api/showcase/session")
+        return new Response(JSON.stringify(readiness), { status: apiStatus });
+      assert.equal(
+        url,
+        "https://lab.devpt.app/showcase/?presentation=workspace",
+      );
+      return new Response(`<meta name="devpt-showcase" content="${marker}">`, {
+        status,
+        headers: { "content-security-policy": policy },
+      });
+    };
+  assert.match(
+    await probeShowcase(simlab, response("simlab:v1")),
+    /not deployed/,
+  );
+  assert.match(
+    await probeShowcase(simlab, response("simlab-workspace:v1")),
+    /not deployed/,
+  );
+  assert.equal(
+    await probeShowcase(simlab, response("simlab-ai-preview:v1")),
+    null,
+  );
+  assert.match(
+    await probeShowcase(
+      simlab,
+      response("simlab-ai-preview:v1", "frame-ancestors 'self'"),
+    ),
+    /framing/,
+  );
+  assert.match(
+    await probeShowcase(simlab, response("simlab-ai-preview:v1", csp, 302)),
+    /HTTP 302/,
+  );
+  assert.match(
+    await probeShowcase(
+      simlab,
+      response("simlab-ai-preview:v1", csp, 200, {}, 503),
+    ),
+    /AI preview is not ready.*503/,
+  );
+  assert.match(
+    await probeShowcase(
+      simlab,
+      response("simlab-ai-preview:v1", csp, 200, {
+        available: false,
+        exchangeLimit: 3,
+      }),
+    ),
+    /three-exchange AI preview is not ready/,
+  );
+  assert.match(
+    await probeShowcase(
+      simlab,
+      response("simlab-ai-preview:v1", csp, 200, {
+        available: true,
+        exchangeLimit: 30,
+      }),
+    ),
+    /three-exchange AI preview is not ready/,
+  );
+  const incomplete = structuredClone(registry);
+  delete incomplete.productLines.find((p) => p.id === "simlab").showcase
+    .workspace;
+  assert.throws(
+    () => releaseTargets(incomplete),
+    /native simLAB workspace contract/,
   );
 });

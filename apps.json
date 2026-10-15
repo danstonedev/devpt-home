@@ -177,7 +177,15 @@
       "appIds": ["lab"],
       "showcase": {
         "url": "https://lab.devpt.app/showcase/",
-        "localPort": 5180
+        "localPort": 5180,
+        "workspace": {
+          "url": "https://lab.devpt.app/showcase/?presentation=workspace",
+          "contract": "simlab-ai-preview:v1",
+          "readiness": {
+            "url": "https://lab.devpt.app/api/showcase/session",
+            "exchangeLimit": 3
+          }
+        }
       }
     },
     {
@@ -187,7 +195,11 @@
       "appIds": ["emrsim", "probonoemr"],
       "showcase": {
         "url": "https://simemr.devpt.app/showcase/",
-        "localPort": 5181
+        "localPort": 5181,
+        "workspace": {
+          "url": "https://simemr.devpt.app/showcase/?presentation=workspace",
+          "contract": "emrs-workspace:v1"
+        }
       }
     },
     {
@@ -197,7 +209,11 @@
       "appIds": ["painmap"],
       "showcase": {
         "url": "https://www.3dpain.app/showcase/",
-        "localPort": 5182
+        "localPort": 5182,
+        "workspace": {
+          "url": "https://www.3dpain.app/showcase/?presentation=workspace",
+          "contract": "painmap-workspace:v1"
+        }
       }
     }
   ]

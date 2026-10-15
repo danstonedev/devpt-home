@@ -20,10 +20,10 @@ The homepage is the shared introduction. Each product has a dedicated walkthroug
 - `emr-foundation.css` — selected active EMR tokens and established shared chrome, refreshed by `scripts/sync-emr-foundation.mjs`.
 - `walkthrough.js` and `native-showcase.css` — the existing simLAB live catalogue, chapter navigation and frame visibility bridge.
 - `product-walkthrough.js` — public walkthrough bridge for the EMR and 3Dpain.app entries.
-- `feature-previews.js` — click-to-play native feature recordings, screenshot recovery and playback suspension.
+- `feature-workspaces.js` — nine source-owned native previews in one lazy iframe, with strict product contracts and visibility/lifetime controls.
 - `showcase/index.html` — compatibility redirect for earlier simLAB bookmarks.
 - `assets/` — brand marks and supporting screenshots.
-- `assets/features/` — three screenshots and recorded feature clips per product, with source provenance and capture instructions.
+- `assets/features/` — native launch posters and retired recordings, with source provenance and capture instructions.
 
 Fonts load from Google Fonts; supporting imagery is local. Product public entries use sample demonstration data. Protected production workspaces retain their normal sign-in and access requirements.
 
@@ -34,6 +34,8 @@ The product owns its demonstration state, chapter catalogue, native controls and
 The existing simLAB bridge consumes `simlab-showcase-ready` and its versioned manifest. James's native case supplies the patient words, symptom drawing, observed examinations, reasoning and plan. It is scripted practice with an in-memory session, without protected AI calls or a persisted learner attempt. See [Live simLAB walkthrough](docs/native-showcase.md) for the complete contract.
 
 EMR and 3Dpain.app public entries use the `devpt-showcase-ready`, `devpt-showcase-select`, `devpt-showcase-state` and `devpt-showcase-visibility` contract. A schema-versioned manifest identifies the product and its chapters. The EMR entry uses synthetic orientation data; 3Dpain.app uses its native recorded guest demonstrations. DevPT does not supply patient identities, account tokens or arbitrary navigation URLs to either entry.
+
+The homepage feature previews use a separate native workspace presentation: `/showcase/?presentation=workspace&section=...` on each owning source. Its `${product}-workspace-ready` manifest identifies the three allowed sections and build. The corresponding select/state/visibility/close messages retain exact source-window and origin checks. One shared dialog loads only the selected native workspace. simLAB's interview offers three server-limited AI exchanges with bounded speech; its objective preview includes native preselected exam examples and a separately labeled BPPV sample. EMR and pain-map actions use their real components and limited synthetic in-memory data. See [Product introduction](docs/homepage-refresh.md) for limits and ownership.
 
 Each parent accepts messages only from the configured exact product origin and its own iframe window. Product entries restrict their trusted parents and frame ancestors to DevPT. Keep `referrerpolicy="origin"` on the embedded frames: their trusted-parent handshake needs the origin even when a page policy suppresses other cross-origin referrers. The path and query are not shared by that policy.
 
@@ -72,7 +74,7 @@ PLAYWRIGHT_CHROMIUM_PATH=/usr/bin/chromium npm run test:ui
 node --check app.js
 node --check walkthrough.js
 node --check product-walkthrough.js
-node --check feature-previews.js
+node --check feature-workspaces.js
 node scripts/check-apps.mjs --no-ping
 git diff --check
 ```
@@ -81,7 +83,7 @@ git diff --check
 
 Inspect all four routes at desktop and phone widths. Check shared navigation, chapter selection, full view, local assets, reduced motion and unavailable-frame links. The real demonstration and its clinical behavior are tested in the owning product repository. See [Product introduction](docs/homepage-refresh.md) for the editorial and ownership rules.
 
-The homepage media browser checks decode every real clip, verify that no clips load before a click, and exercise screenshot enlargement, video controls, error recovery, playback suspension and the JavaScript-free image links. Re-export feature media from the native workflows recorded in each product's `assets/features/` directory when those screens change.
+The homepage browser checks exercise all nine lazy preview launches, exact product contracts, window/origin rejection, visibility suspension, Escape/focus recovery and JavaScript-free direct links. Existing native PNGs remain launch posters; recorded clips are retired from the homepage. The owning source suites verify the actual product actions and isolation from account and patient-record services.
 
 ## Deployment and compatibility
 
@@ -89,6 +91,6 @@ Azure Static Web Apps deploys the repository root on push to `main` via `.github
 
 For a new public entry or a contract change, deploy the compatible product entry first, confirm it independently, then deploy the DevPT framing. The source's signed-in routes and protected APIs remain unchanged by the public walkthrough.
 
-The Azure upload now waits up to 30 minutes for both new public entries. `scripts/wait-for-showcases.mjs` requires HTTP 200, each product's `devpt-showcase` version marker and a Content Security Policy permitting both DevPT parent origins. An auth fallback, a missing build or a framing restriction blocks the upload. If a product's CI or deployment is blocked, resolve it and rerun this deployment after the product is live. Do not remove the gate to force an early homepage release.
+The Azure upload waits up to 30 minutes for all three required native entries. `scripts/wait-for-showcases.mjs` requires HTTP 200, the new workspace version markers and a Content Security Policy permitting both DevPT parent origins. It also checks the simLAB three-exchange API's read-only readiness endpoint. An auth fallback, older recorded build, unavailable AI configuration or framing restriction blocks the upload. If a product's CI or deployment is blocked, resolve it and rerun this deployment after the product is live. Do not remove the gate to force an early homepage release.
 
 Custom domains and DNS live in Azure. Prefer Azure DNS ALIAS for apex changes and keep the catalogue aligned with the product domain records. Do not advertise an unverified alternate hostname.
