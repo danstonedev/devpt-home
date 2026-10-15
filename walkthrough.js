@@ -17,12 +17,12 @@
   var tools = [];
   var paths = {
     person: 'M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M14 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0M20 8v6m-3-3h6',
-    hearing: 'M6 9a6 6 0 0 1 12 0c0 3-3 4-4 6-1 2-1 5-4 5a3 3 0 0 1-3-3M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5',
-    location_on: 'M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0ZM15 10a3 3 0 1 1-6 0 3 3 0 0 1 6 0',
-    straighten: 'M3 7h18v10H3ZM7 7v5m5-5v3m5-3v5',
-    hub: 'M9 12H5m10 0h4M12 9V5m0 10v4M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0M14 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0M14 21a2 2 0 1 1-4 0 2 2 0 0 1 4 0M5 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0M23 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0',
-    flag: 'M5 21V3m0 1c5-4 9 4 14 0v10c-5 4-9-4-14 0',
-    school: 'm2 9 10-5 10 5-10 5L2 9Zm4 3v5c4 3 8 3 12 0v-5m4-3v8',
+    mic: 'M9 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0V5Zm-3 6a6 6 0 0 0 12 0M12 17v4m-4 0h8',
+    accessibility_new: 'M14 4a2 2 0 1 1-4 0 2 2 0 0 1 4 0M4 8l8 2 8-2M12 10v5m0 0-5 6m5-6 5 6',
+    stethoscope: 'M5 3v6a5 5 0 0 0 10 0V3M3 3h4m6 0h4M10 14v3a4 4 0 0 0 8 0v-2m2-2a2 2 0 1 1-4 0 2 2 0 0 1 4 0',
+    link: 'M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-2 2m2 6a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l2-2',
+    trending_up: 'm3 17 6-6 4 4 8-11m-7 0h7v7',
+    menu_book: 'M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1m0-15c3-2 6-2 10-1v15c-4-1-7-1-10 1V5Z',
   };
   function icon(name) {
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
