@@ -37,7 +37,7 @@
       "repo": "danstonedev/devpt-emr-platform",
       "status": "live",
       "placement": ["footer"],
-      "blurb": "Documentation practice with fictional patient records."
+      "blurb": "Documentation practice with practice patient records."
     },
     {
       "id": "movements",

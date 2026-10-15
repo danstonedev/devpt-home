@@ -8,6 +8,16 @@ DevPT has three distinct product lines: **simLAB**, **EMRs** and **3Dpain.app**.
 
 The brand homepage must not load the full simLAB walkthrough. Product pages share navigation and link back to DevPT, so visitors can compare the family without treating the other products as simLAB features.
 
+## Established DevPT presentation
+
+Use the active EMR design, rather than creating a separate marketing theme. The references are `src/app.css`, `src/routes/+layout.svelte`, `src/lib/styles/emrHeaders.css` and `src/lib/styles/noteGuide.css` in `danstonedev/devpt-emr-platform`. Its vendored `design-tokens/` folder is currently unused and is not the authority.
+
+`emr-foundation.css` contains the selected active theme variables and shared public navigation/control styles. Keep the compact black application header, black text, neutral gray working surface, white content, green primary actions and matching section frames. The homepage introduces its products in a single directory with approved wordmarks. Use direct headings and useful product descriptions; avoid oversized slogans, numbered marketing tiles, extra product palettes and repeated promotional sections.
+
+Refresh the selected variables with `npm run sync:brand`, then verify them with `npm run check:brand:source`. Both use the adjacent EMR checkout. The provenance manifest records the source revision and hashes. CI's `check:brand` verifies the committed CSS against that manifest; its explicit snapshot mode does not claim to inspect the latest private EMR source.
+
+The product wordmarks in `assets/brand/` are byte-for-byte approved assets from the EMR's `static/brand/{simemr,probonoemr}/wordmark-on-dark.png` and PainMap's `static/3dpainapp-logo-640.png`. Keep them on dark surfaces with their aspect ratios preserved. Source-owned walkthroughs continue to render their own interfaces.
+
 ## Preserve the simLAB experience
 
 The former homepage content was moved to `/simlab/`, including both native frames, chapter navigation, James's story, live study tools, student/faculty sections, screenshot enlargement and public fallback links. Assets and scripts use site-root paths so nested routes resolve correctly. The simLAB-specific demo enquiry remains on that page; the shared top navigation leads to the DevPT contact section.

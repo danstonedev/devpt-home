@@ -17,6 +17,7 @@ The homepage is the shared introduction. Each product has a dedicated walkthroug
 - `emrs/index.html` and `3dpain/index.html` — dedicated product walkthroughs.
 - `apps.json` — canonical product/app registry, launch URLs, repositories and public walkthrough endpoints.
 - `app.js` and `styles.css` — shared page behavior and DevPT presentation.
+- `emr-foundation.css` — selected active EMR tokens and established shared chrome, refreshed by `scripts/sync-emr-foundation.mjs`.
 - `walkthrough.js` and `native-showcase.css` — the existing simLAB live catalogue, chapter navigation and frame visibility bridge.
 - `product-walkthrough.js` — public walkthrough bridge for the EMR and 3Dpain.app entries.
 - `showcase/index.html` — compatibility redirect for earlier simLAB bookmarks.
@@ -64,6 +65,7 @@ Product-line registry records also declare the EMR and PainMap local source port
 
 ```bash
 npm test
+npm run check:brand:source # verifies the active adjacent EMR checkout
 PLAYWRIGHT_CHROMIUM_PATH=/usr/bin/chromium npm run test:ui
 node --check app.js
 node --check walkthrough.js

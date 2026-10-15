@@ -6,14 +6,14 @@
     <title>EMRs walkthrough — DevPT</title>
     <meta
       name="description"
-      content="simEMR provides a place to practice with fictional patients. proBonoEMR supports documentation in teaching clinics. Explore the note-writing experience shared by the EMR product line."
+      content="simEMR supports documentation practice with Virtual Standardized Patients (VSPs). proBonoEMR supports documentation in teaching clinics. Explore the note-writing experience shared by the EMR product line."
     />
-    <meta name="theme-color" content="#111916" />
+    <meta name="theme-color" content="#000000" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="EMRs walkthrough — DevPT" />
     <meta
       property="og:description"
-      content="simEMR provides a place to practice with fictional patients. proBonoEMR supports documentation in teaching clinics. Explore the note-writing experience shared by the EMR product line."
+      content="simEMR supports documentation practice with Virtual Standardized Patients (VSPs). proBonoEMR supports documentation in teaching clinics. Explore the note-writing experience shared by the EMR product line."
     />
     <meta property="og:url" content="https://devpt.app/emrs/" />
     <meta property="og:site_name" content="DevPT" />
@@ -30,6 +30,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/emr-foundation.css" />
     <link rel="stylesheet" href="/portfolio.css" />
     <script
       async
@@ -89,13 +90,14 @@
               <p class="eyebrow">
                 Two settings. One documentation product line.
               </p>
-              <h1>Learn the chart.<br /><span>Document the care.</span></h1>
+              <h1>EMRs</h1>
             </div>
             <div>
               <p>
-                simEMR provides a place to practice with fictional patients.
-                proBonoEMR supports documentation in teaching clinics. Explore
-                the note-writing experience shared by the EMR product line.
+                simEMR supports documentation practice with Virtual Standardized
+                Patients (VSPs). proBonoEMR supports documentation in teaching
+                clinics. Explore the note-writing experience shared by the EMR
+                product line.
               </p>
               <div class="hero-cta">
                 <a href="#walkthrough" class="btn btn-green"
@@ -142,7 +144,7 @@
           <div class="product-tour-window">
             <div class="product-tour-bar">
               <span class="mono"
-                >Interactive editor · fictional patient · changes reset on
+                >Interactive editor · practice patient · changes reset on
                 reload</span
               ><a
                 href="https://simemr.devpt.app/showcase/"
@@ -172,7 +174,7 @@
             </p>
           </div>
           <p class="tour-caption">
-            Interactive editor · fictional patient · changes reset on reload. No
+            Interactive editor · practice patient · changes reset on reload. No
             sign-in required for this walkthrough.
           </p>
           <noscript
@@ -200,68 +202,74 @@
       >
         <div class="wrap product-context-grid">
           <article id="simemr">
-            <span class="mono">FOR DOCUMENTATION PRACTICE</span>
-            <h2>simEMR</h2>
-            <p>
-              Build documentation skills using fictional patient records in a
-              learning environment.
-            </p>
-            <ul>
-              <li>Practice writing evaluations and follow-up notes.</li>
-              <li>Connect examination findings, assessment and plan.</li>
-              <li>Review documentation with your faculty.</li>
-            </ul>
-            <a
-              class="btn btn-green"
-              href="https://simemr.devpt.app"
-              target="_blank"
-              rel="noopener"
-              >Open simEMR
-              <svg
-                class="icon-arrow"
-                viewBox="0 0 20 20"
-                aria-hidden="true"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
+            <header class="emr-product-brand">
+              <h2>
+                <img src="/assets/brand/simemr-wordmark.png" alt="" /><span
+                  class="sr-only"
+                  >simEMR</span
+                >
+              </h2>
+            </header>
+            <div class="emr-product-content">
+              <p class="eyebrow">For documentation practice</p>
+              <p>
+                Build documentation skills with Virtual Standardized Patients
+                (VSPs) in a practice environment.
+              </p>
+              <ul>
+                <li>Write evaluations and follow-up notes.</li>
+                <li>Connect examination findings, assessment and plan.</li>
+                <li>Review documentation with your faculty.</li>
+              </ul>
+              <p class="product-safety">
+                Practice patients only — never enter real patient information.
+              </p>
+              <a
+                class="btn btn-green"
+                href="https://simemr.devpt.app"
+                target="_blank"
+                rel="noopener"
+                >Open simEMR</a
               >
-                <path d="M4 16 16 4M4 4h12v12" /></svg
-            ></a>
+            </div>
           </article>
           <article id="probonoemr">
-            <span class="mono">FOR TEACHING CLINICS</span>
-            <h2>proBonoEMR</h2>
-            <p>
-              Support patient records, team documentation and faculty review in
-              a clinic environment.
-            </p>
-            <ul>
-              <li>Work from a shared patient and appointment context.</li>
-              <li>Document the care provided by your team.</li>
-              <li>Review and co-sign through the clinical workflow.</li>
-            </ul>
-            <a
-              class="btn btn-ghost"
-              href="https://emr.devpt.app"
-              target="_blank"
-              rel="noopener"
-              >Open proBonoEMR
-              <svg
-                class="icon-arrow"
-                viewBox="0 0 20 20"
-                aria-hidden="true"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
+            <header class="emr-product-brand">
+              <h2>
+                <img src="/assets/brand/probonoemr-wordmark.png" alt="" /><span
+                  class="sr-only"
+                  >proBonoEMR</span
+                >
+              </h2>
+            </header>
+            <div class="emr-product-content">
+              <p class="eyebrow">For authorized clinic care</p>
+              <p>
+                Support patient records, team documentation and faculty review
+                in a clinic environment.
+              </p>
+              <ul>
+                <li>Work from a shared patient and appointment context.</li>
+                <li>Document the care provided by your team.</li>
+                <li>Review and co-sign through the clinical workflow.</li>
+              </ul>
+              <p class="product-safety">
+                Real patient records — HIPAA applies.
+              </p>
+              <a
+                class="btn btn-green"
+                href="https://emr.devpt.app"
+                target="_blank"
+                rel="noopener"
+                >Open proBonoEMR</a
               >
-                <path d="M4 16 16 4M4 4h12v12" /></svg
-            ></a>
+            </div>
           </article>
         </div>
         <div class="wrap">
           <p class="tour-caption">
             Product access follows your program or clinic’s sign-in and
-            permissions. The public walkthrough uses fictional data and does not
+            permissions. The public walkthrough uses practice data and does not
             connect to clinic records.
           </p>
         </div>
@@ -407,7 +415,8 @@
       </div>
       <div class="wrap footer-bottom">
         <p>
-          © <span id="year">2026</span> DevPT · Built by Dan Stone, PT, DPT, MS.
+          © <span id="year">2026</span> DevPT · Built by Dan Stone, PT, DPT,
+          MS.
         </p>
         <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
       </div>

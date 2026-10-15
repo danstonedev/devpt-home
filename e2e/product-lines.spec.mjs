@@ -147,13 +147,17 @@ test("the homepage introduces three distinct product lines and destinations", as
       product.path,
     );
     await expect
-      .poll(() => card.locator("img").evaluate((image) => image.naturalWidth))
+      .poll(() =>
+        card
+          .locator(".product-preview img")
+          .evaluate((image) => image.naturalWidth),
+      )
       .toBeGreaterThan(0);
     boxes.push(await card.boundingBox());
   }
   if (testInfo.project.name === "phone") {
-    expect(boxes[1].y).toBeGreaterThan(boxes[0].y + boxes[0].height);
-    expect(boxes[2].y).toBeGreaterThan(boxes[1].y + boxes[1].height);
+    expect(boxes[1].y).toBeGreaterThanOrEqual(boxes[0].y + boxes[0].height);
+    expect(boxes[2].y).toBeGreaterThanOrEqual(boxes[1].y + boxes[1].height);
   } else {
     expect(boxes[0].y).toBe(boxes[1].y);
     expect(boxes[1].y).toBe(boxes[2].y);
@@ -311,14 +315,29 @@ test("native chapter navigation validates deep links, keyboard and child state w
     "data-chapter",
     "middle",
   );
-  await page.evaluate(() => scrollTo(0, document.body.scrollHeight));
-  await frame.waitForFunction(() =>
-    receivedMessages.some(
-      (message) =>
-        message.type === "devpt-showcase-visibility" &&
-        message.visible === false,
-    ),
-  );
+  // Keep this lifecycle check independent of the page's footer height. The
+  // compact desktop layout otherwise leaves the frame inside the observer's
+  // visibility margin even after scrolling to the end of the page.
+  await page.evaluate(() => {
+    const space = document.createElement("div");
+    space.setAttribute("aria-hidden", "true");
+    space.style.height = `${innerHeight + 240}px`;
+    document.body.append(space);
+    scrollTo({ top: document.body.scrollHeight, behavior: "instant" });
+  });
+  // A fully offscreen frame can suspend animation frames; poll via evaluate
+  // instead of the requestAnimationFrame polling used by waitForFunction.
+  await expect
+    .poll(() =>
+      frame.evaluate(() =>
+        receivedMessages.some(
+          (message) =>
+            message.type === "devpt-showcase-visibility" &&
+            message.visible === false,
+        ),
+      ),
+    )
+    .toBe(true);
 });
 
 test("only the expected origin, actual frame and valid native manifest can activate chapters", async ({

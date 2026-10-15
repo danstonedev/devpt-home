@@ -26,6 +26,8 @@ jobs:
         run: node scripts/check-live-showcase.mjs
       - name: Check coordinated release gate
         run: node --test scripts/wait-for-showcases.test.mjs
+      - name: Check committed EMR foundation contract
+        run: node scripts/sync-emr-foundation.mjs --check --snapshot-only
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - name: Check product journeys and trusted walkthrough bridges

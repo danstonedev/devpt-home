@@ -8,10 +8,13 @@
     "start": "npx http-server -c-1 -p 8099",
     "prepreview": "node scripts/ensure-fresh-main.mjs --preview",
     "preview": "http-server -c-1 -p 8109 -a 127.0.0.1",
-    "test": "node scripts/check-live-showcase.mjs && node scripts/check-apps.mjs --no-ping && node --test scripts/wait-for-showcases.test.mjs",
+    "test": "node scripts/check-live-showcase.mjs && node scripts/check-apps.mjs --no-ping && npm run check:brand && node --test scripts/wait-for-showcases.test.mjs",
     "build:demos": "node scripts/build-demos.mjs",
     "check:walkthrough": "node scripts/check-live-showcase.mjs",
-    "test:ui": "playwright test"
+    "test:ui": "playwright test",
+    "check:brand": "node scripts/sync-emr-foundation.mjs --check --snapshot-only",
+    "check:brand:source": "node scripts/sync-emr-foundation.mjs --check --source ../devpt-emr-platform",
+    "sync:brand": "node scripts/sync-emr-foundation.mjs --source ../devpt-emr-platform"
   },
   "keywords": [],
   "author": "",
