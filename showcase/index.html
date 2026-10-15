@@ -1,20 +1,9 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="noindex" />
-    <title>Inside simLAB — native product showcase</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-    <script type="module" crossorigin src="/showcase/assets/index-C0SPdC2I.js"></script>
-    <link rel="stylesheet" crossorigin href="/showcase/assets/index-BADrBQfF.css">
-  </head>
-  <body>
-    <div id="app"></div>
-  </body>
-</html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Inside simLAB</title><link rel="canonical" href="https://lab.devpt.app/showcase/"></head><body><p><a id="continue" href="https://lab.devpt.app/showcase/">Continue to the live simLAB walkthrough ↗</a></p><script>
+// Preserve old public bookmarks without retaining another build of simLAB.
+var old = new URLSearchParams(location.search), target = new URL('https://lab.devpt.app/showcase/');
+var cases = { patient: 'meet', interview: 'listen', reasoning: 'reason' };
+var tools = ['movement', 'joints', 'eyes', 'neuro', 'aquatic', 'vitals'];
+if (cases[old.get('area')]) target.searchParams.set('chapter', cases[old.get('area')]);
+else if (tools.includes(old.get('area'))) { target.searchParams.set('chapter', 'study'); target.searchParams.set('tool', old.get('area')); }
+document.getElementById('continue').href = target.href; location.replace(target.href);
+</script></body></html>

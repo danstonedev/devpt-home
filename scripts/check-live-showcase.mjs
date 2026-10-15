@@ -1,0 +1,16 @@
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import assert from 'node:assert/strict';
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const read = file => readFileSync(resolve(root, file), 'utf8');
+const page = read('index.html'), bridge = read('walkthrough.js');
+assert(page.includes('data-live-showcase="tour"') && page.includes('data-live-showcase="teaser"'), 'Both homepage scenes must load the live public entry.');
+assert(page.includes('src="walkthrough.js"'), 'The live bridge must be loaded.');
+assert(!page.includes('src="showcase/') && !page.includes('native-showcase.js'), 'The homepage must not load a vendored simulator.');
+assert(bridge.includes('https://lab.devpt.app/showcase/'), 'The production walkthrough must come from simLAB.');
+assert(bridge.includes('manifest.chapters') && bridge.includes('manifest.studyTools'), 'Navigation must use the live simLAB catalogue.');
+assert(!existsSync(resolve(root, 'showcase-src')) && !existsSync(resolve(root, 'scripts/build-native-showcase.mjs')), 'Remove pinned simulator copies/builders to prevent drift.');
+assert.deepEqual(readdirSync(resolve(root, 'showcase')), ['index.html'], 'Only the old-bookmark redirect may remain locally.');
+assert(!/61a664c|SIMLAB_SOURCE_DIR/.test(bridge), 'The homepage must not pin a simLAB source snapshot.');
+console.log('Live simLAB walkthrough integration checks passed.');

@@ -4,7 +4,7 @@ The master home page and hub for **DevPT**: a growing platform of simulation and
 assessment tools for physical therapy education, built at the University of North
 Dakota.
 
-It's a static deployment with a locally compiled native simLAB showcase. The app catalog is
+It's a static deployment embedding the public walkthrough from simLAB's own deployment. The app catalog is
 data-driven: **[`apps.json`](apps.json) is the single source of truth**, and
 `app.js` renders the footer tool list from it.
 
@@ -14,66 +14,53 @@ data-driven: **[`apps.json`](apps.json) is the single source of truth**, and
 - `apps.json` — **canonical app registry** (id, name, live URL, backing repo, status, placement)
 - `styles.css` — light editorial theme, UND-green accent
 - `app.js` — screenshot dialog, mobile menu and footer catalog
-- `native-showcase.js` / `native-showcase.css` — homepage gallery navigation and iframe visibility coordination
-- `showcase-src/` — homepage framing around imported, unmodified simLAB components
-- `scripts/build-native-showcase.mjs` — pinned-source Vite build and native asset/credit packaging
-- `showcase/` — checked-in generated showcase, models, credits and `source.json` provenance
+- `walkthrough.js` / `native-showcase.css` — live walkthrough navigation, shared catalogue and frame visibility
+- `showcase/index.html` — redirect for old public bookmarks
 - `assets/` — logo, demo videos/posters, screenshots
 - `CV - Dan Stone.pdf` — linked from the About section
 
 Fonts (Hanken Grotesk + JetBrains Mono) load from Google Fonts; product imagery is local.
 
-## Homepage product story
+## James’s walkthrough — one shared build
 
-The homepage embeds the actual simLAB patient presentation, interview, reasoning map and learning-lab components,
-compiled from simLAB **61a664ca5706c19cddb8842fbfec1f0118121917** (`61a664c`). Native labels, controls, teaching notes,
-models and playback come from that source. The homepage owns the surrounding navigation and demonstration state;
-it does not recreate the product UI. See [the refresh record](docs/homepage-refresh.md) for component provenance.
+The homepage embeds **https://lab.devpt.app/showcase/**. That document is built and
+deployed by simLAB, alongside the signed-in application, from the same commit and
+component sources. The homepage no longer compiles, pins or ships its own patient
+models, clinical UI or study tools.
 
-The default gallery opens the **sterile Movement lab teaching view**. Its clean Body stage remains the baseline;
-native patient identities and Outpatient PT, Inpatient room and Performance gym are separate presentation choices.
-The gallery also exposes the native Joint, Eye, Neuro, Aquatic Therapy and Live Vitals workspaces.
+James Morgan’s real case supplies the identity, patient words, symptom drawing,
+exam results and follow-up scenarios. The guided visit connects the interview,
+3D symptom map, native supine hip examinations, reasoning workspace and plan of care.
+Guests can pause, choose chapters and explore the same learning labs. This public
+sample is scripted and keeps an in-memory session; it does not call protected AI
+or account APIs or save a learner attempt.
 
-The public case uses the real James Morgan scenario and native authored patient replies. Its interview and reasoning
-views share an in-memory session, native transcript and selected-text evidence capture. It displays **Scripted case
-practice**, has no AI API or account-service access, and does not save a learner record. Browser Talk/dictation, if
-explicitly activated, can use the browser's speech-recognition service; it is not simLAB's protected realtime AI.
-Offscreen case children unmount while their demonstration session remains available when visitors return.
+`walkthrough.js` owns only homepage navigation, frame visibility and the full-view
+link. It accepts messages only from its actual simLAB frame and exact source
+origin. Chapter labels and the study-tool catalogue come from that live frame's
+versioned ready message. Updating the catalogue in simLAB updates the homepage
+navigation and study cards without another homepage build. Iframes pause and
+release their native views while offscreen; the guest's case state remains.
 
-Without JavaScript, descriptive content, the Movement screenshot fallback and static footer links remain available.
-The remaining screenshots are direct captures of synthetic local demonstrations, not production student records.
-Preserve the native teaching notes, source links and packaged model credits.
+The old `showcase/` URL is a bookmark redirect to the live entry. The former
+generated assets, `showcase-src/` adapters and pinned-source build script have
+been retired. `node scripts/check-live-showcase.mjs` runs in CI to prevent a
+vendored simulator from returning.
 
-The earlier `experience.*`, `reasoning-demo.*` and `demos/` previews are superseded and are not loaded by the current
-homepage. `build:demos` remains for those historical assets; use `build:native` for the current product showcase.
+For an intentional two-repository local preview, start simLAB's mission-shell
+development server on **127.0.0.1:5180**, then use this repository's normal draft
+preview on **127.0.0.1:8109** and open:
 
-## Build the native showcase
-
-Serving checked-in files needs no simLAB checkout. Rebuilding requires the pinned source and its recorded recursive
-submodules at the default sibling path `../simlab-native-source`, plus frozen dependencies in both repositories.
-The build was tested with Node.js 22.19.0; `build:native` enables TypeScript stripping for native plugin imports.
-Use pnpm 9.15.0, as declared by the simLAB source.
-
-From this homepage repository, prepare a fresh source checkout and build:
-
-```bash
-git clone https://github.com/danstonedev/simlab.git ../simlab-native-source
-git -C ../simlab-native-source checkout --detach 61a664ca5706c19cddb8842fbfec1f0118121917
-git -C ../simlab-native-source submodule update --init --recursive
-pnpm --dir ../simlab-native-source install --frozen-lockfile --ignore-scripts
-npm ci
-npm run build:native
+```
+http://127.0.0.1:8109/?simlab=http://127.0.0.1:5180
 ```
 
-For an existing checkout, inspect its changes before changing its revision. Keep the recorded submodule commits;
-do not update them with `--remote`. `SIMLAB_SOURCE_DIR` can point the builder to another prepared source directory.
-The builder checks the pinned HEAD and tracked source cleanliness, prepares gitignored SvelteKit config stubs,
-then regenerates only `showcase/` and the root `simlab-logo.png` asset. `showcase/source.json` records the full source
-commit and recursive submodule status. Homepage adapters do not alter the simLAB source.
+The source override is accepted only on a loopback homepage and only for that
+loopback simLAB port. Production always uses `https://lab.devpt.app/showcase/`.
 
-Commit the generated `showcase/` files and `simlab-logo.png` with source changes after inspecting the build. Azure
-uses `skip_app_build: true`: it uploads these committed HTML, JavaScript, CSS and model assets from the repository
-root and does not run npm, pnpm or Vite during deployment. Source files alone do not update the deployed showcase.
+Rollout order: deploy the simLAB public entry first, confirm its guest walkthrough,
+then deploy this homepage integration. Future simLAB deployments update the
+embedded experience automatically. API admission and signed-in routes are unchanged.
 
 ## Run locally
 
