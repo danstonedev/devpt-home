@@ -141,7 +141,9 @@ test("the homepage introduces three distinct product lines and destinations", as
     const card = page.locator(
       `.product-grid article[data-product="${product.id}"]`,
     );
-    await expect(card.locator("h2")).toContainText(product.name);
+    await expect(card.locator("h2")).toHaveAccessibleName(
+      product.id === "emrs" ? "simEMR proBonoEMR" : product.name,
+    );
     await expect(card.locator("a.product-walkthrough")).toHaveAttribute(
       "href",
       product.path,
