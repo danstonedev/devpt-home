@@ -161,7 +161,7 @@
   font-weight: 700;
   letter-spacing: 0;
 }
-.feature-play {
+.feature-try {
   flex-shrink: 0;
   padding: 8px 12px;
   font-size: 0.8125rem;
@@ -175,11 +175,11 @@
   background: var(--color-neutral-100);
 }
 .feature-still {
+  position: relative;
   display: block;
   height: 100%;
 }
-.feature-still img,
-.feature-media video {
+.feature-still img {
   display: block;
   width: 100%;
   height: 100%;
@@ -187,27 +187,6 @@
 }
 .feature-still:focus-visible {
   outline-offset: -4px;
-}
-.feature-recording-note {
-  display: none;
-}
-.feature-preview:has(video:not([hidden])) .feature-recording-note {
-  display: block;
-}
-.feature-preview [data-feature-status],
-.feature-recording-note {
-  margin: 8px 0 0;
-  color: var(--color-text);
-  font-size: 0.8125rem;
-  line-height: 1.5;
-}
-.portfolio-home .image-dialog {
-  border-color: var(--color-neutral-500);
-  border-radius: var(--radius-card);
-  background: var(--color-topbar-end);
-}
-.portfolio-home .image-dialog::backdrop {
-  background: rgb(0 0 0 / 80%);
 }
 .simlab-feature-intro {
   display: flex;
@@ -237,7 +216,8 @@
   font-size: 0.875rem;
   line-height: 1.5;
 }
-.simlab-direct-link {
+.simlab-direct-link,
+.workspace-direct-link {
   margin-top: auto;
   color: black;
   font-size: 0.8125rem;
@@ -245,7 +225,22 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.simlab-live-dialog {
+.feature-launch-label {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 6px 9px;
+  border-radius: var(--radius-sm);
+  color: white;
+  background: black;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+.workspace-direct-link {
+  display: inline-block;
+  margin-top: 8px;
+}
+.workspace-live-dialog {
   width: min(1440px, calc(100vw - 32px));
   height: min(1000px, calc(100dvh - 32px));
   max-width: none;
@@ -257,17 +252,17 @@
   color: black;
   background: white;
 }
-.simlab-live-dialog[open] {
+.workspace-live-dialog[open] {
   display: flex;
   flex-direction: column;
 }
-.simlab-live-dialog[data-state="unavailable"] {
+.workspace-live-dialog[data-state="unavailable"] {
   height: auto;
 }
-.simlab-live-dialog::backdrop {
+.workspace-live-dialog::backdrop {
   background: rgb(0 0 0 / 80%);
 }
-.simlab-live-toolbar {
+.workspace-live-toolbar {
   display: flex;
   flex: none;
   align-items: center;
@@ -277,17 +272,17 @@
   color: white;
   background: black;
 }
-.simlab-live-toolbar h2 {
+.workspace-live-toolbar h2 {
   margin: 0;
   color: white;
   font-size: 1rem;
   font-weight: 600;
   line-height: 1.4;
 }
-.simlab-live-toolbar button {
+.workspace-live-toolbar button {
   flex-shrink: 0;
 }
-.simlab-live-notice {
+.workspace-live-notice {
   display: flex;
   flex: none;
   flex-wrap: wrap;
@@ -300,35 +295,35 @@
   font-size: 0.8125rem;
   line-height: 1.4;
 }
-.simlab-live-notice[hidden] {
+.workspace-live-notice[hidden] {
   display: none;
 }
-.simlab-live-notice p {
+.workspace-live-notice p {
   flex: 1 1 260px;
   margin: 0;
 }
-.simlab-live-notice a {
+.workspace-live-notice a {
   color: black;
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.simlab-live-stage {
+.workspace-live-stage {
   flex: 1;
   min-height: 0;
 }
-[data-simlab-live-frame] {
+[data-workspace-frame] {
   display: block;
   width: 100%;
   height: 100%;
   border: 0;
   background: white;
 }
-body:has(.simlab-live-dialog[open]) {
+body:has(.workspace-live-dialog[open]) {
   overflow: hidden;
 }
 @media (max-width: 600px) {
-  .simlab-live-dialog {
+  .workspace-live-dialog {
     width: calc(100vw - 16px);
     height: calc(100dvh - 16px);
   }

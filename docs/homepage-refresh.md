@@ -1,6 +1,6 @@
 # DevPT product introduction and walkthroughs
 
-DevPT has three distinct product lines: **simLAB**, **EMRs** and **3Dpain.app**. The homepage introduces that family and gives each product its own route for a focused walkthrough:
+DevPT has three distinct product lines: **simLAB**, **EMRs** and **3Dpain.app**. The hero reads **A Web App Platform for Developing Clinical Reasoning & Readiness**. The homepage introduces that family and gives each product its own route for a focused walkthrough:
 
 - `/simlab/` preserves James Morgan's live guided visit, native study tools and student/faculty introduction.
 - `/emrs/` introduces the education and clinic documentation workspaces.
@@ -40,12 +40,24 @@ Existing photographs and screenshots are supporting imagery; they are not a repl
 
 The homepage introduces three features from each product:
 
-- simLAB: patient interview, connecting differentials and passive range of motion.
+- simLAB: patient interview, connecting differentials and objective exam/observation with one preselected test per category, including vestibular BPPV testing.
 - EMRs: note workspace, a student clinic schedule and faculty feedback with comments.
 - 3Dpain.app: symptom mapping, pose/movement and timeline review of a pain progression.
 
-simLAB's three actions open its real public practice workspace in one full-size iframe dialog. The source-owned URL is `/showcase/?presentation=workspace&section=interview|reason|examine` on `lab.devpt.app`. It mounts the native patient toolbar, encounter activity and guest header with a fictional James Morgan case. The interview, reasoning map and observation-gated examination use the same components as the application. Practice state stays in memory; this public entry requests no account, learner records or AI provider credentials. The dedicated guided `/simlab/` walkthrough remains separate.
+All nine actions open real source-owned workspaces in one shared full-size iframe dialog. Each product's canonical URL and version marker are registered in `apps.json` under `showcase.workspace`. The dedicated guided walkthroughs remain separate. Public practice requires no account or real patient or learner record; changes stay in the sample.
 
-No simulator loads on the homepage until a visitor selects **Try live**. The dialog owns one iframe, validates its exact origin, source window and `simlab-workspace` manifest, and pauses when the page is hidden. Closing removes the iframe and returns focus to its trigger. A full-view source link remains available without JavaScript or if the embed fails. The release workflow requires the deployed source's `simlab-workspace:v1` marker and DevPT framing policy before uploading the homepage; the older guided manifest cannot satisfy that gate. The former software-rendered simLAB captures are retired from the homepage.
+simLAB uses `/showcase/?presentation=workspace&section=interview|reason|examine` on `lab.devpt.app`. It mounts the native patient toolbar, encounter activity and practice guest header with a fictional James Morgan case. The interview, reasoning map and observation-gated examination use the same components as the application. Objective examples cover each native major exam group; the vestibular BPPV choice uses the separately labeled native EyeLab sample rather than inventing a James finding.
 
-The six EMR and 3Dpain.app previews retain their native screenshots and optional recorded clips under `assets/features/{emrs,painmap}/`, with source revisions and capture details alongside them. Use synthetic demonstration data and refresh exports from the owning workflows when those features change. Screenshots can be enlarged and remain available without JavaScript. Clips load only when requested, use native video controls and never start or loop automatically. The homepage pauses a clip when another starts, when it leaves view or when the page is hidden. Keep the complete native frame visible without stretching its interface.
+The EMR source supplies `documentation|schedule|feedback` from `simemr.devpt.app`. Documentation edits use the real OrientationWriter. The shared native student schedule begins half booked and permits one practice booking; faculty feedback uses the real note renderer and review controls to add or edit sample comments. These data ports keep practice changes in memory and do not release feedback, sign notes or write patient records.
+
+The pain-map source supplies `mapping|movement|timeline` from `www.3dpain.app`. Its native finding workflow, body renderer and pose/movement controls use an ephemeral sample. The real history preview reviews three source-owned synthetic snapshots. Account, assessment, persistence and export services are outside the public entry.
+
+The public patient interview allows three actual AI exchanges, shared by typed and dictated questions. The source API owns the fixed patient prompt, durable allowance and bounded audio for its replies; provider keys remain on the server. A short-lived opaque grant resumes the remaining allowance across preview openings. The third reply includes the patient's demo farewell and invitation to contact [Dan Stone](mailto:daniel.j.stone@und.edu). Native rendering must create that known contact link explicitly, without rendering model output as HTML. Failures must be identified as failures, never passed off as AI with a scripted answer. Reasoning and examination do not spend conversation turns.
+
+No simulator loads on the homepage until a visitor selects **Try live**. The dialog owns at most one iframe, validates its exact origin, source window and workspace catalog, and pauses when the page is hidden. simLAB additionally must advertise its fixed patient and three-exchange speech capability. Microphone permission is delegated only to simLAB's exact source origin and recording requires the visitor's action. Closing removes the iframe and returns focus to its trigger. Direct source links remain available without JavaScript or if an embed fails.
+
+Before uploading the homepage, the release workflow requires the deployed `simlab-ai-preview:v1`, `emrs-workspace:v1` and `painmap-workspace:v1` markers and each source's DevPT framing policy. The simLAB API must also pass its read-only three-exchange readiness check. Older guided, recorded or scripted builds cannot satisfy those gates.
+
+The six EMR and 3Dpain.app native PNGs remain launch posters, linked to their corresponding real workspaces. Their source revisions and capture details remain under `assets/features/{emrs,painmap}/`. The former recorded clips and software-rendered simLAB captures are retired from the homepage; do not reintroduce recorded playback in place of an interactive preview. Keep native poster aspect ratios intact.
+
+All four product-page footers link **About Dan Stone** to the official UND directory bio and include the supplied LinkedIn profile. The outdated CV PDF and links to it are removed from the site.

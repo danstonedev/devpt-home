@@ -15,15 +15,27 @@ export function releaseTargets(registry) {
       "All three source-owned product entries must be registered.",
     );
   return products.map((product) => {
-    if (product.id !== "simlab") return product;
     const workspace = product.showcase.workspace;
+    const origins = {
+      simlab: "https://lab.devpt.app",
+      emrs: "https://simemr.devpt.app",
+      painmap: "https://www.3dpain.app",
+    };
+    const contract =
+      product.id === "simlab"
+        ? "simlab-ai-preview:v1"
+        : `${product.id}-workspace:v1`;
     if (
       workspace?.url !==
-        "https://lab.devpt.app/showcase/?presentation=workspace" ||
-      workspace.contract !== "simlab-workspace:v1"
+        `${origins[product.id]}/showcase/?presentation=workspace` ||
+      workspace.contract !== contract ||
+      (product.id === "simlab" &&
+        (workspace.readiness?.url !==
+          "https://lab.devpt.app/api/showcase/session" ||
+          workspace.readiness.exchangeLimit !== 3))
     )
       throw new Error(
-        "The native simLAB workspace contract must be registered.",
+        `The native ${product.name} workspace contract must be registered.`,
       );
     return { ...product, showcase: workspace };
   });
@@ -68,9 +80,27 @@ export async function probeShowcase(product, fetcher = fetch) {
       `<meta\\b(?=[^>]*\\bname=["']devpt-showcase["'])(?=[^>]*\\bcontent=["']${literal}["'])[^>]*>`,
       "i",
     );
-    return marker.test(html)
-      ? null
-      : `${product.id}: the public walkthrough build is not deployed yet`;
+    if (!marker.test(html))
+      return `${product.id}: the public walkthrough build is not deployed yet`;
+    if (product.showcase.readiness) {
+      const preflight = await fetcher(product.showcase.readiness.url, {
+        redirect: "manual",
+        signal: AbortSignal.timeout(10000),
+        headers: {
+          "user-agent": "devpt-showcase-release-check",
+          "cache-control": "no-cache",
+        },
+      });
+      if (preflight.status !== 200)
+        return `${product.id}: AI preview is not ready (HTTP ${preflight.status})`;
+      const ready = await preflight.json();
+      if (
+        ready.available !== true ||
+        ready.exchangeLimit !== product.showcase.readiness.exchangeLimit
+      )
+        return `${product.id}: the three-exchange AI preview is not ready`;
+    }
+    return null;
   } catch (error) {
     return `${product.id}: ${error.name === "TimeoutError" ? "request timed out" : "entry not reachable"}`;
   }

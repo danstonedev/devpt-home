@@ -162,18 +162,26 @@ if (
       ) {
         errors.push(`${product.id}: local showcase port is invalid`);
       }
-      if (product.id === "simlab") {
-        const workspace = product.showcase.workspace;
-        const nativeUrl = new URL(workspace.url);
-        if (
-          nativeUrl.origin !== source.origin ||
-          nativeUrl.pathname !== source.pathname ||
-          nativeUrl.search !== "?presentation=workspace" ||
-          nativeUrl.hash ||
-          workspace.contract !== "simlab-workspace:v1"
-        )
-          errors.push("simlab: native workspace URL or contract is invalid");
-      }
+      const workspace = product.showcase.workspace;
+      const nativeUrl = new URL(workspace.url);
+      const contract =
+        product.id === "simlab"
+          ? "simlab-ai-preview:v1"
+          : `${product.id}-workspace:v1`;
+      if (
+        nativeUrl.origin !== source.origin ||
+        nativeUrl.pathname !== source.pathname ||
+        nativeUrl.search !== "?presentation=workspace" ||
+        nativeUrl.hash ||
+        workspace.contract !== contract ||
+        (product.id === "simlab" &&
+          (workspace.readiness?.url !==
+            "https://lab.devpt.app/api/showcase/session" ||
+            workspace.readiness.exchangeLimit !== 3))
+      )
+        errors.push(
+          `${product.id}: native workspace URL or contract is invalid`,
+        );
     } catch {
       errors.push(`${product.id}: invalid source-owned showcase URL`);
     }

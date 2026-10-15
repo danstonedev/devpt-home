@@ -150,8 +150,8 @@ test("the homepage introduces three distinct product lines and destinations", as
     );
     await expect(card.locator(".feature-preview")).toHaveCount(3);
     if (product.id === "simlab") {
-      await expect(card.locator("[data-simlab-preview]")).toHaveCount(3);
-      await expect(card.locator("[data-simlab-try]:visible")).toHaveCount(3);
+      await expect(card.locator("[data-workspace-preview]")).toHaveCount(3);
+      await expect(card.locator("[data-workspace-try]:visible")).toHaveCount(3);
       await expect(
         card.locator(".feature-gallery img, .feature-gallery video"),
       ).toHaveCount(0);
