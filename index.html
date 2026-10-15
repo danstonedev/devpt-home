@@ -108,8 +108,8 @@
                 ><a
                   href="#flow"
                   class="btn btn-ghost btn-lg"
-                  data-open-native="movement"
-                  >Explore the simulator <span aria-hidden="true">↓</span></a
+                  data-start-walkthrough
+                  >Watch James’s visit <span aria-hidden="true">↓</span></a
                 >
               </div>
               <p class="access-note">
@@ -129,23 +129,23 @@
               <p class="mono">PART OF DEVPT</p>
               <figure class="hero-native">
                 <div class="product-chrome">
-                  <span>simLAB / patients &amp; environments</span
+                  <span>simLAB / meet James</span
                   ><a
-                    href="showcase/?area=patient"
+                    href="https://lab.devpt.app/showcase/?chapter=meet"
                     target="_blank"
                     rel="noopener"
                     >Open scene ↗</a
                   >
                 </div>
                 <iframe
-                  src="showcase/?area=patient&amp;embed"
-                  title="Native simLAB patient and clinical environments"
+                  data-live-showcase="teaser"
+                  title="Meet James Morgan in simLAB"
                   data-native-frame
                   loading="lazy"
                 ></iframe>
                 <figcaption>
-                  The program’s own patient view, room selector and camera.
-                  Authored animation preview with real case content.
+                  James wants to get back to his Saturday walking group.
+                  Follow his visit, from the first question to the next step.
                 </figcaption>
               </figure>
               <div class="hero-principle">
@@ -180,117 +180,40 @@
             <div>
               <p class="eyebrow">Inside the simulator</p>
               <h2 id="tour-title">
-                See the scope.<br />Try the real workspaces.
+                One patient.<br />The whole clinical story.
               </h2>
             </div>
             <p>
-              Explore the patient encounter and focused teaching labs with the
-              controls, models and case information learners use in simLAB.
+              Meet James, hear his story and watch his examination. Connect the
+              findings, build a plan, then explore the science in simLAB’s study tools.
             </p>
           </div>
-          <div
-            class="native-workspace-list"
-            role="group"
-            aria-label="Choose a simLAB workspace"
-          >
-            <button
-              type="button"
-              data-native-area="movement"
-              aria-pressed="true"
-            >
-              <span>01</span> Sterile teaching view
-            </button>
-            <button
-              type="button"
-              data-native-area="patient"
-              aria-pressed="false"
-            >
-              <span>02</span> Patients &amp; environments
-            </button>
-            <button
-              type="button"
-              data-native-area="interview"
-              aria-pressed="false"
-            >
-              <span>03</span> Patient interview
-            </button>
-            <button
-              type="button"
-              data-native-area="reasoning"
-              aria-pressed="false"
-            >
-              <span>04</span> Reasoning &amp; evidence
-            </button>
-            <button
-              type="button"
-              data-native-area="joints"
-              aria-pressed="false"
-            >
-              <span>05</span> Joint mechanics
-            </button>
-            <button type="button" data-native-area="eyes" aria-pressed="false">
-              <span>06</span> Eye examinations
-            </button>
-            <button type="button" data-native-area="neuro" aria-pressed="false">
-              <span>07</span> Neuro lab
-            </button>
-            <button
-              type="button"
-              data-native-area="aquatic"
-              aria-pressed="false"
-            >
-              <span>08</span> Aquatic Therapy
-            </button>
-            <button
-              type="button"
-              data-native-area="vitals"
-              aria-pressed="false"
-            >
-              <span>09</span> Live Vitals
-            </button>
-          </div>
+          <nav class="native-workspace-list story-chapters" aria-label="James’s visit" data-story-chapters>
+            <a href="https://lab.devpt.app/showcase/">Open James’s walkthrough ↗</a>
+          </nav>
           <div class="native-gallery">
             <header class="native-gallery-heading">
-              <div>
-                <p class="native-gallery-title">Movement lab</p>
-                <span class="native-gallery-badge mono"
-                  >STERILE TEACHING BASELINE</span
-                >
-              </div>
+              <span class="native-gallery-badge mono">A GUIDED SIMLAB WALKTHROUGH</span>
               <a
                 class="native-full-view"
-                href="showcase/?area=movement"
+                href="https://lab.devpt.app/showcase/"
                 target="_blank"
                 rel="noopener"
                 >Open full view <span aria-hidden="true">↗</span></a
               >
             </header>
-            <p class="native-gallery-description">
-              The clean body teaching stage, with the program’s examination
-              demonstrations, movement adaptations, hands, instruments and
-              playback controls. Start with Capsular hip, or explore the native
-              catalog.
-            </p>
             <iframe
               id="native-gallery-frame"
-              src="showcase/?area=movement&amp;embed"
-              title="simLAB Movement lab native workspace"
+              data-live-showcase="tour"
+              title="James Morgan · a guided simLAB visit"
               data-native-frame
               loading="lazy"
             ></iframe>
-            <p class="native-gallery-note">
-              Native simLAB workspaces · Public demonstration with authored
-              sample content. The interview uses scripted case practice; full
-              simLAB supports AI conversations.
-            </p>
+            <p class="native-gallery-note">Scripted case demonstration · explore freely · no sign-in required</p>
           </div>
           <div class="native-baseline-note">
-            <strong>The sterile view stays.</strong>
-            <p>
-              Begin with a clear teaching model that keeps attention on movement
-              and examination. Add patient presentation and clinical
-              surroundings when that context serves the lesson.
-            </p>
+            <strong>A case to follow. A lab to explore.</strong>
+            <p>Open a study tool whenever a finding makes you curious. James’s visit stays with you when you come back.</p>
           </div>
           <noscript
             ><p class="image-note">
@@ -376,7 +299,7 @@
               alongside case practice.
             </p>
           </div>
-          <div class="native-lab-cards">
+          <div class="native-lab-cards" data-live-study-tools>
             <a class="native-lab-card" href="#flow" data-open-native="movement"
               ><span class="mono">01 / MOVEMENT</span>
               <h3>A clear teaching baseline.</h3>
@@ -747,6 +670,6 @@
       <p></p>
     </dialog>
     <script src="app.js"></script>
-    <script src="native-showcase.js"></script>
+    <script src="walkthrough.js"></script>
   </body>
 </html>
