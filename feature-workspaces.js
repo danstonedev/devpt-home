@@ -175,8 +175,12 @@
       visibility(active.card.id === "simlab");
     } else if (data.type === "simlab-workspace-patient-state" && active.ready &&
                active.card.id === "simlab" && data.section === active.section) {
-      if (data.state === "ready") visualReady();
-      else if (data.state === "unavailable") unavailable();
+      // A native 3D fallback is a usable product (including its conversation),
+      // not a failed connection. Reveal it without discarding that session.
+      if (data.state === "ready" || data.state === "unavailable") {
+        active.frame.dataset.patientState = data.state;
+        visualReady();
+      }
       else if (data.state === "loading") {
         active.visualReady = false;
         delete active.frame.dataset.visualReady;

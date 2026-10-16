@@ -689,18 +689,20 @@ test("simLAB keeps its poster until the current native section reports a settled
   await expect(element).toHaveAttribute("data-visual-ready", "true");
 });
 
-test("an unavailable native scene keeps the website poster and direct fallback usable", async ({ page }) => {
+test("an unavailable native scene reveals the usable native fallback and retains its session", async ({ page }) => {
   const product = products[0];
   await routeFixture(page, product);
   await page.goto("/");
   const frame = await open(page, product);
   await post(page, frame, readyMessage(product));
+  await frame.evaluate(() => { window.retainedSample = "conversation remains available"; });
   await post(page, frame, { type: "simlab-workspace-patient-state", section: "interview", state: "unavailable" });
-  await expect(page.locator("[data-workspace-status]")).toHaveAttribute("data-state", "unavailable");
-  await expect(page.locator("[data-workspace-full-view]")).toBeVisible();
-  await expect(page.locator("[data-workspace-full-view]")).toHaveAttribute("href", workspaceUrl(product, "interview"));
-  await expect(posterFor(page, product, "interview").locator("img")).toBeVisible();
-  await expect(page.locator("[data-workspace-frame][data-visual-ready=true]")).toHaveCount(0);
+  await expect(page.locator("[data-workspace-frame]")).toHaveAttribute("data-patient-state", "unavailable");
+  await expect(page.locator("[data-workspace-frame][data-visual-ready=true]")).toHaveCount(1);
+  await expect(page.locator(".workspace-live-notice")).toBeHidden();
+  await page.locator("[data-workspace-close]").click();
+  await triggerFor(page, product, "interview").click();
+  expect(await frame.evaluate(() => window.retainedSample)).toBe("conversation remains available");
 });
 
 test("normal motion warms only one visible preview and parks it with its card", async ({ page }) => {
