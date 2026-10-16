@@ -110,7 +110,13 @@
               >
                 <header class="product-heading">
                   <h2>
-                    <img src="/assets/simlab-logo.png" alt="" /><span
+                    <img
+                      src="/assets/brand/simlab-wordmark-122.png"
+                      srcset="/assets/brand/simlab-wordmark-245.png 2x, /assets/brand/simlab-wordmark-367.png 3x"
+                      width="122"
+                      height="36"
+                      alt=""
+                    /><span
                       class="sr-only"
                       >simLAB</span
                     >
@@ -119,117 +125,125 @@
                 </header>
                 <div class="product-content">
                   <div class="feature-gallery">
-                    <figure
-                      class="feature-preview simlab-feature-preview"
-                      data-workspace-preview="interview"
-                    >
+                    <figure class="feature-preview" data-workspace-preview="interview">
                       <figcaption>
                         <h3 id="simlab-interview">Patient interview</h3>
-                        <button
-                          type="button"
-                          class="feature-try btn btn-green"
-                          data-workspace-try
-                          hidden
-                          aria-haspopup="dialog"
-                          aria-controls="workspace-live-dialog"
-                        >
-                          Try live
-                        </button>
                       </figcaption>
-                      <div class="feature-media simlab-feature-intro">
-                        <p class="simlab-case-label">Try 3 AI exchanges</p>
-                        <p class="simlab-feature-cue">
-                          AI-powered, real-time conversations.
-                        </p>
-                        <p class="simlab-feature-copy">
-                          Converse with simulated patients in text or speech.
-                        </p>
+                      <div class="feature-media">
                         <a
-                          class="simlab-direct-link"
+                          class="feature-still"
+                          data-workspace-launch
                           href="https://lab.devpt.app/showcase/?presentation=workspace&amp;section=interview"
-                          data-workspace-direct
                           target="_blank"
                           rel="noopener"
-                          >Open directly</a
+                          aria-labelledby="simlab-interview"
                         >
+                          <img
+                            src="/assets/features/simlab/public-interview.jpg"
+                            alt="Practice guest interview with James Morgan in the clinical room and the patient conversation."
+                            width="1280"
+                            height="800"
+                            loading="eager"
+                            fetchpriority="high"
+                            decoding="async"
+                          />
+                        </a>
+                        <div class="workspace-controls">
+                          <button
+                            type="button"
+                            class="workspace-expand"
+                            data-workspace-expand
+                            hidden
+                            aria-haspopup="dialog"
+                            aria-controls="workspace-live-dialog"
+                            aria-label="Expand Patient interview"
+                          >
+                            <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+                              <path d="M7 3H3v4m0-4 5 5m5-5h4v4m0-4-5 5M3 13v4h4m-4 0 5-5m9 1v4h-4m4 0-5-5" />
+                            </svg>
+                            <span>Expand</span>
+                          </button>
+                        </div>
                       </div>
                     </figure>
-                    <figure
-                      class="feature-preview simlab-feature-preview"
-                      data-workspace-preview="reason"
-                    >
+                    <figure class="feature-preview" data-workspace-preview="reason">
                       <figcaption>
                         <h3 id="simlab-differentials">Connect differentials</h3>
-                        <button
-                          type="button"
-                          class="feature-try btn btn-green"
-                          data-workspace-try
-                          hidden
-                          aria-haspopup="dialog"
-                          aria-controls="workspace-live-dialog"
-                        >
-                          Try live
-                        </button>
                       </figcaption>
-                      <div class="feature-media simlab-feature-intro">
-                        <p class="simlab-case-label">
-                          Live workspace · fictional case
-                        </p>
-                        <p class="simlab-feature-cue">
-                          Work through the clinical reasoning.
-                        </p>
-                        <p class="simlab-feature-copy">
-                          Connect case findings with possible explanations in
-                          the actual reasoning workspace.
-                        </p>
+                      <div class="feature-media">
                         <a
-                          class="simlab-direct-link"
+                          class="feature-still"
+                          data-workspace-launch
                           href="https://lab.devpt.app/showcase/?presentation=workspace&amp;section=reason"
-                          data-workspace-direct
                           target="_blank"
                           rel="noopener"
-                          >Open directly</a
+                          aria-labelledby="simlab-differentials"
                         >
+                          <img
+                            src="/assets/features/simlab/public-reason.jpg"
+                            alt="simLAB guest reasoning workspace with the referral, differential diagnoses and interview plan."
+                            width="1280"
+                            height="800"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </a>
+                        <div class="workspace-controls">
+                          <button
+                            type="button"
+                            class="workspace-expand"
+                            data-workspace-expand
+                            hidden
+                            aria-haspopup="dialog"
+                            aria-controls="workspace-live-dialog"
+                            aria-label="Expand Connect differentials"
+                          >
+                            <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+                              <path d="M7 3H3v4m0-4 5 5m5-5h4v4m0-4-5 5M3 13v4h4m-4 0 5-5m9 1v4h-4m4 0-5-5" />
+                            </svg>
+                            <span>Expand</span>
+                          </button>
+                        </div>
                       </div>
                     </figure>
-                    <figure
-                      class="feature-preview simlab-feature-preview"
-                      data-workspace-preview="examine"
-                    >
+                    <figure class="feature-preview" data-workspace-preview="examine">
                       <figcaption>
-                        <h3 id="simlab-objective-exam">
-                          Objective Exam &amp; Observation
-                        </h3>
-                        <button
-                          type="button"
-                          class="feature-try btn btn-green"
-                          data-workspace-try
-                          hidden
-                          aria-haspopup="dialog"
-                          aria-controls="workspace-live-dialog"
-                        >
-                          Try live
-                        </button>
+                        <h3 id="simlab-objective-exam">Objective Exam &amp; Observation</h3>
                       </figcaption>
-                      <div class="feature-media simlab-feature-intro">
-                        <p class="simlab-case-label">
-                          Live workspace · fictional case
-                        </p>
-                        <p class="simlab-feature-cue">
-                          Observe the test before its finding.
-                        </p>
-                        <p class="simlab-feature-copy">
-                          Try preselected exams from each category, including a
-                          vestibular BPPV test.
-                        </p>
+                      <div class="feature-media">
                         <a
-                          class="simlab-direct-link"
+                          class="feature-still"
+                          data-workspace-launch
                           href="https://lab.devpt.app/showcase/?presentation=workspace&amp;section=examine"
-                          data-workspace-direct
                           target="_blank"
                           rel="noopener"
-                          >Open directly</a
+                          aria-labelledby="simlab-objective-exam"
                         >
+                          <img
+                            src="/assets/features/simlab/public-examine.jpg"
+                            alt="simLAB guest objective examination with James Morgan and a plan for range of motion, reflex and balance tests."
+                            width="1280"
+                            height="800"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </a>
+                        <div class="workspace-controls">
+                          <button
+                            type="button"
+                            class="workspace-expand"
+                            data-workspace-expand
+                            hidden
+                            aria-haspopup="dialog"
+                            aria-controls="workspace-live-dialog"
+                            aria-label="Expand Objective Exam &amp; Observation"
+                          >
+                            <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+                              <path d="M7 3H3v4m0-4 5 5m5-5h4v4m0-4-5 5M3 13v4h4m-4 0 5-5m9 1v4h-4m4 0-5-5" />
+                            </svg>
+                            <span>Expand</span>
+                          </button>
+                        </div>
                       </div>
                     </figure>
                   </div>
@@ -261,22 +275,9 @@
                 </header>
                 <div class="product-content">
                   <div class="feature-gallery">
-                    <figure
-                      class="feature-preview"
-                      data-workspace-preview="documentation"
-                    >
+                    <figure class="feature-preview" data-workspace-preview="documentation">
                       <figcaption>
                         <h3 id="emrs-workspace">Clinical workspace</h3>
-                        <button
-                          type="button"
-                          class="feature-try btn btn-green"
-                          data-workspace-try
-                          hidden
-                          aria-haspopup="dialog"
-                          aria-controls="workspace-live-dialog"
-                        >
-                          Try live
-                        </button>
                       </figcaption>
                       <div class="feature-media">
                         <a
@@ -285,48 +286,38 @@
                           href="https://simemr.devpt.app/showcase/?presentation=workspace&amp;section=documentation"
                           target="_blank"
                           rel="noopener"
-                          aria-labelledby="emrs-workspace emrs-workspace-launch"
+                          aria-labelledby="emrs-workspace"
                         >
                           <img
                             src="/assets/features/emrs/workspace.png"
                             alt="simEMR note workspace with structured documentation and the Note Guide."
                             width="1280"
                             height="800"
-                            loading="eager"
+                            loading="lazy"
                             decoding="async"
                           />
-                          <span
-                            class="feature-launch-label"
-                            id="emrs-workspace-launch"
-                            >Open live workspace</span
-                          >
                         </a>
+                        <div class="workspace-controls">
+                          <button
+                            type="button"
+                            class="workspace-expand"
+                            data-workspace-expand
+                            hidden
+                            aria-haspopup="dialog"
+                            aria-controls="workspace-live-dialog"
+                            aria-label="Expand Clinical workspace"
+                          >
+                            <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+                              <path d="M7 3H3v4m0-4 5 5m5-5h4v4m0-4-5 5M3 13v4h4m-4 0 5-5m9 1v4h-4m4 0-5-5" />
+                            </svg>
+                            <span>Expand</span>
+                          </button>
+                        </div>
                       </div>
-                      <a
-                        class="workspace-direct-link"
-                        data-workspace-direct
-                        href="https://simemr.devpt.app/showcase/?presentation=workspace&amp;section=documentation"
-                        target="_blank"
-                        rel="noopener"
-                        >Open directly</a
-                      >
                     </figure>
-                    <figure
-                      class="feature-preview"
-                      data-workspace-preview="schedule"
-                    >
+                    <figure class="feature-preview" data-workspace-preview="schedule">
                       <figcaption>
                         <h3 id="emrs-student-schedule">Student schedule</h3>
-                        <button
-                          type="button"
-                          class="feature-try btn btn-green"
-                          data-workspace-try
-                          hidden
-                          aria-haspopup="dialog"
-                          aria-controls="workspace-live-dialog"
-                        >
-                          Try live
-                        </button>
                       </figcaption>
                       <div class="feature-media">
                         <a
@@ -335,7 +326,7 @@
                           href="https://simemr.devpt.app/showcase/?presentation=workspace&amp;section=schedule"
                           target="_blank"
                           rel="noopener"
-                          aria-labelledby="emrs-student-schedule emrs-student-schedule-launch"
+                          aria-labelledby="emrs-student-schedule"
                         >
                           <img
                             src="/assets/features/emrs/student-schedule.png"
@@ -345,38 +336,28 @@
                             loading="lazy"
                             decoding="async"
                           />
-                          <span
-                            class="feature-launch-label"
-                            id="emrs-student-schedule-launch"
-                            >Open live workspace</span
-                          >
                         </a>
+                        <div class="workspace-controls">
+                          <button
+                            type="button"
+                            class="workspace-expand"
+                            data-workspace-expand
+                            hidden
+                            aria-haspopup="dialog"
+                            aria-controls="workspace-live-dialog"
+                            aria-label="Expand Student schedule"
+                          >
+                            <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+                              <path d="M7 3H3v4m0-4 5 5m5-5h4v4m0-4-5 5M3 13v4h4m-4 0 5-5m9 1v4h-4m4 0-5-5" />
+                            </svg>
+                            <span>Expand</span>
+                          </button>
+                        </div>
                       </div>
-                      <a
-                        class="workspace-direct-link"
-                        data-workspace-direct
-                        href="https://simemr.devpt.app/showcase/?presentation=workspace&amp;section=schedule"
-                        target="_blank"
-                        rel="noopener"
-                        >Open directly</a
-                      >
                     </figure>
-                    <figure
-                      class="feature-preview"
-                      data-workspace-preview="feedback"
-                    >
+                    <figure class="feature-preview" data-workspace-preview="feedback">
                       <figcaption>
                         <h3 id="emrs-faculty-feedback">Faculty feedback</h3>
-                        <button
-                          type="button"
-                          class="feature-try btn btn-green"
-                          data-workspace-try
-                          hidden
-                          aria-haspopup="dialog"
-                          aria-controls="workspace-live-dialog"
-                        >
-                          Try live
-                        </button>
                       </figcaption>
                       <div class="feature-media">
                         <a
@@ -385,7 +366,7 @@
                           href="https://simemr.devpt.app/showcase/?presentation=workspace&amp;section=feedback"
                           target="_blank"
                           rel="noopener"
-                          aria-labelledby="emrs-faculty-feedback emrs-faculty-feedback-launch"
+                          aria-labelledby="emrs-faculty-feedback"
                         >
                           <img
                             src="/assets/features/emrs/faculty-feedback.png"
@@ -395,21 +376,24 @@
                             loading="lazy"
                             decoding="async"
                           />
-                          <span
-                            class="feature-launch-label"
-                            id="emrs-faculty-feedback-launch"
-                            >Open live workspace</span
-                          >
                         </a>
+                        <div class="workspace-controls">
+                          <button
+                            type="button"
+                            class="workspace-expand"
+                            data-workspace-expand
+                            hidden
+                            aria-haspopup="dialog"
+                            aria-controls="workspace-live-dialog"
+                            aria-label="Expand Faculty feedback"
+                          >
+                            <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+                              <path d="M7 3H3v4m0-4 5 5m5-5h4v4m0-4-5 5M3 13v4h4m-4 0 5-5m9 1v4h-4m4 0-5-5" />
+                            </svg>
+                            <span>Expand</span>
+                          </button>
+                        </div>
                       </div>
-                      <a
-                        class="workspace-direct-link"
-                        data-workspace-direct
-                        href="https://simemr.devpt.app/showcase/?presentation=workspace&amp;section=feedback"
-                        target="_blank"
-                        rel="noopener"
-                        >Open directly</a
-                      >
                     </figure>
                   </div>
                   <p class="product-description">
@@ -438,22 +422,9 @@
                 </header>
                 <div class="product-content">
                   <div class="feature-gallery">
-                    <figure
-                      class="feature-preview"
-                      data-workspace-preview="mapping"
-                    >
+                    <figure class="feature-preview" data-workspace-preview="mapping">
                       <figcaption>
                         <h3 id="painmap-mapping">Map symptoms</h3>
-                        <button
-                          type="button"
-                          class="feature-try btn btn-green"
-                          data-workspace-try
-                          hidden
-                          aria-haspopup="dialog"
-                          aria-controls="workspace-live-dialog"
-                        >
-                          Try live
-                        </button>
                       </figcaption>
                       <div class="feature-media">
                         <a
@@ -462,48 +433,38 @@
                           href="https://www.3dpain.app/showcase/?presentation=workspace&amp;section=mapping"
                           target="_blank"
                           rel="noopener"
-                          aria-labelledby="painmap-mapping painmap-mapping-launch"
+                          aria-labelledby="painmap-mapping"
                         >
                           <img
                             src="/assets/features/painmap/mapping.png"
                             alt="3Dpain.app body map showing a sample pain region."
                             width="1280"
                             height="800"
-                            loading="eager"
+                            loading="lazy"
                             decoding="async"
                           />
-                          <span
-                            class="feature-launch-label"
-                            id="painmap-mapping-launch"
-                            >Open live workspace</span
-                          >
                         </a>
+                        <div class="workspace-controls">
+                          <button
+                            type="button"
+                            class="workspace-expand"
+                            data-workspace-expand
+                            hidden
+                            aria-haspopup="dialog"
+                            aria-controls="workspace-live-dialog"
+                            aria-label="Expand Map symptoms"
+                          >
+                            <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+                              <path d="M7 3H3v4m0-4 5 5m5-5h4v4m0-4-5 5M3 13v4h4m-4 0 5-5m9 1v4h-4m4 0-5-5" />
+                            </svg>
+                            <span>Expand</span>
+                          </button>
+                        </div>
                       </div>
-                      <a
-                        class="workspace-direct-link"
-                        data-workspace-direct
-                        href="https://www.3dpain.app/showcase/?presentation=workspace&amp;section=mapping"
-                        target="_blank"
-                        rel="noopener"
-                        >Open directly</a
-                      >
                     </figure>
-                    <figure
-                      class="feature-preview"
-                      data-workspace-preview="movement"
-                    >
+                    <figure class="feature-preview" data-workspace-preview="movement">
                       <figcaption>
                         <h3 id="painmap-movement">Pose &amp; movement</h3>
-                        <button
-                          type="button"
-                          class="feature-try btn btn-green"
-                          data-workspace-try
-                          hidden
-                          aria-haspopup="dialog"
-                          aria-controls="workspace-live-dialog"
-                        >
-                          Try live
-                        </button>
                       </figcaption>
                       <div class="feature-media">
                         <a
@@ -512,7 +473,7 @@
                           href="https://www.3dpain.app/showcase/?presentation=workspace&amp;section=movement"
                           target="_blank"
                           rel="noopener"
-                          aria-labelledby="painmap-movement painmap-movement-launch"
+                          aria-labelledby="painmap-movement"
                         >
                           <img
                             src="/assets/features/painmap/movement.png"
@@ -522,38 +483,28 @@
                             loading="lazy"
                             decoding="async"
                           />
-                          <span
-                            class="feature-launch-label"
-                            id="painmap-movement-launch"
-                            >Open live workspace</span
-                          >
                         </a>
+                        <div class="workspace-controls">
+                          <button
+                            type="button"
+                            class="workspace-expand"
+                            data-workspace-expand
+                            hidden
+                            aria-haspopup="dialog"
+                            aria-controls="workspace-live-dialog"
+                            aria-label="Expand Pose &amp; movement"
+                          >
+                            <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+                              <path d="M7 3H3v4m0-4 5 5m5-5h4v4m0-4-5 5M3 13v4h4m-4 0 5-5m9 1v4h-4m4 0-5-5" />
+                            </svg>
+                            <span>Expand</span>
+                          </button>
+                        </div>
                       </div>
-                      <a
-                        class="workspace-direct-link"
-                        data-workspace-direct
-                        href="https://www.3dpain.app/showcase/?presentation=workspace&amp;section=movement"
-                        target="_blank"
-                        rel="noopener"
-                        >Open directly</a
-                      >
                     </figure>
-                    <figure
-                      class="feature-preview"
-                      data-workspace-preview="timeline"
-                    >
+                    <figure class="feature-preview" data-workspace-preview="timeline">
                       <figcaption>
                         <h3 id="painmap-timeline">Pain progression</h3>
-                        <button
-                          type="button"
-                          class="feature-try btn btn-green"
-                          data-workspace-try
-                          hidden
-                          aria-haspopup="dialog"
-                          aria-controls="workspace-live-dialog"
-                        >
-                          Try live
-                        </button>
                       </figcaption>
                       <div class="feature-media">
                         <a
@@ -562,7 +513,7 @@
                           href="https://www.3dpain.app/showcase/?presentation=workspace&amp;section=timeline"
                           target="_blank"
                           rel="noopener"
-                          aria-labelledby="painmap-timeline painmap-timeline-launch"
+                          aria-labelledby="painmap-timeline"
                         >
                           <img
                             src="/assets/features/painmap/timeline.png"
@@ -572,21 +523,24 @@
                             loading="lazy"
                             decoding="async"
                           />
-                          <span
-                            class="feature-launch-label"
-                            id="painmap-timeline-launch"
-                            >Open live workspace</span
-                          >
                         </a>
+                        <div class="workspace-controls">
+                          <button
+                            type="button"
+                            class="workspace-expand"
+                            data-workspace-expand
+                            hidden
+                            aria-haspopup="dialog"
+                            aria-controls="workspace-live-dialog"
+                            aria-label="Expand Pain progression"
+                          >
+                            <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+                              <path d="M7 3H3v4m0-4 5 5m5-5h4v4m0-4-5 5M3 13v4h4m-4 0 5-5m9 1v4h-4m4 0-5-5" />
+                            </svg>
+                            <span>Expand</span>
+                          </button>
+                        </div>
                       </div>
-                      <a
-                        class="workspace-direct-link"
-                        data-workspace-direct
-                        href="https://www.3dpain.app/showcase/?presentation=workspace&amp;section=timeline"
-                        target="_blank"
-                        rel="noopener"
-                        >Open directly</a
-                      >
                     </figure>
                   </div>
                   <p class="product-description">
@@ -747,19 +701,17 @@
         <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
       </div>
     </footer>
-    <dialog
-      class="workspace-live-dialog"
+    <div class="workspace-live-backdrop" data-workspace-backdrop hidden></div>
+    <div
+      class="workspace-live-surface"
       id="workspace-live-dialog"
+      hidden
+      role="region"
       aria-labelledby="workspace-live-title"
     >
       <header class="workspace-live-toolbar">
         <h2 id="workspace-live-title">Live product workspace</h2>
-        <button
-          type="button"
-          class="btn btn-green"
-          data-workspace-close
-          autofocus
-        >
+        <button type="button" class="btn btn-green" data-workspace-close>
           Close <span aria-hidden="true">×</span>
         </button>
       </header>
@@ -772,11 +724,11 @@
           data-workspace-full-view
           target="_blank"
           rel="noopener"
-          >Open directly</a
+          >Open in new tab</a
         >
       </div>
       <div class="workspace-live-stage" data-workspace-frame-slot></div>
-    </dialog>
+    </div>
     <script src="/app.js"></script>
     <script src="/feature-workspaces.js"></script>
     <script src="/portfolio.js"></script>

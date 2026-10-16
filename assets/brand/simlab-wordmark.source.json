@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-16T05:29:57.886246+00:00",
+  "source": {
+    "file": "../simlab-logo.png",
+    "width": 2750,
+    "height": 809,
+    "bytes": 345760,
+    "sha256": "1f7b7c01e57f2503f61d7fd8ba7f2a86b80b8c47024d32ad86c0906252b666ed"
+  },
+  "transformation": "Faithful RGBA PNG display-size derivatives. Pillow thumbnail with LANCZOS resampling preserves the source aspect ratio and transparency. Original artwork retained without modification. PNG optimize=True, compress_level=9.",
+  "tool": "Pillow 12.2.0",
+  "assets": [
+    {
+      "file": "simlab-wordmark-122.png",
+      "width": 122,
+      "height": 36,
+      "density": 1,
+      "bytes": 5645,
+      "sha256": "87a164e4d2efb4df1f00f9d935b98b6c2f3184ab13173cce5a0f844f1007aa03"
+    },
+    {
+      "file": "simlab-wordmark-245.png",
+      "width": 245,
+      "height": 72,
+      "density": 2,
+      "bytes": 13750,
+      "sha256": "b82a6e6b0155a0223a4c673918bdbe2966241ca213c5ebcf531821d48ca67c28"
+    },
+    {
+      "file": "simlab-wordmark-367.png",
+      "width": 367,
+      "height": 108,
+      "density": 3,
+      "bytes": 22516,
+      "sha256": "69fa4291d0ce48e5499645b84e87008f2519aeac59d2201f2e95ea96704f1665"
+    }
+  ]
+}

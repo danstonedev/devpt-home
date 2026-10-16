@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-10-16T05:22:40.897Z",
+  "origin": "https://lab.devpt.app",
+  "noPaidInteractions": true,
+  "interactionPolicy": "No questions, speech playback, clinical actions, or quota resets. Only automatic free showcase grant creation/resume was allowed. All other POST API calls blocked.",
+  "grants": [
+    {
+      "url": "https://lab.devpt.app/api/showcase/session",
+      "status": 200,
+      "remaining": 3,
+      "exhausted": false
+    }
+  ],
+  "blockedPaidRequests": [],
+  "pageErrors": [],
+  "sourceBuild": "Hashed production entry script URLs are recorded per capture; source commit was not exposed in page DOM.",
+  "assets": [
+    {
+      "file": "public-interview.jpg",
+      "url": "https://lab.devpt.app/showcase/?presentation=workspace&section=interview",
+      "capturedAt": "2026-10-16T05:22:31.890Z",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "deviceScaleFactor": 1,
+      "source": "Actual public simLAB guest UI, unmodified full viewport browser screenshot.",
+      "readyAfterMs": 9777,
+      "screenshotFormat": "JPEG",
+      "jpegQuality": 85,
+      "bytes": 109968,
+      "sha256": "97b2f3c631c313f3f7884193c0f3ffc1104c88881b4d2accdc34257b959d3501",
+      "page": {
+        "title": "James’s visit · Inside simLAB",
+        "entryScripts": [
+          "https://lab.devpt.app/assets/showcase-DifUUg9f.js"
+        ],
+        "patientState": "ready",
+        "section": "interview",
+        "practiceGuest": true,
+        "remaining": "3"
+      }
+    },
+    {
+      "file": "public-reason.jpg",
+      "url": "https://lab.devpt.app/showcase/?presentation=workspace&section=reason",
+      "capturedAt": "2026-10-16T05:22:33.167Z",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "deviceScaleFactor": 1,
+      "source": "Actual public simLAB guest UI, unmodified full viewport browser screenshot.",
+      "readyAfterMs": 1274,
+      "screenshotFormat": "JPEG",
+      "jpegQuality": 85,
+      "bytes": 108370,
+      "sha256": "7297fd920c7571a508153c59416a350308a8a0db046dedfcde37b84e91336eee",
+      "page": {
+        "title": "James’s visit · Inside simLAB",
+        "entryScripts": [
+          "https://lab.devpt.app/assets/showcase-DifUUg9f.js"
+        ],
+        "patientState": "loading",
+        "section": "reason",
+        "practiceGuest": true
+      }
+    },
+    {
+      "file": "public-examine.jpg",
+      "url": "https://lab.devpt.app/showcase/?presentation=workspace&section=examine",
+      "capturedAt": "2026-10-16T05:22:40.895Z",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "deviceScaleFactor": 1,
+      "source": "Actual public simLAB guest UI, unmodified full viewport browser screenshot.",
+      "readyAfterMs": 7726,
+      "screenshotFormat": "JPEG",
+      "jpegQuality": 85,
+      "bytes": 131988,
+      "sha256": "257d85499657f38f269e08950136e36c588770ef2926302cafd85b9781ea4f79",
+      "page": {
+        "title": "James’s visit · Inside simLAB",
+        "entryScripts": [
+          "https://lab.devpt.app/assets/showcase-DifUUg9f.js"
+        ],
+        "patientState": "ready",
+        "section": "examine",
+        "practiceGuest": true
+      }
+    }
+  ]
+}
