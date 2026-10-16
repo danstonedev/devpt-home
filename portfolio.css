@@ -162,18 +162,18 @@
   letter-spacing: 0;
 }
 .feature-media {
+  --workspace-controls-height: 64px;
   position: relative;
   display: block;
   overflow: hidden;
   border: 1px solid var(--color-neutral-300);
   border-radius: var(--radius-sm);
-  aspect-ratio: 1.6;
   background: var(--color-neutral-100);
 }
 .feature-still {
   position: relative;
   display: block;
-  height: 100%;
+  aspect-ratio: 1.6;
 }
 .feature-still img {
   display: block;
@@ -184,11 +184,15 @@
 .feature-still:focus-visible {
   outline-offset: -4px;
 }
+.workspace-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: var(--workspace-controls-height);
+  padding: 8px;
+  border-top: 1px solid var(--color-neutral-300);
+}
 .workspace-expand {
-  position: absolute;
-  z-index: 3;
-  right: 8px;
-  bottom: 8px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -219,7 +223,7 @@
 }
 .workspace-live-surface {
   position: absolute;
-  inset: 0;
+  inset: 0 0 var(--workspace-controls-height);
   z-index: 2;
   display: flex;
   flex-direction: column;

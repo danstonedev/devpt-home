@@ -643,6 +643,97 @@ test("a launch poster activates inline and its corner control returns focus on c
   await expect(page.locator("#workspace-live-dialog")).toHaveAttribute("role", "region");
 });
 
+test("inline native corner actions and the reserved Expand control both remain mouse-clickable", async ({ page }, testInfo) => {
+  const product = products[0];
+  const documentRequests = [];
+  page.on("request", request => {
+    if (request.resourceType() === "document" && request.url().startsWith(product.origin))
+      documentRequests.push(request.url());
+  });
+  // This static protocol fixture supplies a real iframe hit target at the
+  // exact corner previously covered by the host's Expand overlay. It does not
+  // imitate simLAB behavior or allocate a WebGL context.
+  const cornerFixture = fixture(product).replace("</body>", `
+    <style>
+      html,body{margin:0;height:100%;overflow:hidden}
+      canvas{position:fixed;inset:0;width:100%;height:100%;background:#eaf0ed;z-index:-1}
+      #native-corner{position:fixed;right:0;bottom:0;width:140px;height:100px;border:0;background:#006c39;color:white}
+    </style>
+    <canvas data-native-canvas width="1280" height="800"></canvas>
+    <p id="native-action-count">Native clicks: 0</p>
+    <button id="native-corner" type="button">Native corner action</button>
+    <script>
+      window.nativeClicks=0;
+      document.getElementById('native-corner').addEventListener('click',()=>{
+        document.getElementById('native-action-count').textContent='Native clicks: '+(++nativeClicks);
+      });
+    </script>
+  </body>`);
+  await page.route(`${product.origin}/showcase/**`, route => route.fulfill({
+    contentType: "text/html", body: cornerFixture,
+  }));
+  await page.goto("/");
+  const poster = posterFor(page, product, "interview");
+  const media = page.locator('[data-product="simlab"] [data-workspace-preview="interview"] .feature-media');
+  const corner = triggerFor(page, product, "interview");
+  await poster.scrollIntoViewIfNeeded();
+  await expect.poll(() => poster.locator("img").evaluate(image => image.naturalWidth)).toBeGreaterThan(0);
+  const before = await media.boundingBox();
+  await poster.click();
+  const frame = await frameFor(page, product.origin);
+  await present(page, frame, product);
+  const element = page.locator("[data-workspace-frame]");
+  const retainedFrame = await element.elementHandle();
+  const retainedCanvas = await frame.locator("[data-native-canvas]").elementHandle();
+  const timeOrigin = await frame.evaluate(() => performance.timeOrigin);
+  const after = await media.boundingBox();
+  expect(after.height).toBe(before.height);
+  const nativeViewport = await element.boundingBox();
+  expect(nativeViewport.width / nativeViewport.height).toBeCloseTo(1.6, 2);
+  expect(await element.evaluate(iframe => ({ width: iframe.clientWidth, height: iframe.clientHeight })))
+    .toEqual({ width: 1280, height: 800 });
+
+  const nativeAction = frame.getByRole("button", { name: "Native corner action", exact: true });
+  // Cross-frame locator bounds do not include the host iframe's CSS scale.
+  // Map the actual child's viewport coordinates to rendered page pixels, then
+  // use a mouse event so the browser must hit the native button, not an overlay.
+  const renderedNativeBounds = async () => {
+    const viewport = await element.boundingBox();
+    const child = await nativeAction.evaluate(button => {
+      const bounds = button.getBoundingClientRect();
+      return { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height, viewportWidth: innerWidth, viewportHeight: innerHeight };
+    });
+    return {
+      x: viewport.x + child.x * viewport.width / child.viewportWidth,
+      y: viewport.y + child.y * viewport.height / child.viewportHeight,
+      width: child.width * viewport.width / child.viewportWidth,
+      height: child.height * viewport.height / child.viewportHeight,
+    };
+  };
+  const nativeBounds = await renderedNativeBounds();
+  const expandBounds = await corner.boundingBox();
+  expect(nativeBounds.y + nativeBounds.height).toBeLessThanOrEqual(expandBounds.y);
+  expect(expandBounds.height).toBeGreaterThanOrEqual(44);
+  await page.mouse.click(nativeBounds.x + nativeBounds.width / 2, nativeBounds.y + nativeBounds.height / 2);
+  await expect(frame.locator("#native-action-count")).toHaveText("Native clicks: 1");
+  await page.screenshot({ path: testInfo.outputPath("inline-native-corner.png") });
+
+  await corner.click();
+  await expect(page.locator("#workspace-live-dialog")).toHaveAttribute("data-expanded", "true");
+  await page.screenshot({ path: testInfo.outputPath("expanded-native-corner.png") });
+  await page.locator("[data-workspace-close]").click();
+  await expect(corner).toBeFocused();
+  expect(await retainedFrame.evaluate(iframe => iframe.isConnected && iframe === document.querySelector("[data-workspace-frame]"))).toBe(true);
+  expect(await retainedCanvas.evaluate(canvas => canvas.isConnected && canvas === document.querySelector("[data-native-canvas]"))).toBe(true);
+  expect(await frame.evaluate(() => performance.timeOrigin)).toBe(timeOrigin);
+  expect(await media.boundingBox()).toEqual(after);
+  const restoredNativeBounds = await renderedNativeBounds();
+  await page.mouse.click(restoredNativeBounds.x + restoredNativeBounds.width / 2, restoredNativeBounds.y + restoredNativeBounds.height / 2);
+  await expect(frame.locator("#native-action-count")).toHaveText("Native clicks: 2");
+  expect(documentRequests).toEqual([workspaceUrl(product, "interview")]);
+  await expect(element).toHaveCount(1);
+});
+
 test("simLAB keeps its poster until the current native section reports a settled scene", async ({ page }) => {
   const product = products[0];
   await routeFixture(page, product);
