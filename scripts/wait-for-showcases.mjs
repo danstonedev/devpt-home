@@ -82,6 +82,8 @@ export async function probeShowcase(product, fetcher = fetch) {
     );
     if (!marker.test(html))
       return `${product.id}: the public walkthrough build is not deployed yet`;
+    if (product.id === "simlab" && !/<meta\b(?=[^>]*\bname=["']devpt-showcase["'])(?=[^>]*\bcontent=["']simlab-settled-scene:v1["'])[^>]*>/i.test(html))
+      return `${product.id}: settled patient presentation readiness is not deployed yet`;
     if (product.showcase.readiness) {
       const preflight = await fetcher(product.showcase.readiness.url, {
         redirect: "manual",

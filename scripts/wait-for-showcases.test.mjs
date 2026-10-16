@@ -98,6 +98,7 @@ test("guided or scripted simLAB builds cannot release the three-exchange AI home
       status = 200,
       readiness = { available: true, exchangeLimit: 3 },
       apiStatus = 200,
+      presentation = true,
     ) =>
     async (url) => {
       if (url === "https://lab.devpt.app/api/showcase/session")
@@ -106,7 +107,7 @@ test("guided or scripted simLAB builds cannot release the three-exchange AI home
         url,
         "https://lab.devpt.app/showcase/?presentation=workspace",
       );
-      return new Response(`<meta name="devpt-showcase" content="${marker}">`, {
+      return new Response(`<meta name="devpt-showcase" content="${marker}">${presentation ? '<meta name="devpt-showcase" content="simlab-settled-scene:v1">' : ''}`, {
         status,
         headers: { "content-security-policy": policy },
       });
@@ -122,6 +123,10 @@ test("guided or scripted simLAB builds cannot release the three-exchange AI home
   assert.equal(
     await probeShowcase(simlab, response("simlab-ai-preview:v1")),
     null,
+  );
+  assert.match(
+    await probeShowcase(simlab, response("simlab-ai-preview:v1", csp, 200, { available: true, exchangeLimit: 3 }, 200, false)),
+    /settled patient presentation readiness is not deployed/,
   );
   assert.match(
     await probeShowcase(
