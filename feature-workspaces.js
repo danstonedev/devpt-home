@@ -80,7 +80,12 @@
     if (!active || active.failed || active.visualReady || (active.ready && !shouldRun())) return;
     var frame = active.frame;
     timer = window.setTimeout(function () {
-      if (active?.frame === frame && !active.visualReady) unavailable();
+      if (active?.frame !== frame || active.visualReady) return;
+      // A validated connection can still be preparing its native scene. Keep
+      // that work and its poster; a cold model download is not a failed bridge.
+      if (active.ready)
+        setStatus("The live preview is still preparing. You can keep exploring.", "loading");
+      else unavailable();
     }, 15000);
   }
   function visibility(force) {

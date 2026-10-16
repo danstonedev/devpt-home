@@ -572,6 +572,27 @@ for (const product of products) {
       await expect(page.locator("#workspace-live-dialog")).not.toHaveAttribute("data-expanded", "true");
       await expect(trigger).toBeFocused();
     });
+
+    test("a rejected manifest still expires the unconnected preview", async ({ page }) => {
+      await page.clock.install();
+      await routeFixture(page, product);
+      await page.goto("/");
+      await expect(triggerFor(page, product, product.sections[0])).toBeVisible();
+      await page.clock.pauseAt(await page.evaluate(() => Date.now() + 10000));
+      const frame = await open(page, product);
+      const element = page.locator("[data-workspace-frame]");
+      const retained = await element.elementHandle();
+      const invalid = readyMessage(product);
+      invalid.manifest.schemaVersion = 2;
+      await post(page, frame, invalid);
+      await expect(element).not.toHaveAttribute("data-ready", "true");
+      await page.clock.fastForward(15001);
+      await expect(page.locator("[data-workspace-status]")).toHaveAttribute("data-state", "unavailable");
+      await expect(element).toHaveCount(0);
+      expect(await retained.evaluate(iframe => iframe.isConnected)).toBe(false);
+      expect(frame.isDetached()).toBe(true);
+      await expect(page.locator("[data-workspace-full-view]")).toBeVisible();
+    });
   });
 }
 
@@ -778,6 +799,95 @@ test("simLAB keeps its poster until the current native section reports a settled
   await expect(element).not.toHaveAttribute("data-visual-ready", "true");
   await post(page, frame, { ...scene, section: "reason" });
   await expect(element).toHaveAttribute("data-visual-ready", "true");
+});
+
+test("a connected simLAB scene keeps preparing past the deadline and reveals the same document", async ({ page }) => {
+  const product = products[0];
+  const documentRequests = [];
+  page.on("request", request => {
+    if (request.resourceType() === "document" && request.url().startsWith(product.origin))
+      documentRequests.push(request.url());
+  });
+  // A real canvas and document sentinel detect retirement/recreation without
+  // pretending that this protocol fixture implements the native 3D product.
+  await page.route(`${product.origin}/showcase/**`, route => route.fulfill({
+    contentType: "text/html",
+    body: fixture(product).replace("<body>", '<body><canvas data-native-canvas width="16" height="16"></canvas>'),
+  }));
+  await page.clock.install();
+  await page.goto("/");
+  const poster = posterFor(page, product, "interview");
+  const corner = triggerFor(page, product, "interview");
+  await poster.scrollIntoViewIfNeeded();
+  await expect(corner).toBeVisible();
+  await expect.poll(() => poster.locator("img").evaluate(image => image.naturalWidth)).toBeGreaterThan(0);
+  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 10000));
+  await poster.click();
+  const frame = await frameFor(page, product.origin);
+  const element = page.locator("[data-workspace-frame]");
+  const retainedFrame = await element.elementHandle();
+  const retainedDocument = await frame.evaluateHandle(() => document);
+  const retainedCanvas = await frame.locator("[data-native-canvas]").elementHandle();
+  const retainedPoster = await page.locator(".workspace-live-poster").elementHandle();
+  const timeOrigin = await frame.evaluate(() => {
+    window.retainedPreparation = "native preparation remains connected";
+    const context = document.querySelector("canvas").getContext("2d");
+    context.fillStyle = "rgb(12, 34, 56)";
+    context.fillRect(0, 0, 16, 16);
+    return performance.timeOrigin;
+  });
+  await post(page, frame, readyMessage(product));
+  await post(page, frame, {
+    type: "simlab-workspace-patient-state", section: "interview", state: "loading",
+  });
+  await expect(element).toHaveAttribute("data-ready", "true");
+  await page.clock.fastForward(15001);
+  const surface = page.locator("#workspace-live-dialog");
+  await expect(element).toHaveCount(1);
+  await expect(surface).toHaveAttribute("data-state", "loading");
+  await expect(page.locator("[data-workspace-status]")).toContainText("still preparing");
+  await expect(page.locator(".workspace-live-notice")).toBeVisible();
+  await expect(element).not.toHaveAttribute("data-visual-ready", "true");
+  await expect(element).toHaveCSS("opacity", "0");
+  await expect(page.locator(".workspace-live-poster")).toHaveCSS("opacity", "1");
+  expect(await element.evaluate(iframe => ({ inert: iframe.inert, tabIndex: iframe.tabIndex })))
+    .toEqual({ inert: true, tabIndex: -1 });
+  await flushHostMessages(page, frame, product.origin);
+  const selectCount = await frame.evaluate(() => receivedMessages.filter(message => message.type.endsWith("-select")).length);
+  const expectRetained = async () => {
+    expect(await retainedFrame.evaluate(iframe => iframe.isConnected && iframe === document.querySelector("[data-workspace-frame]"))).toBe(true);
+    expect(await retainedDocument.evaluate(doc => doc === document && doc.documentElement.isConnected)).toBe(true);
+    expect(await retainedCanvas.evaluate(canvas => ({
+      connected: canvas.isConnected && canvas === document.querySelector("[data-native-canvas]"),
+      pixel: [...canvas.getContext("2d").getImageData(0, 0, 1, 1).data],
+    }))).toEqual({ connected: true, pixel: [12, 34, 56, 255] });
+    expect(await retainedPoster.evaluate(image => image.isConnected && image === document.querySelector(".workspace-live-poster"))).toBe(true);
+    expect(await frame.evaluate(() => window.retainedPreparation)).toBe("native preparation remains connected");
+    expect(await frame.evaluate(() => performance.timeOrigin)).toBe(timeOrigin);
+    expect(documentRequests).toEqual([workspaceUrl(product, "interview")]);
+    await flushHostMessages(page, frame, product.origin);
+    expect(await frame.evaluate(() => receivedMessages.filter(message => message.type.endsWith("-select")).length)).toBe(selectCount);
+  };
+  await expectRetained();
+  // Expanding during preparation must preserve both the hidden scene and poster.
+  await corner.click();
+  await expect(surface).toHaveAttribute("data-expanded", "true");
+  await page.locator("[data-workspace-close]").click();
+  await expect(surface).toHaveAttribute("role", "region");
+  await expect(element).not.toHaveAttribute("data-visual-ready", "true");
+  await expectRetained();
+  await post(page, frame, {
+    type: "simlab-workspace-patient-state", section: "interview", state: "ready",
+  });
+  await expect(element).toHaveAttribute("data-visual-ready", "true");
+  await expect(element).toHaveCSS("opacity", "1");
+  await expect(page.locator(".workspace-live-poster")).toHaveCSS("opacity", "0");
+  await expect(page.locator(".workspace-live-notice")).toBeHidden();
+  expect(await element.evaluate(iframe => iframe.inert)).toBe(false);
+  await corner.click();
+  await page.locator("[data-workspace-close]").click();
+  await expect(corner).toBeFocused();
+  await expectRetained();
 });
 
 test("an unavailable native scene reveals the usable native fallback and retains its session", async ({ page }) => {
