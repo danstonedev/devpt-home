@@ -141,7 +141,7 @@ test("the homepage introduces three distinct product lines and destinations", as
     const card = page.locator(
       `.product-grid article[data-product="${product.id}"]`,
     );
-    await expect(card.locator("h2")).toHaveAccessibleName(
+    await expect(card.locator(".product-heading h2")).toHaveAccessibleName(
       product.id === "emrs" ? "simEMR proBonoEMR" : product.name,
     );
     await expect(card.locator("a.product-walkthrough")).toHaveAttribute(
@@ -151,11 +151,12 @@ test("the homepage introduces three distinct product lines and destinations", as
     await expect(card.locator(".feature-preview")).toHaveCount(3);
     if (product.id === "simlab") {
       await expect(card.locator("[data-workspace-preview]")).toHaveCount(3);
-      await expect(card.locator("[data-workspace-try]:visible")).toHaveCount(3);
+      await expect(card.locator("[data-workspace-expand]:visible")).toHaveCount(3);
       await expect(
-        card.locator(".feature-gallery img, .feature-gallery video"),
-      ).toHaveCount(0);
+        card.locator(".feature-still img"),
+      ).toHaveCount(3);
     } else {
+      await card.locator(".feature-still img").first().scrollIntoViewIfNeeded();
       await expect
         .poll(() =>
           card
@@ -165,8 +166,10 @@ test("the homepage introduces three distinct product lines and destinations", as
         )
         .toBeGreaterThan(0);
     }
-    boxes.push(await card.boundingBox());
   }
+  await page.evaluate(() => scrollTo(0, 0));
+  for (const product of products)
+    boxes.push(await page.locator(`.product-grid article[data-product="${product.id}"]`).boundingBox());
   if (testInfo.project.name === "phone") {
     expect(boxes[1].y).toBeGreaterThanOrEqual(boxes[0].y + boxes[0].height);
     expect(boxes[2].y).toBeGreaterThanOrEqual(boxes[1].y + boxes[1].height);

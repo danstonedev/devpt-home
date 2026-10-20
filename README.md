@@ -20,12 +20,12 @@ The homepage is the shared introduction. Each product has a dedicated walkthroug
 - `emr-foundation.css` — selected active EMR tokens and established shared chrome, refreshed by `scripts/sync-emr-foundation.mjs`.
 - `walkthrough.js` and `native-showcase.css` — the existing simLAB live catalogue, chapter navigation and frame visibility bridge.
 - `product-walkthrough.js` — public walkthrough bridge for the EMR and 3Dpain.app entries.
-- `feature-workspaces.js` — nine source-owned native previews in one lazy iframe, with strict product contracts and visibility/lifetime controls.
+- `feature-workspaces.js` — nine source-owned native previews sharing one prepared inline iframe, with strict product contracts, expansion and visibility/lifetime controls.
 - `showcase/index.html` — compatibility redirect for earlier simLAB bookmarks.
 - `assets/` — brand marks and supporting screenshots.
 - `assets/features/` — native launch posters and retired recordings, with source provenance and capture instructions.
 
-Fonts load from Google Fonts; supporting imagery is local. Product public entries use sample demonstration data. Protected production workspaces retain their normal sign-in and access requirements.
+Fonts load from Google Fonts; supporting imagery is local. Every homepage feature has a fixed-ratio native poster before its app starts. Display-sized simLAB wordmark derivatives retain the original artwork and transparency; their source hash and resize settings are recorded in `assets/brand/simlab-wordmark.source.json`. Product public entries use sample demonstration data. Protected production workspaces retain their normal sign-in and access requirements.
 
 ## One product, one walkthrough source
 
@@ -35,7 +35,7 @@ The existing simLAB bridge consumes `simlab-showcase-ready` and its versioned ma
 
 EMR and 3Dpain.app public entries use the `devpt-showcase-ready`, `devpt-showcase-select`, `devpt-showcase-state` and `devpt-showcase-visibility` contract. A schema-versioned manifest identifies the product and its chapters. The EMR entry uses synthetic orientation data; 3Dpain.app uses its native recorded guest demonstrations. DevPT does not supply patient identities, account tokens or arbitrary navigation URLs to either entry.
 
-The homepage feature previews use a separate native workspace presentation: `/showcase/?presentation=workspace&section=...` on each owning source. Its `${product}-workspace-ready` manifest identifies the three allowed sections and build. The corresponding select/state/visibility/close messages retain exact source-window and origin checks. One shared dialog loads only the selected native workspace. simLAB's interview offers three server-limited AI exchanges with bounded speech; its objective preview includes native preselected exam examples and a separately labeled BPPV sample. EMR and pain-map actions use their real components and limited synthetic in-memory data. See [Product introduction](docs/homepage-refresh.md) for limits and ownership.
+The homepage feature previews use a separate native workspace presentation: `/showcase/?presentation=workspace&section=...` on each owning source. Its `${product}-workspace-ready` manifest identifies the three allowed sections and build. The corresponding select/state/visibility/close messages retain exact source-window and origin checks. One active native iframe appears inside its feature card. Preparation is bounded to one candidate, so the page never starts nine applications together. The poster remains until the selected native content is ready; the manifest handshake and iframe document load alone do not mean a 3D patient is ready. The corner Expand control enlarges the same connected iframe with CSS, and closing restores it inline without reloading the scene or conversation. simLAB's interview offers three server-limited AI exchanges with bounded speech; its objective preview includes native preselected exam examples and a separately labeled BPPV sample. EMR and pain-map actions use their real components and limited synthetic in-memory data. See [Product introduction](docs/homepage-refresh.md) for limits and ownership.
 
 Each parent accepts messages only from the configured exact product origin and its own iframe window. Product entries restrict their trusted parents and frame ancestors to DevPT. Keep `referrerpolicy="origin"` on the embedded frames: their trusted-parent handshake needs the origin even when a page policy suppresses other cross-origin referrers. The path and query are not shared by that policy.
 
@@ -83,7 +83,7 @@ git diff --check
 
 Inspect all four routes at desktop and phone widths. Check shared navigation, chapter selection, full view, local assets, reduced motion and unavailable-frame links. The real demonstration and its clinical behavior are tested in the owning product repository. See [Product introduction](docs/homepage-refresh.md) for the editorial and ownership rules.
 
-The homepage browser checks exercise all nine lazy preview launches, exact product contracts, window/origin rejection, visibility suspension, Escape/focus recovery and JavaScript-free direct links. Existing native PNGs remain launch posters; recorded clips are retired from the homepage. The owning source suites verify the actual product actions and isolation from account and patient-record services.
+The homepage browser checks cover the nine native features, exact product contracts, window/origin rejection, visibility suspension, expansion/restore on the same iframe, readiness before reveal, Escape/focus recovery and JavaScript-free poster links. Actual public guest simLAB captures and existing native EMR/pain-map screenshots provide immediate posters; capture URLs, revisions or deployed build references and image hashes remain with the assets. Recorded clips are retired from the homepage. The owning source suites verify the actual product actions and isolation from account and patient-record services.
 
 ## Deployment and compatibility
 

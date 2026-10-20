@@ -8,6 +8,21 @@ const read = (file) => readFileSync(resolve(root, file), "utf8");
 const home = read("index.html");
 const page = read("simlab/index.html");
 const bridge = read("walkthrough.js");
+const workspaces = read("feature-workspaces.js");
+
+const features = [...home.matchAll(/<figure\b[^>]*data-workspace-preview="[^"]+"[^>]*>[\s\S]*?<\/figure>/g)].map(match => match[0]);
+assert.equal(features.length, 9, "Every homepage feature needs a native workspace preview.");
+for (const feature of features) {
+  assert(feature.includes('class="feature-media"'), "Keep each poster, inline workspace and expand control in one stable media slot.");
+  assert(/<a\b[^>]*data-workspace-launch[\s\S]*?<img\b[^>]*>/u.test(feature), "Every feature, including simLAB, needs a real website image linking to its native workspace.");
+  assert(/<button\b(?=[^>]*data-workspace-expand)(?=[^>]*\bhidden\b)[^>]*>/u.test(feature), "A feature's one corner expand button stays hidden without JavaScript.");
+  const source = feature.match(/<img\b[^>]*\bsrc="([^"]+)"/u)?.[1];
+  assert(source?.startsWith("/assets/") && existsSync(resolve(root, source.slice(1))), "Every native website poster must be a shipped local asset.");
+}
+assert(!home.includes("data-workspace-try") && !home.includes("data-workspace-direct"), "Use the website poster and one expand control, without duplicate launch options.");
+assert(/<div\b(?=[^>]*\bid="workspace-live-dialog")(?=[^>]*\brole="region")[^>]*>/u.test(home), "The retained live surface starts as an inline region and expands in place.");
+assert(!/<iframe\b/u.test(home), "The homepage must not eagerly allocate product frames in static HTML.");
+assert(workspaces.includes("patient-state") && workspaces.includes("settled-scene"), "Patient posters must wait for native settled-scene readiness, not just the document handshake.");
 
 assert(
   !home.includes("data-live-showcase") &&
