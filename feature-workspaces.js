@@ -26,6 +26,7 @@
   var loopback = ["localhost", "127.0.0.1", "[::1]"];
   var active = null, cards = [], expanded = false, opener = null;
   var inertSiblings = [], timer = null, warmScheduled = false, automaticAdmissionUsed = false;
+  var registry = null, renderGeneration = 0;
   function endpointFor(entry, id, product) {
     try {
       var workspace = entry.showcase.workspace, endpoint = new URL(workspace.url);
@@ -33,6 +34,27 @@
           endpoint.pathname !== "/showcase/" || endpoint.hash || endpoint.username ||
           endpoint.password || endpoint.searchParams.size !== 1 ||
           endpoint.searchParams.get("presentation") !== "workspace") return null;
+      // Only the explicit local teaching host mounts generated native outputs.
+      // Production continues to use each registry-owned /showcase/ contract.
+      if (loopback.includes(location.hostname) && location.port === "8110") {
+        var configuredBase = id === "simlab" && typeof NATIVE_SOURCE_BASE === "string"
+          ? NATIVE_SOURCE_BASE : id === "emrs" && typeof EMR_SOURCE_BASE === "string"
+            ? EMR_SOURCE_BASE : null;
+        if (configuredBase) {
+          try {
+            var configured = new URL(configuredBase, location.href);
+            if (["http:", "https:"].includes(configured.protocol) &&
+                !configured.username && !configured.password && !configured.search && !configured.hash &&
+                (configured.origin === location.origin || configured.origin === product.origin ||
+                 (loopback.includes(configured.hostname) && configured.port === product.port))) {
+              endpoint = new URL(configured.pathname.replace(/\/$/, "") +
+                (id === "emrs" ? "/" : "/showcase/"), configured.origin);
+              endpoint.searchParams.set("presentation", "workspace");
+              return endpoint;
+            }
+          } catch (_) { /* Invalid local configuration retains the canonical endpoint. */ }
+        }
+      }
       if (loopback.includes(location.hostname) && location.port === "8109") {
         var override = new URLSearchParams(location.search).get(id);
         if (override) {
@@ -289,7 +311,9 @@
     var card = cards.find(function (card) { return onscreen(card); });
     if (!card || document.visibilityState !== "visible") return;
     warmScheduled = true;
+    var generation = renderGeneration;
     var warm = function () {
+      if (generation !== renderGeneration) return;
       warmScheduled = false;
       if (active || automaticAdmissionUsed || !onscreen(card) || !automaticAllowed() ||
           document.visibilityState !== "visible") return;
@@ -316,7 +340,7 @@
     document.head.append(link);
   }
   function initialize(catalog) {
-    if (!Array.isArray(catalog.productLines)) return;
+    if (!Array.isArray(catalog.productLines) || cards.length) return;
     Object.keys(products).forEach(function (id) {
       var entries = catalog.productLines.filter(function (entry) { return entry?.id === id; });
       if (entries.length !== 1) return;
@@ -354,9 +378,25 @@
     .then(function (response) {
       if (!response.ok) throw new Error("Product registry unavailable");
       return response.json();
-    }).then(initialize).catch(function () {
+    }).then(function (catalog) { registry = catalog; initialize(catalog); }).catch(function () {
       /* Static native links remain usable without the registry. */
     }).finally(function () { window.clearTimeout(registryTimer); });
+  document.addEventListener("devpt:before-render", function () {
+    // Retire the native frame while its card is still connected, then park the
+    // empty shared host outside the SPA mount before that mount is replaced.
+    collapse();
+    dispose();
+    surface.hidden = true;
+    document.body.append(surface);
+    observer?.disconnect();
+    cards = [];
+    renderGeneration += 1;
+    warmScheduled = false;
+    automaticAdmissionUsed = false;
+  });
+  document.addEventListener("devpt:render", function () {
+    if (registry) initialize(registry);
+  });
   close.addEventListener("click", collapse);
   backdrop.addEventListener("click", collapse);
   document.addEventListener("keydown", function (event) {

@@ -1,0 +1,21 @@
+{
+  "purpose": "Local development preview. Posters show canonical native tools; they do not assign teaching/publication approval.",
+  "mediaSources": {
+    "logo": "../assets/devpt-logo.png",
+    "simlab": "../assets/simlab-logo.png",
+    "simemr": "../assets/brand/simemr-wordmark.png",
+    "painmap": "../assets/brand/3dpain-wordmark.png",
+    "vestibular": "../../simlab/apps/mission-shell/src/lib/lab/vestibular/assets/vestibular-demo-preview.png",
+    "rom": "../assets/shots/movement-lab.jpg",
+    "examination": "../assets/features/simlab/passive-rom.png",
+    "bppv": "../../simlab/.cache/public-workspace-results/public-workspace-native-pu-0d8fd-ervation-without-remounting/native-public-bppv.png",
+    "emr": "../assets/features/emrs/workspace.png",
+    "anatomy": "posters/hip-anatomy.png",
+    "biomechanics": "posters/hip-biomechanics.png",
+    "manual": "posters/hip-manual-therapy.png",
+    "gait": "posters/gait.png",
+    "vitals": "posters/live-vitals.png",
+    "neuro": "posters/neural-pathways.png",
+    "imaging": "posters/synthetic-imaging.png"
+  }
+}

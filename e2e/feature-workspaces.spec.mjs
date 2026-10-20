@@ -193,12 +193,13 @@ for (const product of products) {
       const requests = [];
       page.on("request", (request) => {
         if (
+          request.resourceType() === "document" &&
           products.some((item) => new URL(request.url()).origin === item.origin)
         )
           requests.push(request.url());
       });
       await routeFixture(page, product);
-      await page.goto("/");
+      await page.goto("/#/products");
       const card = page.locator(`[data-product="${product.id}"]`);
       await expect(card.locator("[data-workspace-preview]")).toHaveCount(3);
       await expect(
@@ -283,7 +284,7 @@ for (const product of products) {
     }) => {
       await routeFixture(page, product);
       await routeFixture(page, product, "https://untrusted.example");
-      await page.goto("/");
+      await page.goto("/#/products");
       let frame = await open(page, product);
       const valid = readyMessage(product);
       const invalid = [
@@ -415,7 +416,7 @@ for (const product of products) {
     }) => {
       await page.emulateMedia({ reducedMotion: "reduce" });
       await routeFixture(page, product);
-      await page.goto("/");
+      await page.goto("/#/products");
       const frame = await open(page, product);
       await present(page, frame, product);
       const prefix = `${product.id}-workspace`;
@@ -510,7 +511,7 @@ for (const product of products) {
       const localOrigin = `http://127.0.0.1:${product.port}`;
       await routeFixture(page, product, localOrigin);
       await routeFixture(page, product);
-      await page.goto(`/?${product.id}=${localOrigin}`);
+      await page.goto(`/?${product.id}=${localOrigin}#/products`);
       const local = await open(page, product, product.sections[2], localOrigin);
       await post(page, local, readyMessage(product));
       await expect(page.locator("[data-workspace-full-view]")).toHaveAttribute(
@@ -518,14 +519,14 @@ for (const product of products) {
         workspaceUrl(product, product.sections[2], localOrigin),
       );
       await page.locator("[data-workspace-close]").click();
-      await page.goto(`/?${product.id}=http://127.0.0.1:5999`);
+      await page.goto(`/?${product.id}=http://127.0.0.1:5999#/products`);
       await open(page, product);
       await expect(page.locator("[data-workspace-frame]")).toHaveAttribute(
         "src",
         workspaceUrl(product, product.sections[0]),
       );
       await page.locator("[data-workspace-close]").click();
-      await page.goto(`/?${product.id}=invalid-url`);
+      await page.goto(`/?${product.id}=invalid-url#/products`);
       await open(page, product);
       await expect(page.locator("[data-workspace-frame]")).toHaveAttribute(
         "src",
@@ -533,7 +534,7 @@ for (const product of products) {
       );
       await page.locator("[data-workspace-close]").click();
       await serveProductionHome(page);
-      await page.goto(`https://devpt.app/?${product.id}=${localOrigin}`);
+      await page.goto(`https://devpt.app/?${product.id}=${localOrigin}#/products`);
       await open(page, product);
       await expect(page.locator("[data-workspace-frame]")).toHaveAttribute(
         "src",
@@ -546,7 +547,7 @@ for (const product of products) {
     }) => {
       await page.clock.install();
       await routeFixture(page, product);
-      await page.goto("/");
+      await page.goto("/#/products");
       const trigger = triggerFor(page, product, product.sections[0]);
       await page.clock.pauseAt(await page.evaluate(() => Date.now() + 10000));
       await trigger.click();
@@ -576,7 +577,7 @@ for (const product of products) {
     test("a rejected manifest still expires the unconnected preview", async ({ page }) => {
       await page.clock.install();
       await routeFixture(page, product);
-      await page.goto("/");
+      await page.goto("/#/products");
       await expect(triggerFor(page, product, product.sections[0])).toBeVisible();
       await page.clock.pauseAt(await page.evaluate(() => Date.now() + 10000));
       const frame = await open(page, product);
@@ -602,7 +603,7 @@ test("registry failure preserves static links and creates no iframe", async ({
   await page.route("**/apps.json", (route) =>
     route.fulfill({ status: 503, body: "Unavailable" }),
   );
-  await page.goto("/");
+  await page.goto("/#/products");
   await expect(page.locator("[data-workspace-expand]:visible")).toHaveCount(0);
   await expect(page.locator("iframe")).toHaveCount(0);
   await expect(page.locator("[data-workspace-launch]")).toHaveCount(9);
@@ -625,7 +626,7 @@ test("registry cannot redirect trust or substitute an old workspace contract", a
   const pain = catalog.productLines.find((item) => item.id === "painmap");
   catalog.productLines.push(structuredClone(pain));
   await page.route("**/apps.json", (route) => route.fulfill({ json: catalog }));
-  await page.goto("/");
+  await page.goto("/#/products");
   await expect(page.locator("[data-workspace-expand]:visible")).toHaveCount(0);
   await expect(page.locator("iframe")).toHaveCount(0);
   for (const product of products) {
@@ -642,7 +643,7 @@ test("a launch poster activates inline and its corner control returns focus on c
 }) => {
   const product = products[1];
   await routeFixture(page, product);
-  await page.goto("/");
+  await page.goto("/#/products");
   const poster = page
     .locator('[data-product="emrs"] [data-workspace-launch]')
     .first();
@@ -693,7 +694,7 @@ test("inline native corner actions and the reserved Expand control both remain m
   await page.route(`${product.origin}/showcase/**`, route => route.fulfill({
     contentType: "text/html", body: cornerFixture,
   }));
-  await page.goto("/");
+  await page.goto("/#/products");
   const poster = posterFor(page, product, "interview");
   const media = page.locator('[data-product="simlab"] [data-workspace-preview="interview"] .feature-media');
   const corner = triggerFor(page, product, "interview");
@@ -758,7 +759,7 @@ test("inline native corner actions and the reserved Expand control both remain m
 test("simLAB keeps its poster until the current native section reports a settled scene", async ({ page }) => {
   const product = products[0];
   await routeFixture(page, product);
-  await page.goto("/");
+  await page.goto("/#/products");
   const frame = await open(page, product);
   const element = page.locator("[data-workspace-frame]");
   const scene = { type: "simlab-workspace-patient-state", section: "interview", state: "ready" };
@@ -815,7 +816,7 @@ test("a connected simLAB scene keeps preparing past the deadline and reveals the
     body: fixture(product).replace("<body>", '<body><canvas data-native-canvas width="16" height="16"></canvas>'),
   }));
   await page.clock.install();
-  await page.goto("/");
+  await page.goto("/#/products");
   const poster = posterFor(page, product, "interview");
   const corner = triggerFor(page, product, "interview");
   await poster.scrollIntoViewIfNeeded();
@@ -893,7 +894,7 @@ test("a connected simLAB scene keeps preparing past the deadline and reveals the
 test("an unavailable native scene reveals the usable native fallback and retains its session", async ({ page }) => {
   const product = products[0];
   await routeFixture(page, product);
-  await page.goto("/");
+  await page.goto("/#/products");
   const frame = await open(page, product);
   await post(page, frame, readyMessage(product));
   await frame.evaluate(() => { window.retainedSample = "conversation remains available"; });
@@ -913,10 +914,10 @@ test("normal motion warms only one visible preview and parks it with its card", 
   }));
   const requests = [];
   page.on("request", request => {
-    if (products.some(product => new URL(request.url()).origin === product.origin)) requests.push(request.url());
+    if (request.resourceType() === "document" && products.some(product => new URL(request.url()).origin === product.origin)) requests.push(request.url());
   });
   for (const product of products) await routeFixture(page, product);
-  await page.goto("/");
+  await page.goto("/#/products");
   const media = page.locator('[data-product="simlab"] [data-workspace-preview="interview"] .feature-media');
   await media.scrollIntoViewIfNeeded();
   const frame = await frameFor(page, products[0].origin);
@@ -939,13 +940,50 @@ test("normal motion warms only one visible preview and parks it with its card", 
   await frame.waitForFunction(() => receivedMessages.at(-1)?.type === "simlab-workspace-visibility" && receivedMessages.at(-1)?.visible === true, undefined, { polling: 100 });
 });
 
+test("SPA navigation retires the old native session and rebinds the shared host once", async ({ page }) => {
+  const product = products[1];
+  const documents = [];
+  page.on("request", request => {
+    if (request.resourceType() === "document" && request.url().startsWith(product.origin))
+      documents.push(request.url());
+  });
+  await routeFixture(page, product);
+  await page.goto("/#/products");
+  const first = await open(page, product);
+  await present(page, first, product);
+  const sharedHost = await page.locator("#workspace-live-dialog").elementHandle();
+  const oldFrame = await page.locator("[data-workspace-frame]").elementHandle();
+  await page.evaluate(() => { location.hash = "/contact"; });
+  await expect(page.locator("main h1")).toContainText("talk");
+  await expect(page.locator("[data-workspace-frame]")).toHaveCount(0);
+  await expect(page.locator("#workspace-live-dialog")).toBeHidden();
+  expect(await sharedHost.evaluate(host => host.isConnected && host.parentElement === document.body)).toBe(true);
+  expect(await oldFrame.evaluate(frame => frame.isConnected)).toBe(false);
+  expect(first.isDetached()).toBe(true);
+  await expect(page.locator("body")).not.toHaveClass(/workspace-expanded/);
+  expect(await page.locator("#app").evaluate(app => app.inert)).toBe(false);
+
+  await page.evaluate(() => { location.hash = "/products"; });
+  await expect(page.locator("[data-workspace-expand]:visible")).toHaveCount(9);
+  // A duplicate renderer notification must not attach another set of handlers.
+  await page.evaluate(() => document.dispatchEvent(new Event("devpt:render")));
+  const second = await open(page, product);
+  await present(page, second, product);
+  await expect(page.locator("[data-workspace-frame]")).toHaveCount(1);
+  expect(await sharedHost.evaluate(host => host === document.querySelector("#workspace-live-dialog"))).toBe(true);
+  expect(documents).toEqual([
+    workspaceUrl(product, product.sections[0]),
+    workspaceUrl(product, product.sections[0]),
+  ]);
+});
+
 for (const connection of [{ saveData: true, effectiveType: "4g" }, { saveData: false, effectiveType: "2g" }]) {
   test(`automatic preview preparation respects ${connection.saveData ? "data saving" : "a slow connection"}`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "no-preference" });
     await page.addInitScript(connection => Object.defineProperty(navigator, "connection", { configurable: true, value: connection }), connection);
     await page.clock.install();
     await routeFixture(page, products[0]);
-    await page.goto("/");
+    await page.goto("/#/products");
     await page.locator('[data-product="simlab"] .feature-media').first().scrollIntoViewIfNeeded();
     await page.clock.fastForward(16000);
     await expect(page.locator("[data-workspace-frame]")).toHaveCount(0);
@@ -960,7 +998,7 @@ test.describe("without JavaScript", () => {
   test("all nine features link straight to their public native workspaces", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/#/products");
     await expect(
       page.locator("[data-workspace-expand]:visible, iframe, video"),
     ).toHaveCount(0);

@@ -28,6 +28,10 @@ jobs:
         run: node --test scripts/wait-for-showcases.test.mjs
       - name: Check committed EMR foundation contract
         run: node scripts/sync-emr-foundation.mjs --check --snapshot-only
+      - name: Check published teaching release contract
+        run: node --test scripts/wait-for-teaching-catalog.test.mjs
+      - name: Verify explicit public website export
+        run: node scripts/build-public-site.mjs
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - name: Check product journeys and trusted walkthrough bridges

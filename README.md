@@ -94,3 +94,9 @@ For a new public entry or a contract change, deploy the compatible product entry
 The Azure upload waits up to 30 minutes for all three required native entries. `scripts/wait-for-showcases.mjs` requires HTTP 200, the new workspace version markers and a Content Security Policy permitting both DevPT parent origins. It also checks the simLAB three-exchange API's read-only readiness endpoint. An auth fallback, older recorded build, unavailable AI configuration or framing restriction blocks the upload. If a product's CI or deployment is blocked, resolve it and rerun this deployment after the product is live. Do not remove the gate to force an early homepage release.
 
 Custom domains and DNS live in Azure. Prefer Azure DNS ALIAS for apex changes and keep the catalogue aligned with the product domain records. Do not advertise an unverified alternate hostname.
+
+## Faculty resource library
+
+The root site provides Regions, Topics, ready-made resource collections, browser-local saves and account-free sharing. It consumes SimLab’s source-owned published catalog at `https://lab.devpt.app/teaching/catalog.json`; models and players are never copied into this repository. Public entry controls and publication selection live in SimLab. Gait physics remains an experimental local tool.
+
+`npm run build:public` exports only public website files to `.cache/public-site`, which is the Azure deployment input. The workflow waits for compatible source-owned walkthroughs and the published teaching entry before upload. `npm run build:local` and `npm run preview:local` retain the complete local source review; see `docs/local-site-preview.md`.

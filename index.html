@@ -4,33 +4,39 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#080d0a">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="robots" content="index, follow">
     <title>Teaching resources · DevPT</title>
     <meta name="description" content="Explore interactive anatomy, movement and clinical teaching resources. Browse by region or topic, collect resources and share them with your students.">
+    <link rel="canonical" href="https://devpt.app/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Teaching resources · DevPT">
+    <meta property="og:description" content="Interactive resources for your courses. Explore, collect and share. No account needed.">
+    <meta property="og:url" content="https://devpt.app/">
+    <meta property="og:image" content="https://devpt.app/assets/teaching/hip-anatomy.png">
     <link rel="icon" href="/assets/devpt-logo.png">
-    <link rel="stylesheet" href="/local-site-fonts.css">
+    <link rel="stylesheet" href="/site-fonts.css">
     <link rel="stylesheet" href="/teaching-library.css">
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <div id="app"></div>
-    <noscript><main class="main wrap"><h1>DevPT</h1><p>Enable JavaScript to explore the interactive resource library.</p><p><a href="/simlab/">simLAB</a> · <a href="/emrs/">EMRs</a> · <a href="/3dpain/">3Dpain.app</a> · <a href="mailto:daniel.j.stone@und.edu">Contact</a></p></main></noscript>
+    <noscript><main class="main wrap" id="main"><h1>DevPT</h1><p>Interactive resources require JavaScript. Open a native product workspace directly:</p><section data-product="simlab"><h2>simLAB</h2><ul><li data-workspace-preview="interview"><a data-workspace-launch href="https://lab.devpt.app/showcase/?presentation=workspace&amp;section=interview">Interview</a></li><li data-workspace-preview="reason"><a data-workspace-launch href="https://lab.devpt.app/showcase/?presentation=workspace&amp;section=reason">Reason</a></li><li data-workspace-preview="examine"><a data-workspace-launch href="https://lab.devpt.app/showcase/?presentation=workspace&amp;section=examine">Examine</a></li></ul></section><section data-product="emrs"><h2>EMRs</h2><ul><li data-workspace-preview="documentation"><a data-workspace-launch href="https://simemr.devpt.app/showcase/?presentation=workspace&amp;section=documentation">Documentation</a></li><li data-workspace-preview="schedule"><a data-workspace-launch href="https://simemr.devpt.app/showcase/?presentation=workspace&amp;section=schedule">Schedule</a></li><li data-workspace-preview="feedback"><a data-workspace-launch href="https://simemr.devpt.app/showcase/?presentation=workspace&amp;section=feedback">Feedback</a></li></ul></section><section data-product="painmap"><h2>3Dpain.app</h2><ul><li data-workspace-preview="mapping"><a data-workspace-launch href="https://www.3dpain.app/showcase/?presentation=workspace&amp;section=mapping">Mapping</a></li><li data-workspace-preview="movement"><a data-workspace-launch href="https://www.3dpain.app/showcase/?presentation=workspace&amp;section=movement">Movement</a></li><li data-workspace-preview="timeline"><a data-workspace-launch href="https://www.3dpain.app/showcase/?presentation=workspace&amp;section=timeline">Timeline</a></li></ul></section><p><a href="/simlab/">simLAB overview</a> · <a href="/emrs/">EMRs overview</a> · <a href="/3dpain/">3Dpain.app overview</a> · <a href="mailto:daniel.j.stone@und.edu">Contact</a></p></main></noscript>
     <dialog id="modal" aria-label="Resource actions"></dialog>
     <div id="announcer" class="sr-only" role="status" aria-live="polite"></div>
     <div id="toast" role="status"></div>
-    <dialog class="workspace-live-dialog" id="workspace-live-dialog" aria-labelledby="workspace-live-title">
+    <div class="workspace-live-backdrop" data-workspace-backdrop hidden></div>
+    <div class="workspace-live-surface" id="workspace-live-dialog" hidden role="region" aria-labelledby="workspace-live-title">
       <header class="workspace-live-toolbar">
         <h2 id="workspace-live-title">Live product workspace</h2>
-        <button type="button" class="button small" data-workspace-close autofocus>Close <span aria-hidden="true">×</span></button>
+        <button type="button" class="button small" data-workspace-close>Close <span aria-hidden="true">×</span></button>
       </header>
       <div class="workspace-live-notice">
         <p role="status" data-workspace-status>Choose a feature to open its live workspace.</p>
         <a href="/simlab/" data-workspace-full-view target="_blank" rel="noopener">Open directly</a>
       </div>
       <div class="workspace-live-stage" data-workspace-frame-slot></div>
-    </dialog>
-    <script src="/local-site-config.js"></script>
-    <script src="/teaching-library.js"></script>
-    <script src="/feature-workspaces.js"></script>
+    </div>
+    <script src="/site-media.js"></script>
+    <script src="/site-bootstrap.js"></script>
   </body>
 </html>

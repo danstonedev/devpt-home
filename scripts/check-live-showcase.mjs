@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import assert from "node:assert/strict";
+import { renderProducts } from "./render-homepage.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (file) => readFileSync(resolve(root, file), "utf8");
@@ -10,7 +11,7 @@ const page = read("simlab/index.html");
 const bridge = read("walkthrough.js");
 const workspaces = read("feature-workspaces.js");
 
-const features = [...home.matchAll(/<figure\b[^>]*data-workspace-preview="[^"]+"[^>]*>[\s\S]*?<\/figure>/g)].map(match => match[0]);
+const features = [...renderProducts(root).matchAll(/<figure\b[^>]*data-workspace-preview="[^"]+"[^>]*>[\s\S]*?<\/figure>/g)].map(match => match[0]);
 assert.equal(features.length, 9, "Every homepage feature needs a native workspace preview.");
 for (const feature of features) {
   assert(feature.includes('class="feature-media"'), "Keep each poster, inline workspace and expand control in one stable media slot.");

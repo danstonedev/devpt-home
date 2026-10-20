@@ -1,0 +1,70 @@
+{
+  "purpose": "Local layout thumbnails captured from the canonical interactive source views.",
+  "capturedAt": "2026-10-20T07:14:24.892945+00:00",
+  "method": "Playwright native locator screenshots; temporary browser CSS isolates source viewport. No image editing or generation.",
+  "upstreamAssets": "Licenses and attribution remain those of the canonical source models; preserve the bundled upstream notices.",
+  "captures": [
+    {
+      "file": "hip-anatomy.png",
+      "activity": "hip-anatomy",
+      "sourceUrl": "http://127.0.0.1:5180/native/teaching/?activity=hip-anatomy",
+      "scene": "JointLab native textured hip, source rest pose at time0.",
+      "size": [
+        1200,
+        700
+      ],
+      "bytes": 90626
+    },
+    {
+      "file": "hip-biomechanics.png",
+      "activity": "hip-biomechanics",
+      "sourceUrl": "http://127.0.0.1:5180/native/teaching/?activity=hip-biomechanics",
+      "scene": "JointLab hip:flexion, native timeline3600ms and90degrees.",
+      "size": [
+        1200,
+        700
+      ],
+      "bytes": 59890
+    },
+    {
+      "file": "hip-manual-therapy.png",
+      "activity": "hip-manual-therapy",
+      "sourceUrl": "http://127.0.0.1:5180/native/teaching/?activity=hip-manual-therapy",
+      "scene": "JointLab hip:posterior-glide, native45percent timeline and synchronized patient inset.",
+      "size": [
+        1200,
+        700
+      ],
+      "bytes": 195450
+    },
+    {
+      "file": "live-vitals.png",
+      "activity": "live-vitals",
+      "sourceUrl": "http://127.0.0.1:5180/native/teaching/?activity=live-vitals",
+      "scene": "LiveVitals native model response: moderate5METs120s followed by rest1MET60s.",
+      "size": [
+        1200,
+        700
+      ],
+      "bytes": 29300
+    },
+    {
+      "file": "synthetic-imaging.png",
+      "activity": "sectional-anatomy",
+      "sourceUrl": "http://127.0.0.1:5180/native/teaching/?activity=sectional-anatomy",
+      "scene": "Canonical simPACS native synthetic MRI T1 frontal reconstruction; labels and scale source-rendered.",
+      "size": [
+        1200,
+        700
+      ],
+      "bytes": 326009
+    },
+    {
+      "file": "gait.png",
+      "activity": "gait",
+      "sourceUrl": "http://127.0.0.1:8110/native/teaching/?activity=gait",
+      "scene": "Original blank male teaching model, CC 025-HD-Walk_M at0.25s; exact own-target source-linked derivative. Stage screenshot, no phase claim.",
+      "bytes": 421945
+    }
+  ]
+}

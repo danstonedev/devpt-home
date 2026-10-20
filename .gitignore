@@ -7,3 +7,8 @@ playwright-report/
 local-site-config.js
 local-site-fonts.css
 .cache/
+
+# Historical generated layout previews are retained outside the source release.
+design-preview/*.png
+design-preview/*.html
+design-preview/*.zip

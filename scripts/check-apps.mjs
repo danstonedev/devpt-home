@@ -15,7 +15,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { runInNewContext } from "node:vm";
+import { renderProducts } from "./render-homepage.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const strict = process.argv.includes("--strict");
@@ -61,49 +61,11 @@ const html = readFileSync(join(root, "index.html"), "utf8");
 // The homepage is rendered by the same source used by the local site. Exercise
 // its product route instead of treating an empty application shell as the UI.
 // No teaching catalog, source application, browser, or network is needed here.
-function renderProducts() {
-  if (!html.includes('src="/teaching-library.js"')) {
-    errors.push("index.html must load the shared teaching-library.js renderer");
-    return "";
-  }
-  if (!html.includes('id="app"')) {
-    errors.push("index.html must provide the homepage application mount");
-    return "";
-  }
-  const mount = { innerHTML: "" };
-  const modal = { addEventListener() {} };
-  try {
-    runInNewContext(
-      readFileSync(join(root, "teaching-library.js"), "utf8"),
-      {
-        document: {
-          querySelector: (selector) =>
-            selector === "#app" ? mount : selector === "#modal" ? modal : null,
-          querySelectorAll: () => [],
-          addEventListener() {},
-          dispatchEvent() {},
-        },
-        window: { addEventListener() {} },
-        location: {
-          hash: "#/products",
-          href: "http://127.0.0.1:8110/#/products",
-          protocol: "http:",
-        },
-        localStorage: { getItem: () => null },
-        URL,
-        URLSearchParams,
-        Event,
-        clearTimeout,
-        setTimeout,
-      },
-      { filename: "teaching-library.js", timeout: 1000 },
-    );
-  } catch (error) {
-    errors.push(`The homepage product route could not render: ${error.message}`);
-  }
-  return mount.innerHTML;
-}
-const productsHtml = renderProducts();
+let productsHtml = '';
+if (!html.includes('src="/site-bootstrap.js"') || !readFileSync(join(root, 'site-bootstrap.js'), 'utf8').includes("script('/teaching-library.js')")) errors.push('index.html must load the actual teaching-library.js renderer through its bootstrap');
+if (!html.includes('id="app"')) errors.push('The homepage application mount is missing');
+try { productsHtml = renderProducts(root); }
+catch (error) { errors.push(`The homepage product route could not render: ${error.message}`); }
 const productCards = new Map(
   [...productsHtml.matchAll(/<article\b([^>]*data-product="([^"]+)"[^>]*)>([\s\S]*?)<\/article>/g)]
     .map((match) => [match[2], { attributes: match[1], content: match[3] }]),

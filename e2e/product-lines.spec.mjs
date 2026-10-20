@@ -129,11 +129,11 @@ test.beforeEach(async ({ page }) => {
   );
 });
 
-test("the homepage introduces three distinct product lines and destinations", async ({
+test("the products route introduces three distinct product lines and destinations", async ({
   page,
 }, testInfo) => {
-  await page.goto("/");
-  await expect(page.locator("body")).toHaveClass(/portfolio-home/);
+  await page.goto("/#/products");
+  await expect(page.locator("main h1")).toHaveText("DevPT products");
   const cards = page.locator(".product-grid article[data-product]");
   await expect(cards).toHaveCount(3);
   const boxes = [];
@@ -182,50 +182,38 @@ test("the homepage introduces three distinct product lines and destinations", as
   await expectNoHorizontalOverflow(page);
 });
 
-test("all four pages remain readable without horizontal overflow", async ({
+test("resource, product directory and product pages remain readable without horizontal overflow", async ({
   page,
 }) => {
-  for (const path of ["/", ...products.map((product) => product.path)]) {
+  for (const path of ["/", "/#/products", ...products.map((product) => product.path)]) {
     await page.goto(path);
     await expect(page.locator("main h1")).toBeVisible();
-    await expect(page.locator("a.skip-link")).toHaveAttribute("href", "#main");
+    await expect(page.locator("a.skip-link, a.skip")).toHaveAttribute("href", "#main");
     await expect(page.locator("main#main")).toHaveCount(1);
     await expectNoHorizontalOverflow(page);
   }
 });
 
-test("primary navigation reaches each product, including the phone menu", async ({
-  page,
-}, testInfo) => {
+test("primary navigation reaches the product directory and each product", async ({ page }, testInfo) => {
   await page.goto("/");
   if (testInfo.project.name === "phone") {
-    await page.locator(".nav-mobile summary").click();
-    const nav = page.getByRole("navigation", {
-      name: "Mobile primary",
-      exact: true,
-    });
-    for (const product of products) {
-      await expect(
-        nav.getByRole("link", { name: product.name, exact: true }),
-      ).toHaveAttribute("href", product.path);
-    }
-    await nav.getByRole("link", { name: "3Dpain.app", exact: true }).click();
-    await expect(page).toHaveURL(/\/3dpain\/$/);
-    await expect(page.locator(".nav-mobile")).not.toHaveAttribute("open", "");
-    await expect(page.locator("main")).toHaveAttribute(
-      "data-product-walkthrough",
-      "painmap",
-    );
-  } else {
-    const nav = page.getByRole("navigation", { name: "Primary", exact: true });
-    for (const product of products) {
-      await expect(
-        nav.getByRole("link", { name: product.name, exact: true }),
-      ).toBeVisible();
-    }
-    await nav.getByRole("link", { name: "EMRs", exact: true }).click();
-    await expect(page).toHaveURL(/\/emrs\/$/);
+    await page.getByRole("button", { name: "Toggle navigation", exact: true }).click();
+    await expect(page.getByRole("button", { name: "Toggle navigation", exact: true })).toHaveAttribute("aria-expanded", "true");
   }
+  const nav = page.getByRole("navigation", { name: "Primary", exact: true });
+  await nav.getByRole("link", { name: "Products", exact: true }).click();
+  await expect(page).toHaveURL(/#\/products$/);
+  await expect(page.locator("main h1")).toHaveText("DevPT products");
+  if (testInfo.project.name === "phone")
+    await expect(page.getByRole("button", { name: "Toggle navigation", exact: true })).toHaveAttribute("aria-expanded", "false");
+  for (const product of products) {
+    const card = page.locator(`[data-product="${product.id}"]`);
+    await expect(card.locator("a.product-walkthrough")).toHaveAttribute("href", product.path);
+  }
+  const destination = testInfo.project.name === "phone" ? products[2] : products[1];
+  await page.locator(`[data-product="${destination.id}"] a.product-walkthrough`).click();
+  await expect(page).toHaveURL(new RegExp(destination.path + '$'));
+  await expect(page.locator("main")).toHaveAttribute("data-product-walkthrough", destination.id);
 });
 
 test("existing simLAB section bookmarks keep their destination", async ({
