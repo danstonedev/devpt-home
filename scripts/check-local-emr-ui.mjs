@@ -43,8 +43,6 @@ try {
     const concern = frame.getByRole('textbox', { name: 'Reason for today’s visit / chief concern', exact: true });
     await expect(concern).toBeVisible({ timeout: 25000 });
     const baseline = await concern.inputValue();
-    const retainedFrame = await iframe.elementHandle();
-    const nativeTimeOrigin = await frame.locator('html').evaluate(() => performance.timeOrigin);
     const sample = `${mode}: real note retained across shared-rail navigation.`;
     await concern.fill(sample);
     await nav.getByRole('button', { name: 'Student schedule', exact: true }).click();
@@ -74,6 +72,10 @@ try {
     await expect(concern).toHaveValue(baseline);
     await expect(nav).toBeVisible();
     check(`${mode}: Reset restores synthetic note fixture`, true);
+    // Reset may intentionally reload the source. Compare collapse against the
+    // reset session rather than incorrectly requiring the old session to live.
+    const retainedFrame = await iframe.elementHandle();
+    const nativeTimeOrigin = await frame.locator('html').evaluate(() => performance.timeOrigin);
     const frameSize = await frame.locator('html').evaluate(element => ({ viewport: innerWidth, scroll: element.scrollWidth }));
     const hostSize = await page.evaluate(() => ({ viewport: innerWidth, scroll: document.documentElement.scrollWidth }));
     check(`${mode}: native workspace has no horizontal overflow`, frameSize.scroll <= frameSize.viewport, frameSize);

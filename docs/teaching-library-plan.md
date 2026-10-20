@@ -19,19 +19,19 @@ The EMR shared rail and PACS exact DevPT parent support deploy from their owning
 1. Lead with ready-made **collections**, with overlapping **Regions**, **Topics**, and **All resources** browse views. Examples include All Things Hip, All Things ROM, Biomechanics, Manual Therapy, Gait, and Eyes & Vestibular. Each refers to the same canonical resource IDs.
 2. Support **Save resource**, **Save all**, a resource-only saved collection, one-link collection sharing, and bulk copying of resource links. No lesson authoring, custom teaching prompts, graded sequence, or lesson service is part of this rebuild.
 3. Keep source assets, model derivatives, clinical content and players in their existing homes. Generate local delivery artifacts from those sources; never edit website copies.
-4. Require no account for local browsing, opening resources, saving in the current browser, or sharing resource lists. Cross-device ownership and server persistence remain future capabilities.
+4. Require no account for browsing, opening resources, saving in the current browser, or sharing resource lists. Cross-device ownership and server persistence remain future capabilities.
 5. Keep public publication approval separate from ordinary development and engine merge rules. Release bounded activities and approved configurations; approval of one hip demonstration must not expose an unfinished neighboring lab.
 6. Build the EMR preview rail in the EMR source using shared navigation presentation and safe practice actions, then integrate that real source build into the local DevPT site.
 
-## Full local DevPT rebuild
+## Implemented website and local review build
 
 The site entry is the root `index.html`, with `teaching-library.js` and `teaching-library.css` providing the resource interface. Product pages, live product previews, contact information and the existing legal/information pages remain part of the full site. The build is no longer a separate design-preview destination.
 
 The resource metadata authority is SimLab's `apps/mission-shell/src/lib/teaching/catalog.json`. Its current 12 candidate IDs are `hip-anatomy`, `hip-rotation`, `hip-flexion`, `hip-biomechanics`, `hip-manual-therapy`, `gait`, `canal-mechanics`, `bppv-examination`, `eye-responses`, `live-vitals`, `neural-pathways`, and `sectional-anatomy`. DevPT's prepared collections reference these IDs; they do not duplicate model paths, clinical parameters or resource explanations. An absent or invalid source catalog must produce an unavailable state rather than a substitute catalog.
 
-The source-owned SimLab teaching entry imports the existing JointLab, MovementLab, VestibularLab, EyeLab, Live Vitals and NeuroLab components, plus GaitLab. simPACS remains its canonical anatomy/imaging viewer. The EMR preview is built from the actual EMR public workspace and source-owned navigation adapter. It is not a website-side imitation of the note writer or navigation rail. These local entries do not change the ordinary deployed product entrypoints.
+The source-owned SimLab teaching entry imports the existing JointLab, MovementLab, VestibularLab, EyeLab, Live Vitals and NeuroLab components, plus GaitLab. Local review can reach the candidate catalog; the public entry enforces the separate publication policy and bounded presentations. `/teaching/` and its generated catalog are now included in SimLab's ordinary production build. simPACS remains its canonical anatomy/imaging viewer. The EMR preview uses the actual EMR public workspace and source-owned navigation adapter, not a website-side imitation. Authenticated product entrypoints retain their own access boundaries.
 
-The local catalog is explicitly `local-development-only`. It includes candidates and unfinished material for review; inclusion in a prepared collection does not clear an asset for public launch. The site must preserve a concise local/nonpublic indicator and keep review details available without cluttering the faculty browse flow.
+The local catalog is explicitly `local-development-only`. It includes candidates and unfinished material for review; inclusion in a prepared collection does not clear an asset for public launch. The local review site preserves a concise local/nonpublic indicator. The public website instead consumes the source-owned `public-resources` projection and omits unreleased activities and empty collections.
 
 The root local pipeline is organized around `scripts/build-local-site.mjs`, `scripts/serve-local-site.mjs`, and `scripts/package-local-site.mjs`. The build consumes source catalogs and generated application builds; the server serves the assembled full site; packaging produces a portable local review artifact. Generated native, simPACS and EMR output must be disposable, carry source/output identity and original credits, and be rebuilt from canonical sources. Do not edit these generated outputs or treat the package as another asset repository. A local share link works only for recipients who can reach the served site; packaging does not create public hosting.
 
@@ -39,21 +39,21 @@ The main page uses visual cards, short titles, resource counts and compact actio
 
 The GaitLab uses packaged **CC native walking clips**. The original blank male teaching model is the default; the original female model and source characters are selectable. Own-target motion derivatives are generated in SimLab through its existing world-delta/bind-pose retarget pipeline, with source and target hashes, unchanged sample times and proportion tests. They are not hand-authored replacement gait patterns. The native clip registry and deterministic generator select the same clips. Rebuild/check the derivatives whenever the source rig, motion, target rig or selected clips change.
 
-Learners mark two same-foot contacts to establish a cycle, then use a conventional phase guide, measured source motion and practice questions inside the source-owned gait resource. These are resource interactions, not a DevPT lesson-authoring feature. Phase percentages are reference guidance, not verified source event detection. ROM studies edit selected native joint channels on a copy while preserving root travel; they do not synthesize physiological compensation. Edits that exceed the existing foot/floor allowance retain the original motion. No packaged native pathological gait clips were identified in the current source libraries; clinical impairment presets remain a separate acquisition and review task. Do not substitute procedural patterns while labeling them native CC gait.
+Learners mark two same-foot contacts to establish a cycle, then use a conventional phase guide and measured source motion inside the source-owned gait resource. Local review also includes practice questions and ROM studies; the public presentation excludes Practice and ROM mutation. These are resource interactions, not a DevPT lesson-authoring feature. Phase percentages are reference guidance, not verified source event detection. Local ROM studies edit selected native joint channels on a copy while preserving root travel; they do not synthesize physiological compensation. Edits that exceed the existing foot/floor allowance retain the original motion. No packaged native pathological gait clips were identified in the current source libraries; clinical impairment presets remain a separate acquisition and review task. Do not substitute procedural patterns while labeling them native CC gait.
 
-The ROM resource now exposes hip, knee and ankle/foot line charts in sagittal, frontal and transverse planes. Original and accepted edited traces share the native time window and per-channel axes. Approximate phase bands appear only after a same-foot contact interval is marked; an unmarked full take uses native seconds. Missing measurements remain gaps. Knee secondary-axis signs remain provisional, and foot-relative-leg rotation is not foot progression.
+The gait resource exposes hip, knee and ankle/foot line charts in sagittal, frontal and transverse planes. Public charts show native source motion; local ROM studies can overlay accepted edited traces using the same native time window and per-channel axes. Approximate phase bands appear only after a same-foot contact interval is marked; an unmarked full take uses native seconds. Missing measurements remain gaps. Knee secondary-axis signs remain provisional, and foot-relative-leg rotation is not foot progression.
 
-Separate **Simulation** and **Reference** views distinguish physics estimates from teaching illustrations. The local launcher invokes a generated build of the canonical simMOVE MuJoCo runner, using the exact selected source recording, calibrated transform, native free-root ancestor channels and source-bound teaching-body fixture. Force vectors come from native contact reactions. Regional mean pressure divides each collider group's actual normal load by its nominal projected model area; it is a coarse engineering estimate, not measured peak plantar pressure. References remain explicitly illustrative and never replace a failed simulation result.
+In local review, separate **Simulation** and **Reference** views distinguish physics estimates from teaching illustrations. The public presentation exposes the reference illustrations without the simulation service. The local launcher invokes a generated build of the canonical simMOVE MuJoCo runner, using the exact selected source recording, calibrated transform, native free-root ancestor channels and source-bound teaching-body fixture. Force vectors come from native contact reactions. Regional mean pressure divides each collider group's actual normal load by its nominal projected model area; it is a coarse engineering estimate, not measured peak plantar pressure. References remain explicitly illustrative and never replace a failed simulation result.
 
 A computed trial is not automatically a suitable representation of the animated walk. The source-owned physics report retains native stops, source tracking errors, mass, coordinates, contact assumptions and qualification fields. The first stationary-floor trials expose the mismatch between in-place CC walking and overground mechanics. The local runner now offers explicit stationary-floor and velocity-actuated moving-belt conditions; belt speed is an inspectable assumption. Both initial conditions still expose unqualified source tracking, so a dedicated alternating-support walking controller remains necessary for qualified gait-force results. Incomplete or poorly tracked trials must remain experimental in the local review and cannot enter the polished public library. This adds a resource implementation capability, not a lesson builder or public approval.
 
-## What exists and what can launch
+## Initial asset-readiness audit: retained snapshot
 
-The audit covered the local DevPT homepage, SimLab, EMR and PainMap sources, plus selected simPACS source files accessed through GitHub. It establishes implementation and documented review status. A fresh visual acceptance review of every candidate remains part of publication.
+The initial audit covered the local DevPT homepage, SimLab, EMR and PainMap sources, plus selected simPACS source files accessed through GitHub. The findings and recommendations below are retained as that initial snapshot, not the current public allowlist. The implemented selection and configuration boundary are described under **Publication scope for this release** and enforced by SimLab's publication policy. Owner publication authorization does not change the pending clinical or faculty review findings.
 
 **No newly audited teaching activity can responsibly be labeled fully verified from the available records alone.** Several excellent candidates exist, but movement educational review, joint clinical content and vestibular clinical sign-off are explicitly pending or unrecorded. Existing public exposure does not establish acceptance. A reviewer can approve a narrow teaching purpose without endorsing an entire simulator, every movement, or clinical measurement validity.
 
-| Asset family | What is already implemented | Best first public slice | Current publication decision |
+| Asset family | Implementation at initial audit | Proposed first public slice | Initial audit recommendation |
 | --- | --- | --- | --- |
 | Patient ROM demonstrations | Native MovementLab and authored presets, shared patient/pose engine, observation and playback behavior | Review `capsular-hip` and `painful-hip-flexion` first; consider `knee-contracture` next | Strong candidates, not cleared. Educational review remains pending; review exact movement, supports, visible response and explanatory wording |
 | Regional 3D anatomy at rest | Fifteen regional modules with native geometry, structure selection, focus/isolate/hide/reset | One reviewed region at rest with useful labels and an explicit structure set | High-priority candidate. Rest anatomy has a narrower validation burden than dynamic biomechanics; confirm anatomy, labels, cut boundaries and rights |
@@ -67,19 +67,19 @@ The audit covered the local DevPT homepage, SimLab, EMR and PainMap sources, plu
 | Neural pathways, live vitals and other labs | Existing shared lab implementations and public study-tool entries | Evaluate individual teaching tasks later | Not established as launch-ready by this audit. Give each its own evidence record rather than inheriting approval from a neighboring activity |
 | Aquatic demonstrations | Existing native aquatic lab and shared engine integration | None in the first release | Hold. Recorded movement audit identifies unresolved ROM enforcement, coordinate/frame and unit issues |
 
-The proposed first review queue is intentionally small: regional anatomy at rest; the two hip ROM presets; posterior-canal vestibular mechanics; its corresponding BPPV examination illustration; and one synthetic imaging activity. Publish whichever pass all gates first. Do not add filler to make every category look populated.
+The initial proposed review queue was intentionally small: regional anatomy at rest; the two hip ROM presets; posterior-canal vestibular mechanics; its corresponding BPPV examination illustration; and one synthetic imaging activity. Those recommendations remain useful for content review; the current bounded publication selection is a separate explicit owner decision. Do not add filler to make every category look populated.
 
 SimLab registers four Git submodules: `pose-engine`, `scenario-engine`, `apps/painmap` and `apps/simvitals`. They are dependency/source boundaries, not pre-approved public teaching packages. The branching scenario engine supplies behavior rather than a freestanding faculty asset. simPACS is an external canonical application, not a SimLab submodule. Keep this distinction visible in the engineering inventory while presenting activities by learning purpose to faculty.
 
 The ROM preset values are authored scenario settings, not normative claims: `capsular-hip` uses right supine PROM internal rotation at 10°, and `painful-hip-flexion` uses right active hip flexion at 90°. Their existing wording includes pain and end-feel concepts. A public release must distinguish what is visually modeled from what is supplied as an authored finding. A browser animation cannot itself establish tactile end-feel or a diagnosis.
 
-### Existing public surface needs a narrower boundary
+### Legacy public study tools: separate proposed boundary work
 
 SimLab's current public StudyView opens entire JointLab, FullBodyLab, NeuroLab, MovementLab, EyeLab, VestibularLab, AquaticLab and LiveVitalsLab components. Those components expose more than a reviewed asset card would imply.
 
-Before promoting the new library, replace broad public study-tool access with an allowlist enforced by the owning public entry. Check asset ID, release, preset, parameter ranges, overlays, neighboring links and all reachable selectors. Unknown IDs and unsupported state must fail closed. A filtered card list alone is insufficient.
+The initial audit recommended replacing broad public study-tool access with an allowlist enforced by the owning public entry. That legacy tour boundary is separate proposed work and is not changed by this release. New hub resource links use the bounded `/teaching/` entry, whose own policy checks asset IDs and selected configurations; existing product-tour behavior is retained. A filtered card list alone is insufficient for either entry.
 
-The same publication rule should apply to the current public study-tool explorer. Keep the live product tour and its curated practice workflows, while ensuring its study links resolve only to released activities. Do not advertise an unreviewed lab through an alternate old URL.
+A follow-up proposal is to apply the same scoped policy to the legacy public study-tool explorer while preserving the live product tour and curated practice workflows. Review preset ranges, overlays, neighboring links and reachable selectors before changing those routes. This proposal is not a claim that the current release closes every alternate whole-lab URL.
 
 ## Faculty discovery and navigation
 
@@ -94,7 +94,7 @@ The same publication rule should apply to the current public study-tool explorer
 
 The rebuilt navigation is **Regions · Topics · All resources · Products · Contact**, with a visible **Saved** resource count and a secondary For faculty destination. Prepared collections can appear under both region and topic views without duplicating their resources. Product pages continue to present simLAB, EMRs and 3Dpain.app.
 
-The local interface uses hash routes such as `#/regions`, `#/topics`, `#/library`, `#/collection/all-hip`, `#/activity/hip-anatomy`, and `#/saved`. Clean canonical public URLs can follow when the public hosting and release contract are ready; do not describe them as deployed endpoints now.
+The local interface and public website export use hash routes such as `#/regions`, `#/topics`, `#/library`, `#/collection/all-hip`, `#/activity/hip-anatomy`, and `#/saved`. Public activity links use the DevPT origin with those routes; source players use the separate `/teaching/?activity=…` entry. Clean non-hash DevPT activity URLs remain a possible later addition. Actual live availability is established by deployment checks, not by this plan.
 
 The homepage leads with region/topic browsing and ready-made collections, then offers the broader products. Search and compact filters provide a direct route to individual resources. Load posters and metadata initially; activate a simulator only after the visitor opens a resource. Public deployment must filter these same views to released activities and omit empty collections.
 
@@ -131,15 +131,17 @@ Source-generated deployment copies and CDN objects are acceptable delivery artif
 
 ### Source-owned publication records
 
-Extend the existing SimLab teaching catalog with the public publication contract. Its current development status is not a release approval. Each source owns its asset definitions and approval evidence. A composition index references those definitions; it must not hand-maintain another copy of model paths, labels, controls or clinical parameters in devpt-home.
+The existing SimLab teaching catalog is now paired with `publication-policy.json`, which selects bounded public presentations and generates the public projection. The development catalog's status remains unchanged and is not a release approval. Each source owns its asset definitions and review evidence. A composition index references those definitions; it must not hand-maintain another copy of model paths, labels, controls or clinical parameters in devpt-home. The fuller review and lifecycle records below describe maintenance and expansion work, not clinical acceptance assigned by this release.
 
 Each candidate needs: stable asset ID; owner; concrete outcome; title and search terms; source entry/preset; supported configuration schema; review scope and reviewer/date; source and dependency digests; model provenance and rights; accessibility behavior; performance budget; public player entry; version; and lifecycle status. Internal review details remain private; expose only the public review summary needed by faculty.
 
 Use lifecycle states such as **draft → review → approved → published → deprecated/withdrawn**. Approval is bound to the declared purpose, dependency set and allowed configurations. Only a named authorized human records content acceptance. Automation checks that a valid record exists and applies to the artifact; it does not assign clinical verification.
 
-For public release, the build must generate a read-only catalog projection containing only published records. Serve it from the owning release system and use it to generate searchable activity pages and discovery metadata. devpt-home may cache the projection, with build identity and bounded cache lifetime; it may not invent unpublished records. Public players must revalidate eligibility, including withdrawal, so a stale index cannot expose a retired asset.
+The implemented build generates a read-only catalog projection from the canonical catalog and explicit publication policy, served by SimLab at `/teaching/catalog.json`. DevPT uses it for searchable activity pages and discovery, with no fallback to development candidates. Public entry lookup checks the same policy. Richer lifecycle and withdrawal records remain maintenance extensions; a stale discovery index must never bypass the owning player's eligibility boundary.
 
-Suggested API concepts and routes are proposals, not existing endpoints: a published catalog, a stable activity landing page, and a dedicated public-player URL for each released activity. Keep all player construction in its owning application.
+The published catalog and source-owned `/teaching/?activity=…` player entry are implemented; DevPT activity landing pages currently use hash routes. Additional saved-view services, short links and LMS-specific routes remain proposals. Keep all player construction in its owning application.
+
+Target publication workflow, including the proposed review and LMS extensions:
 
 ```mermaid
 flowchart LR
@@ -155,7 +157,7 @@ flowchart LR
 
 ### Releases and no drift
 
-A stable generic activity link follows the current approved release. Development changes are never automatically promoted by a marketing deploy. SimLab and the public player resolve the same activity definition and matched runtime for the same release. CI compares the model/data/configuration digests and exercises that same preset in both hosts.
+A stable generic activity link follows the current owner-authorized publication scope. A marketing deploy cannot add development candidates to SimLab's explicit selection. SimLab and the public player resolve the same canonical activity definition and runtime. Expanded release verification should compare model/data/configuration digests and exercise the same allowed preset in both hosts; this is not a claim that every proposed parity check is already implemented.
 
 Shared resource lists resolve canonical IDs through the current catalog; they do not contain copied models or a frozen source snapshot. For public publication, generic resource links should follow compatible approved updates while preserving supported settings. Display the current release and change information. Instructional breaking changes require a new activity identity or an explicit review-needed state, rather than silently turning an old link into a different demonstration.
 
@@ -197,7 +199,7 @@ Measure time to usable interaction, memory and rendering behavior for the exact 
 
 Start with universal direct links and tested responsive iframes. Keep a visible Open full view link for systems that strip iframes. Require no third-party sign-in cookies for student viewing. Keep paid/authenticated applications' framing rules unchanged.
 
-Existing SimLab public framing permits DevPT origins; simPACS's bridge defaults to the SimLab origin. Directly hosting simPACS in DevPT therefore requires an explicit trusted-parent addition. Use exact origin and source-window checks, versioned schemas and exact postMessage target origins. Never accept arbitrary model URLs or privileged commands from embed parents.
+SimLab's public teaching framing permits the exact DevPT origins. The simPACS bridge previously defaulted only to the SimLab origin; its release implementation adds the exact `https://devpt.app` and `https://www.devpt.app` parents. Verify the deployed dependency before relying on that change. Use exact origin and source-window checks, versioned schemas and exact postMessage target origins. Never accept arbitrary model URLs or privileged commands from embed parents.
 
 An LMS iframe containing DevPT which in turn embeds SimLab or simPACS creates an **ancestor chain**. Each child CSP must permit all relevant ancestors; allowing only DevPT is not enough. First support a tested set of institution/LMS hosts on dedicated public embed routes. Unsupported hosts receive the direct-link alternative. A later broadly embeddable public-only route needs an explicit framing policy and a minimal parent interface; it must not widen authenticated-app access or trust arbitrary LMS messages. Test the whole nested chain, each parent's `frame-src` and permissions policy, sandbox permissions and fullscreen delegation before claiming compatibility. The bridge trusts its immediate approved parent window and origin, independently of the broader framing policy.
 
@@ -223,7 +225,7 @@ Before adding hosted lesson publishing, define ownership, visibility, version-ch
 
 At the initial audit, the homepage opened the source-owned EMR route `https://simemr.devpt.app/showcase/?presentation=workspace&section=documentation`. Public Workspace mounted the real OrientationWriter without the authenticated SvelteKit layout. OrientationWriter mounted ChartRail but hid its boundary with `display: none`; production navigation lived in AppNavigationRail inside the authenticated layout. The original preview consequently received neither rail.
 
-The local rebuild integrates the real EMR source build with a public-practice adapter in the EMR repository, sharing the production rail's visual presentation, active states, icons, focus behavior and responsive treatment. Separate destinations/actions from presentation so the public entry can use safe local practice actions without importing authenticated routing or workspace prefetching.
+The release implementation integrates the real EMR public workspace with a public-practice adapter in the EMR repository, sharing the production rail's visual presentation, active states, icons, focus behavior and responsive treatment. The local review uses its compiled source build. Destinations/actions remain separate from presentation so the public entry uses safe in-memory practice actions without importing authenticated routing or workspace prefetching.
 
 - Show the supported public destinations: Note workspace, Student schedule and Faculty feedback. Selecting them uses the existing in-memory sample switch.
 - Within the note sample, reuse chart definitions and working local Note Guide/section actions. Omit empty or unsupported destinations unless their sample purpose is useful and clearly identified.
@@ -234,7 +236,7 @@ Acceptance includes visible desktop navigation, usable phone navigation, all thr
 
 ## Publication quality and operations
 
-Publication gates apply to the released educational activity, not to unrelated engine development or merge authority.
+The following checklist describes ongoing content review and operations for each released educational activity. The bounded implementation above does not imply that these clinical/faculty records are complete or create merge conditions for unrelated engine work.
 
 | Gate | Required evidence | Responsible role |
 | --- | --- | --- |
@@ -258,17 +260,17 @@ Maintain a visible report-an-issue action with asset/release context. A serious 
 
 ## Delivery, public release and expansion
 
-### Current delivery: complete local site
+### Implemented delivery: local review and public website export
 
 Deliver the root DevPT resource interface and existing product/information pages, generated SimLab catalog and native teaching build, canonical simPACS viewer, and real EMR public workspace with its safe navigation rail. Use the root build/server/package scripts for a reproducible full-site review. Preserve source identity and credits in generated delivery output.
 
 Acceptance includes region/topic/prepared-collection browsing, searchable resources, native player launch and full view, source-owned product previews, working EMR navigation and reset, browser-local saving, save-all, one-link resource-list sharing, bulk copy, and usable phone layouts. A clean browser receiving a shared list must see the same valid IDs. Broken source builds must fail honestly; do not substitute website-side models or mock EMR screens. No lesson builder is part of acceptance.
 
-### Public release preparation
+### Implemented public boundary and remaining review work
 
-Complete the ownership record, per-candidate review packets, publication/state schemas and exact configuration boundaries. Correct the broad public study-tool entry so unfinished neighboring tools cannot bypass those boundaries. Existing engineering checks and a successful local review package do not grant public approval.
+The source-owned catalog projection, public teaching entry and selected configuration boundaries are implemented. Complete and maintain the fuller ownership/review packets and lifecycle/state schemas as the library expands. The legacy public study-tool boundary described above remains separate proposed work; this release preserves existing product-tour behavior. Existing engineering checks and a successful local review package do not assign clinical or faculty acceptance; owner publication authorization remains a separate explicit decision.
 
-Publish only the explicit owner-authorized scope, with rights evidence and the required interaction/accessibility/performance checks. Keep clinical and faculty review statuses separate and truthful. An additional or broader activity requires a new explicit publication decision; a generic catalog addition must not publish it automatically. Generate the public catalog from eligible source records and exclude unreleased content from all cards, collections, direct players and legacy routes. Verify live dependency deployment and supported host framing before replacing public links.
+Publish only the explicit owner-authorized scope, with rights evidence and the required interaction/accessibility/performance checks. Keep clinical and faculty review statuses separate and truthful. An additional or broader activity requires a new explicit publication decision; a generic catalog addition must not publish it automatically. Generate the public catalog from eligible source records and exclude unreleased content from the new teaching cards, collections and direct players. Applying that boundary to legacy study-tool routes remains the separate follow-up described above. Verify live dependency deployment and supported host framing before replacing public links.
 
 ### Expansion from demonstrated demand
 
@@ -282,22 +284,24 @@ Measure successful player launches by device, failed loads, time to interaction,
 
 The source work includes the isolated SimLab teaching entry and canonical simPACS teaching viewer. Earlier implementation verification recorded 13 retarget tests, 11 gait model/reference tests, 14 gait player/profile tests, one measured-comparison test, 33 source-clip/recording/catalog tests, and 20 simPACS bridge/focus tests. App TypeScript passed; Svelte check reported zero errors and ten existing warnings. These retained results describe the source work and do not establish final full-site or real EMR-rail acceptance.
 
-Current assembled-site verification: `npm test` passes product registry, canonical showcase, brand-token and orchestration checks. `scripts/check-local-site-ui.mjs` passed 58 desktop/phone assertions, including ID-only collections shared into a clean browser; it intercepts native frames and is a host-contract check. `scripts/check-local-emr-ui.mjs` passed 26 real compiled workspace assertions, including shared rail navigation, in-memory edit retention, Note Guide, reset, phone layout and absence of protected requests. `scripts/check-local-delivery.mjs` passed 25 path, MIME, framing/isolation and boundary checks. Native resource rendering was checked separately; a mobile simPACS collapsed canvas was fixed in its canonical stylesheet and both its 3D view and synthetic MRI were rechecked.
+Local review verification recorded `npm test` passing product registry, canonical showcase, brand-token and orchestration checks. `scripts/check-local-site-ui.mjs` passed 58 desktop/phone assertions, including ID-only collections shared into a clean browser; it intercepts native frames and is a host-contract check. `scripts/check-local-emr-ui.mjs` passed 26 real compiled workspace assertions, including shared rail navigation, in-memory edit retention, Note Guide, reset, phone layout and absence of protected requests. `scripts/check-local-delivery.mjs` passed 25 path, MIME, framing/isolation and boundary checks. These counts identify that earlier local review run, not current public deployment proof. Native resource rendering was checked separately; a mobile simPACS collapsed canvas was fixed in its canonical stylesheet and both its 3D view and synthetic MRI were rechecked.
+
+Release host verification separately passed 86 desktop/phone product journey cases after the current inline preview and SPA lifecycle integration. Those checks retain exact-origin/window validation, native session identity during expansion, preparation/fallback behavior, keyboard focus, data-saving behavior and JavaScript-free links. They exercise host protocol fixtures; source-owned suites and deployment checks establish the corresponding native build and live contracts.
 
 The source gait recorder/player suite passed all 11 tests after absolute root export was added. Three-plane chart/reference/physics adapters passed their targeted tests, and application TypeScript passed. Actual native browser checks cover all nine measured channels, marked-cycle phase bands, matching source/edited clocks, requested knee70 comparison and phone controls. The local physics service passed three process/transport behavior tests and executed the real bundled MuJoCo runner over HTTP. Initial stationary-floor and moving-belt trials produce real contact forces and regional mean pressure, but their tracking does not qualify; those results stay experimental. Exact owning revisions, local changes and exported file hashes are recorded in each package's source manifest. No implementation check assigns clinical or publication approval.
 
-Local source baselines: devpt-home `1b8dc4a`; SimLab `598d423`; EMR `6975c0e8`. This audit does not establish every deployed asset matches those source revisions.
+Initial local source baselines: devpt-home `1b8dc4a`; SimLab `598d423`; EMR `6975c0e8`. These identify the audit snapshot, not the later release heads. Actual release revisions belong in the PR and deployment records.
 
-Read-only live checks returned HTTP 200 for devpt.app, lab.devpt.app/showcase and simemr.devpt.app/showcase. SimLab advertised its workspace and AI-preview markers; the EMR advertised its workspace marker. SimLab's public framing permits DevPT origins. The EMR public CSP has `connect-src 'none'`. These checks establish availability and declared contracts, not complete visual or clinical acceptance.
+Initial read-only live checks returned HTTP 200 for devpt.app, lab.devpt.app/showcase and simemr.devpt.app/showcase. SimLab advertised its workspace and AI-preview markers; the EMR advertised its workspace marker. SimLab's public framing permitted DevPT origins. The EMR public CSP had `connect-src 'none'`. These checks established availability and declared contracts at that point, not the new release's deployment status or complete visual or clinical acceptance.
 
 Targeted vestibular implementation verification executed during the audit: `node node_modules/vitest/vitest.mjs run apps/mission-shell/src/lib/lab/vestibular` passed 5 files / 27 tests. At the initial audit, simPACS tests were inspected in source and remote EMR browser inspection was blocked by a certificate trust error; TLS verification was not disabled. Later local source checks are recorded separately above. Real source-build desktop/phone EMR acceptance belongs in the final assembled-site verification.
 
-Key internal evidence:
+Initial audit references (source paths and line numbers may have changed during implementation):
 
 - `devpt-home/docs/native-showcase.md` and `docs/homepage-refresh.md`: existing source-owned live embedding, product ownership and deployment order.
 - `devpt-home/apps.json:162`: runtime/upstream asset authority descriptions requiring reconciliation.
-- `simlab/apps/mission-shell/src/lib/showcase/StudyView.svelte:11`: current whole-lab public imports.
-- `simlab/apps/mission-shell/src/lib/showcase/story.ts:21`: eight public study-tool families.
+- `simlab/apps/mission-shell/src/lib/showcase/StudyView.svelte:11`: initial whole-lab public imports.
+- `simlab/apps/mission-shell/src/lib/showcase/story.ts:21`: eight study-tool families at the initial audit.
 - `simlab/packages/ddx/src/lab/presets.ts:22`: existing ROM preset IDs and scenario values.
 - `simlab/docs/education/features/movement-lab-self-study.md:67`: pending educational design review and current sharing limits.
 - `simlab/docs/education/features/joint-kinematics-lab.md:11`: implemented modules/presets versus unreviewed clinical content.
