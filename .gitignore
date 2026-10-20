@@ -4,3 +4,6 @@ playwright-report/
 .DS_Store
 
 .env
+local-site-config.js
+local-site-fonts.css
+.cache/

@@ -60,6 +60,39 @@
         endpoint.searchParams.get("presentation") !== "workspace"
       )
         return null;
+      // A generated local build points to the original compiled applications.
+      // Preserve each mount prefix; the EMR workspace uses its root entry.
+      var configuredBase =
+        id === "simlab" && typeof NATIVE_SOURCE_BASE === "string"
+          ? NATIVE_SOURCE_BASE
+          : id === "emrs" && typeof EMR_SOURCE_BASE === "string"
+            ? EMR_SOURCE_BASE
+            : null;
+      if (configuredBase) {
+        try {
+          var configured = new URL(configuredBase, location.href);
+          if (
+            ["http:", "https:"].includes(configured.protocol) &&
+            !configured.username && !configured.password &&
+            !configured.search && !configured.hash &&
+            (configured.origin === location.origin ||
+              configured.origin === product.origin ||
+              (loopback.includes(location.hostname) &&
+                loopback.includes(configured.hostname) &&
+                configured.port === product.port))
+          ) {
+            var mount = configured.pathname.replace(/\/$/, "");
+            endpoint = new URL(
+              mount + (id === "emrs" ? "/" : "/showcase/"),
+              configured.origin,
+            );
+            endpoint.searchParams.set("presentation", "workspace");
+            return endpoint;
+          }
+        } catch (_) {
+          // An invalid local config leaves the canonical source usable.
+        }
+      }
       if (loopback.includes(location.hostname) && location.port === "8109") {
         var override = new URLSearchParams(location.search).get(id);
         if (override) {
@@ -288,11 +321,13 @@
           '[data-product="' + id + '"] [data-workspace-preview]',
         )
         .forEach(function (figure) {
+          if (figure.dataset.workspaceInitialized) return;
           var section = figure.dataset.workspacePreview;
           var button = figure.querySelector("[data-workspace-try]");
           var heading = figure.querySelector("h3");
           if (!product.sections.includes(section) || !button || !heading)
             return;
+          figure.dataset.workspaceInitialized = "true";
           figure
             .querySelectorAll(
               "[data-workspace-direct], [data-workspace-launch]",
@@ -322,6 +357,11 @@
     });
   }
 
+  var loadedCatalog = null;
+  document.addEventListener("devpt:render", function () {
+    if (loadedCatalog) initialize(loadedCatalog);
+  });
+
   var registryAbort = new AbortController();
   var registryTimer = window.setTimeout(function () {
     registryAbort.abort();
@@ -331,7 +371,10 @@
       if (!response.ok) throw new Error("Product registry unavailable");
       return response.json();
     })
-    .then(initialize)
+    .then(function (catalog) {
+      loadedCatalog = catalog;
+      initialize(catalog);
+    })
     .catch(function () {
       /* Static native links stay usable without the registry. */
     })
