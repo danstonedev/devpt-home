@@ -14,6 +14,27 @@ DevPT consumes `https://lab.devpt.app/teaching/catalog.json` directly. It never 
 
 The EMR shared rail and PACS exact DevPT parent support deploy from their owning repositories before the hub depends on them. Existing required checks remain merge conditions. Owner publication authorization is not recorded as faculty clinical review; remaining model limitations and the experimental physics failure remain visible in source records.
 
+Owner clarification, 21 October 2026: follow SimLab's source-owned
+[release requirements and development targets policy](https://github.com/danstonedev/simlab/blob/main/docs/feature-release-policy.md).
+The public library's release checks cover its published experiences, shared
+system boundaries and verified exclusion of development features. Unfinished
+assisted grip, whole-patient manual examination/range and related prototype XR
+treatment controls remain withheld through a production build boundary around
+the experimental immersive XR patient-practice workspace. All unit, type,
+API/security, source and contact checks remain required; only the declared XR
+browser cohort moves to separate development checks. Its original assertions
+and failed results stay visible without blocking unrelated published resources.
+This does not lower a production performance or safety requirement, qualify a
+development feature, or make a local-only flag safe for production.
+
+The public **Hip manual therapy** resource is the bounded JointLab
+posterior-glide illustration, not the unfinished whole-patient manual
+examination. Native Gait Lab and its labeled force/pressure teaching references
+have their own publication scope; experimental physics and unverified models
+remain outside it. DevPT consumes the owning source's publication decision
+rather than maintaining another feature or asset eligibility list. Runtime and
+CI enforcement must be verified before the release relies on this separation.
+
 ## Decisions to adopt
 
 1. Lead with ready-made **collections**, with overlapping **Regions**, **Topics**, and **All resources** browse views. Examples include All Things Hip, All Things ROM, Biomechanics, Manual Therapy, Gait, and Eyes & Vestibular. Each refers to the same canonical resource IDs.
