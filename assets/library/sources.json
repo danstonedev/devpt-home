@@ -238,5 +238,361 @@
         "region-whole-body.mp4": 93455
       }
     }
-  ]
+  ],
+  "headers": {
+    "note": "Region and topic page header tiles. Each is a loop of the resource the tile links to, at 480x360, 24 fps, VP9 WebM with an H.264 MP4 fallback and a first-frame WebP poster. The Imaging topic reuses hero-imaging. Single-resource topics open their resource directly and have no header. No image editing or generation beyond framing, keying and compositing.",
+    "source": {
+      "repository": "https://github.com/danstonedev/simlab",
+      "commit": "c312b29",
+      "player": "apps/mission-shell teaching target (vite.teaching.config.ts), run locally"
+    },
+    "license": "Anatomy CC BY-SA 4.0 (AnatomyTool Open 3D Anatomical Model, LUMC et al., via Z-Anatomy and BodyParts3D).",
+    "tiles": [
+      {
+        "header": "region/ankle-foot",
+        "files": [
+          "head-region-ankle-foot.webm",
+          "head-region-ankle-foot.mp4",
+          "head-region-ankle-foot.webp"
+        ],
+        "activity": "joint-ankle-dorsiflexion",
+        "bytes": {
+          "head-region-ankle-foot.webm": 15300,
+          "head-region-ankle-foot.mp4": 21724,
+          "head-region-ankle-foot.webp": 3928
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=joint-ankle-dorsiflexion, scrubbed frame by frame across its whole timeline, lab controls hidden and the flat background keyed onto the card gradient."
+      },
+      {
+        "header": "region/elbow-hand",
+        "files": [
+          "head-region-elbow-hand.webm",
+          "head-region-elbow-hand.mp4",
+          "head-region-elbow-hand.webp"
+        ],
+        "activity": "joint-fingers-grip-comparison",
+        "bytes": {
+          "head-region-elbow-hand.webm": 17050,
+          "head-region-elbow-hand.mp4": 22245,
+          "head-region-elbow-hand.webp": 4902
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=joint-fingers-grip-comparison, scrubbed frame by frame across its whole timeline, lab controls hidden and the flat background keyed onto the card gradient."
+      },
+      {
+        "header": "region/head-neck",
+        "files": [
+          "head-region-head-neck.webm",
+          "head-region-head-neck.mp4",
+          "head-region-head-neck.webp"
+        ],
+        "activity": "joint-cervical-flexion",
+        "bytes": {
+          "head-region-head-neck.webm": 13631,
+          "head-region-head-neck.mp4": 22159,
+          "head-region-head-neck.webp": 4800
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=joint-cervical-flexion, scrubbed frame by frame across its whole timeline, lab controls hidden and the flat background keyed onto the card gradient."
+      },
+      {
+        "header": "region/hip",
+        "files": [
+          "head-region-hip.webm",
+          "head-region-hip.mp4",
+          "head-region-hip.webp"
+        ],
+        "activity": "joint-hip-abduction",
+        "bytes": {
+          "head-region-hip.webm": 9936,
+          "head-region-hip.mp4": 15156,
+          "head-region-hip.webp": 2580
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=joint-hip-abduction, scrubbed frame by frame across its whole timeline, lab controls hidden and the flat background keyed onto the card gradient."
+      },
+      {
+        "header": "region/knee",
+        "files": [
+          "head-region-knee.webm",
+          "head-region-knee.mp4",
+          "head-region-knee.webp"
+        ],
+        "activity": "joint-knee-terminal-extension",
+        "bytes": {
+          "head-region-knee.webm": 11168,
+          "head-region-knee.mp4": 17140,
+          "head-region-knee.webp": 2944
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=joint-knee-terminal-extension, scrubbed frame by frame across its whole timeline, lab controls hidden and the flat background keyed onto the card gradient."
+      },
+      {
+        "header": "region/lumbopelvic",
+        "files": [
+          "head-region-lumbopelvic.webm",
+          "head-region-lumbopelvic.mp4",
+          "head-region-lumbopelvic.webp"
+        ],
+        "activity": "joint-lumbar-sidebend-left",
+        "bytes": {
+          "head-region-lumbopelvic.webm": 10087,
+          "head-region-lumbopelvic.mp4": 15942,
+          "head-region-lumbopelvic.webp": 4440
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=joint-lumbar-sidebend-left, scrubbed frame by frame across its whole timeline, lab controls hidden and the flat background keyed onto the card gradient."
+      },
+      {
+        "header": "region/shoulder",
+        "files": [
+          "head-region-shoulder.webm",
+          "head-region-shoulder.mp4",
+          "head-region-shoulder.webp"
+        ],
+        "activity": "joint-shoulder-coupled-elevation",
+        "bytes": {
+          "head-region-shoulder.webm": 16398,
+          "head-region-shoulder.mp4": 24827,
+          "head-region-shoulder.webp": 3200
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=joint-shoulder-coupled-elevation, scrubbed frame by frame across its whole timeline, lab controls hidden and the flat background keyed onto the card gradient."
+      },
+      {
+        "header": "region/thorax",
+        "files": [
+          "head-region-thorax.webm",
+          "head-region-thorax.mp4",
+          "head-region-thorax.webp"
+        ],
+        "activity": "joint-thoracic-rotation-right",
+        "bytes": {
+          "head-region-thorax.webm": 13223,
+          "head-region-thorax.mp4": 19469,
+          "head-region-thorax.webp": 5530
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=joint-thoracic-rotation-right, scrubbed frame by frame across its whole timeline, lab controls hidden and the flat background keyed onto the card gradient."
+      },
+      {
+        "header": "region/whole-body",
+        "files": [
+          "head-region-whole-body.webm",
+          "head-region-whole-body.mp4",
+          "head-region-whole-body.webp"
+        ],
+        "activity": "transfers-chair",
+        "bytes": {
+          "head-region-whole-body.webm": 17157,
+          "head-region-whole-body.mp4": 28178,
+          "head-region-whole-body.webp": 2136
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=transfers-chair, scrubbed frame by frame across its whole timeline."
+      },
+      {
+        "header": "topic/anatomy",
+        "files": [
+          "head-topic-anatomy.webm",
+          "head-topic-anatomy.mp4",
+          "head-topic-anatomy.webp"
+        ],
+        "activity": "anatomy-shoulder",
+        "bytes": {
+          "head-topic-anatomy.webm": 75810,
+          "head-topic-anatomy.mp4": 82812,
+          "head-topic-anatomy.webp": 2886
+        },
+        "method": "The shoulder bones from apps/mission-shell/src/lib/lab/joints/assets/shoulder.glb turning once, with the anatomy-systems vessel, nerve and muscle layers swept in from below and then peeled back by a clipping plane (render kit regions.html). Composited on the card gradient."
+      },
+      {
+        "header": "topic/eye-exam",
+        "files": [
+          "head-topic-eye-exam.webm",
+          "head-topic-eye-exam.mp4",
+          "head-topic-eye-exam.webp"
+        ],
+        "activity": "eye-movements-normal",
+        "bytes": {
+          "head-topic-eye-exam.webm": 18447,
+          "head-topic-eye-exam.mp4": 28691,
+          "head-topic-eye-exam.webp": 5242
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=eye-movements-normal, scrubbed frame by frame across 0.0–0.5 of its timeline, tail cross-faded into the start."
+      },
+      {
+        "header": "topic/function-exercise",
+        "files": [
+          "head-topic-function-exercise.webm",
+          "head-topic-function-exercise.mp4",
+          "head-topic-function-exercise.webp"
+        ],
+        "activity": "exercises-forward-lunge",
+        "bytes": {
+          "head-topic-function-exercise.webm": 10763,
+          "head-topic-function-exercise.mp4": 17261,
+          "head-topic-function-exercise.webp": 1300
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=exercises-forward-lunge, scrubbed frame by frame across its whole timeline."
+      },
+      {
+        "header": "topic/gait-balance",
+        "files": [
+          "head-topic-gait-balance.webm",
+          "head-topic-gait-balance.mp4",
+          "head-topic-gait-balance.webp"
+        ],
+        "activity": "gait-normal",
+        "bytes": {
+          "head-topic-gait-balance.webm": 22814,
+          "head-topic-gait-balance.mp4": 33427,
+          "head-topic-gait-balance.webp": 1742
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=gait-normal, scrubbed frame by frame across its whole timeline."
+      },
+      {
+        "header": "topic/joint-mechanics",
+        "files": [
+          "head-topic-joint-mechanics.webm",
+          "head-topic-joint-mechanics.mp4",
+          "head-topic-joint-mechanics.webp"
+        ],
+        "activity": "joint-foot-subtalar-inversion",
+        "bytes": {
+          "head-topic-joint-mechanics.webm": 16402,
+          "head-topic-joint-mechanics.mp4": 26492,
+          "head-topic-joint-mechanics.webp": 5552
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=joint-foot-subtalar-inversion, scrubbed frame by frame across its whole timeline, lab controls hidden and the flat background keyed onto the card gradient."
+      },
+      {
+        "header": "topic/manual-therapy",
+        "files": [
+          "head-topic-manual-therapy.webm",
+          "head-topic-manual-therapy.mp4",
+          "head-topic-manual-therapy.webp"
+        ],
+        "activity": "joint-shoulder-gh-posterior-glide",
+        "bytes": {
+          "head-topic-manual-therapy.webm": 8062,
+          "head-topic-manual-therapy.mp4": 11805,
+          "head-topic-manual-therapy.webp": 4678
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=joint-shoulder-gh-posterior-glide, scrubbed frame by frame across its whole timeline, lab controls hidden and the flat background keyed onto the card gradient."
+      },
+      {
+        "header": "topic/movement-screens",
+        "files": [
+          "head-topic-movement-screens.webm",
+          "head-topic-movement-screens.mp4",
+          "head-topic-movement-screens.webp"
+        ],
+        "activity": "screen-fms-deep-squat-deep-squat",
+        "bytes": {
+          "head-topic-movement-screens.webm": 14525,
+          "head-topic-movement-screens.mp4": 23641,
+          "head-topic-movement-screens.webp": 1788
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=screen-fms-deep-squat-deep-squat, scrubbed frame by frame across 0.2–0.85 of its timeline, played forward then back."
+      },
+      {
+        "header": "topic/muscle-function",
+        "files": [
+          "head-topic-muscle-function.webm",
+          "head-topic-muscle-function.mp4",
+          "head-topic-muscle-function.webp"
+        ],
+        "activity": "muscle-hip-gluteus-medius",
+        "bytes": {
+          "head-topic-muscle-function.webm": 8596,
+          "head-topic-muscle-function.mp4": 13945,
+          "head-topic-muscle-function.webp": 4290
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=muscle-hip-gluteus-medius, scrubbed frame by frame across its whole timeline, lab controls hidden and the flat background keyed onto the card gradient."
+      },
+      {
+        "header": "topic/palpation",
+        "files": [
+          "head-topic-palpation.webm",
+          "head-topic-palpation.mp4",
+          "head-topic-palpation.webp"
+        ],
+        "activity": "palpation-lateral",
+        "bytes": {
+          "head-topic-palpation.webm": 14828,
+          "head-topic-palpation.mp4": 33703,
+          "head-topic-palpation.webp": 3032
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=palpation-lateral, scrubbed frame by frame across 0.1–0.45 of its timeline, played forward then back."
+      },
+      {
+        "header": "topic/range-of-motion",
+        "files": [
+          "head-topic-range-of-motion.webm",
+          "head-topic-range-of-motion.mp4",
+          "head-topic-range-of-motion.webp"
+        ],
+        "activity": "range-shoulder-flexion",
+        "bytes": {
+          "head-topic-range-of-motion.webm": 11415,
+          "head-topic-range-of-motion.mp4": 17537,
+          "head-topic-range-of-motion.webp": 1140
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=range-shoulder-flexion, scrubbed frame by frame across its whole timeline."
+      },
+      {
+        "header": "topic/reflexes-sensation",
+        "files": [
+          "head-topic-reflexes-sensation.webm",
+          "head-topic-reflexes-sensation.mp4",
+          "head-topic-reflexes-sensation.webp"
+        ],
+        "activity": "exam-reflex-reflex-patellar",
+        "bytes": {
+          "head-topic-reflexes-sensation.webm": 10637,
+          "head-topic-reflexes-sensation.mp4": 15279,
+          "head-topic-reflexes-sensation.webp": 2938
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=exam-reflex-reflex-patellar, scrubbed frame by frame across its whole timeline."
+      },
+      {
+        "header": "topic/special-tests",
+        "files": [
+          "head-topic-special-tests.webm",
+          "head-topic-special-tests.mp4",
+          "head-topic-special-tests.webp"
+        ],
+        "activity": "exam-special-lachman",
+        "bytes": {
+          "head-topic-special-tests.webm": 13391,
+          "head-topic-special-tests.mp4": 25773,
+          "head-topic-special-tests.webp": 2546
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=exam-special-lachman, scrubbed frame by frame across its whole timeline."
+      },
+      {
+        "header": "topic/strength",
+        "files": [
+          "head-topic-strength.webm",
+          "head-topic-strength.mp4",
+          "head-topic-strength.webp"
+        ],
+        "activity": "exam-strength-mmt-hip-abduction",
+        "bytes": {
+          "head-topic-strength.webm": 11016,
+          "head-topic-strength.mp4": 18679,
+          "head-topic-strength.webp": 2072
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=exam-strength-mmt-hip-abduction, scrubbed frame by frame across its whole timeline."
+      },
+      {
+        "header": "topic/vestibular",
+        "files": [
+          "head-topic-vestibular.webm",
+          "head-topic-vestibular.mp4",
+          "head-topic-vestibular.webp"
+        ],
+        "activity": "eye-bppv-posterior",
+        "bytes": {
+          "head-topic-vestibular.webm": 22992,
+          "head-topic-vestibular.mp4": 29375,
+          "head-topic-vestibular.webp": 7036
+        },
+        "method": "Screen capture of the simLAB teaching player at ?activity=eye-bppv-posterior, scrubbed frame by frame across 0.0–0.12 of its timeline, played forward then back."
+      }
+    ]
+  }
 }
