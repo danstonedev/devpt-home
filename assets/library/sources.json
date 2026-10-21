@@ -6,14 +6,56 @@
     "commit": "c312b29"
   },
   "license": "CC BY-SA 4.0. The models derive from the AnatomyTool Open 3D Anatomical Model (Leiden University Medical Center and collaborators) with Z-Anatomy and BodyParts3D lineage. These renders are adaptations and carry the same license.",
-  "method": "three.js 0.183 GLTFLoader in headless Chromium. Bones only (capsules, ligaments, muscles, cartilage and discs hidden), one bone colour, room-environment lighting with a green rim light, ACES tone mapping, a 360\u00b0 turn about the vertical axis. Frames are composited onto the card gradient; video is VP9 WebM with an H.264 MP4 fallback at 30 fps. The whole-body skeleton is mirrored about the midline because the source model is one side. No image editing or generation beyond framing and compositing.",
+  "method": "three.js 0.183 GLTFLoader in headless Chromium. Bones only (capsules, ligaments, muscles, cartilage and discs hidden), one bone colour, room-environment lighting with a green rim light, ACES tone mapping, a 360° turn about the vertical axis. Frames are composited onto the card gradient; video is VP9 WebM with an H.264 MP4 fallback at 30 fps. The whole-body skeleton is mirrored about the midline because the source model is one side. No image editing or generation beyond framing and compositing.",
   "hero": {
-    "files": [
-      "hero-skeleton.webp",
-      "hero-skeleton-380.webp"
+    "note": "Home hero tiles. Each is a 4:3 loop at 480x360, 24 fps, VP9 WebM with an H.264 MP4 fallback and a first-frame WebP poster. No image editing or generation beyond framing, compositing and the burned-in labels.",
+    "tiles": [
+      {
+        "files": [
+          "hero-anatomy.webm",
+          "hero-anatomy.mp4",
+          "hero-anatomy.webp"
+        ],
+        "models": [
+          "apps/mission-shell/src/lib/lab/joints/assets/knee.glb",
+          "apps/mission-shell/src/lib/lab/joints/assets/anatomy-systems/knee.glb"
+        ],
+        "method": "three.js 0.183 render of the knee bones turning once, with the native artery and vein, nerve, and muscle and tendon layers swept in from below, deep to superficial, then peeled back in reverse by a world-space clipping plane. Composited on the card gradient."
+      },
+      {
+        "files": [
+          "hero-movement.webm",
+          "hero-movement.mp4",
+          "hero-movement.webp"
+        ],
+        "models": [
+          "apps/mission-shell/src/lib/lab/joints/assets/knee.glb"
+        ],
+        "instrument": "packages/ddx/src/props/layer/instruments.ts Goniometer with the printed scale from apps/mission-shell/src/lib/xr/practiceGoniometer.ts",
+        "method": "Knee flexion 0 to 120 degrees and back, tibia and fibula rotated about the hinge per knee-motion-paths.json, patella at 0.45 of flexion with its recorded glide. The goniometer's fulcrum sits at the lateral epicondyle, the fixed arm along the femur and the moving arm toward the lateral malleolus, zeroed at extension. The readout shows the rendered angle."
+      },
+      {
+        "files": [
+          "hero-vestibular.webm",
+          "hero-vestibular.mp4",
+          "hero-vestibular.webp"
+        ],
+        "models": [
+          "apps/mission-shell/src/lib/lab/vestibular/assets/vestibular-demo.glb"
+        ],
+        "method": "The simLAB vestibular organ turning once. Each canal wall brightens in turn (anterior, horizontal, posterior) through its own colour as emissive; wall opacity raised for legibility at tile size."
+      },
+      {
+        "files": [
+          "hero-imaging.webm",
+          "hero-imaging.mp4",
+          "hero-imaging.webp"
+        ],
+        "source": "simPACS (danstonedev/simpacs at 199a4d0, pose-engine a38450b), lower-limb model, run locally",
+        "method": "Screen captures of the simPACS reconstruction viewport: an AP X-ray projection, then sagittal CT (soft-tissue window) and MRI T1 slices of the same right knee stepped across 48 mm, cropped to the knee and cross-faded. Labels name the modality and plane."
+      }
     ],
-    "model": "apps/mission-shell/src/lib/xr/assets/reference-skeleton.glb",
-    "note": "Still render, mirrored about the midline, transparent background."
+    "license": "Anatomy CC BY-SA 4.0 (AnatomyTool Open 3D Anatomical Model, LUMC et al., via Z-Anatomy and BodyParts3D)."
   },
   "renders": [
     {

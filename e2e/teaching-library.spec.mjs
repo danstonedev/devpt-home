@@ -153,10 +153,12 @@ test('the home hero renders before the catalog and region turntables load only o
   let release;
   const gate = new Promise(resolve => { release = resolve; });
   const videos = [];
-  page.on('request', request => /\/assets\/library\/.*\.(webm|mp4)$/.test(request.url()) && videos.push(request.url()));
+  page.on('request', request => /\/assets\/library\/region-.*\.(webm|mp4)$/.test(request.url()) && videos.push(request.url()));
   await page.route(catalogUrl, async route => { await gate; await route.fulfill({ json: catalog }); });
   await page.goto('/');
   await expect(page.locator('.devpt-hero h1')).toHaveText('Reference library');
+  await expect(page.locator('.hero-tile .tile-label')).toHaveText(['Anatomy', 'Movement', 'Vestibular', 'Imaging']);
+  await expect(page.locator('.hero-tile').first()).toHaveAttribute('href', '#/topic/anatomy');
   await expect(page.locator('.ref-grid.regions .ref-card-shell')).toHaveCount(9);
   release();
   await expect(page.locator('.region-card')).toHaveCount(3);
@@ -167,6 +169,24 @@ test('the home hero renders before the catalog and region turntables load only o
   await page.locator('.region-card').first().hover();
   await expect(page.locator('.region-card').first().locator('video')).toHaveAttribute('src', /\/assets\/library\/region-hip\.(webm|mp4)$/);
   expect(videos).toHaveLength(1);
+});
+
+for (const reducedMotion of ['no-preference', 'reduce']) test(`hero tiles ${reducedMotion === 'reduce' ? 'stay still for reduced motion' : 'play their simLAB clips once the page has loaded'}`, async ({ page }) => {
+  const clips = [];
+  page.on('request', request => /\/assets\/library\/hero-.*\.(webm|mp4)$/.test(request.url()) && clips.push(request.url()));
+  await page.emulateMedia({ reducedMotion });
+  await routeCatalog(page);
+  await page.goto('/', { waitUntil: 'load' });
+  const first = page.locator('.hero-tile').first();
+  await expect(first.locator('img')).toHaveAttribute('src', '/assets/library/hero-anatomy.webp');
+  if (reducedMotion === 'reduce') {
+    await page.waitForTimeout(500);
+    expect(clips).toEqual([]);
+    expect(await first.locator('video').getAttribute('src')).toBeNull();
+  } else {
+    await expect(first.locator('video')).toHaveAttribute('src', /\/assets\/library\/hero-anatomy\.(webm|mp4)$/);
+    expect(clips.length).toBeGreaterThan(0);
+  }
 });
 
 test('report an issue names the resource and builds a report with its page details', async ({ page, context }) => {
