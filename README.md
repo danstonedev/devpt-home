@@ -95,8 +95,8 @@ The Azure upload waits up to 30 minutes for all three required native entries. `
 
 Custom domains and DNS live in Azure. Prefer Azure DNS ALIAS for apex changes and keep the catalogue aligned with the product domain records. Do not advertise an unverified alternate hostname.
 
-## Faculty resource library
+## Reference library
 
-The root site provides Regions, Topics, ready-made resource collections, browser-local saves and account-free sharing. It consumes SimLab’s source-owned published catalog at `https://lab.devpt.app/teaching/catalog.json`; models and players are never copied into this repository. Public entry controls and publication selection live in SimLab. Gait physics remains an experimental local tool.
+The root site is a reference library: every resource simLAB publishes, filed by body region and topic (a region page lists its topics, a topic page its regions), with search across titles, headings and common terms, browser-local saves and account-free sharing. Each resource opens its own selection in simLAB's public player (`https://lab.devpt.app/teaching/?activity=<id>`). The site consumes SimLab’s source-owned published catalog at `https://lab.devpt.app/teaching/catalog.json`, including its ordered regions and topics; models, players and the resource list are never copied into this repository. A curated activity that names a reference item in `aliasOf` is listed once, as that item, and its own links keep opening it; earlier `#/collection/<id>` links open the matching region or topic. Public entry controls and publication live in SimLab ([public teaching resources](https://github.com/danstonedev/simlab/blob/main/docs/public-teaching-resources.md)). Gait physics remains an experimental local tool.
 
 `npm run build:public` exports only public website files to `.cache/public-site`, which is the Azure deployment input. The workflow waits for compatible source-owned walkthroughs and the published teaching entry before upload. `npm run build:local` and `npm run preview:local` retain the complete local source review; see `docs/local-site-preview.md`.
