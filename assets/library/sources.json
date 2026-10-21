@@ -1,0 +1,200 @@
+{
+  "purpose": "Region cards and page headers: still renders and short turntable loops of simLAB's own joint models.",
+  "renderedAt": "2026-10-21",
+  "source": {
+    "repository": "https://github.com/danstonedev/simlab",
+    "commit": "c312b29"
+  },
+  "license": "CC BY-SA 4.0. The models derive from the AnatomyTool Open 3D Anatomical Model (Leiden University Medical Center and collaborators) with Z-Anatomy and BodyParts3D lineage. These renders are adaptations and carry the same license.",
+  "method": "three.js 0.183 GLTFLoader in headless Chromium. Bones only (capsules, ligaments, muscles, cartilage and discs hidden), one bone colour, room-environment lighting with a green rim light, ACES tone mapping, a 360\u00b0 turn about the vertical axis. Frames are composited onto the card gradient; video is VP9 WebM with an H.264 MP4 fallback at 30 fps. The whole-body skeleton is mirrored about the midline because the source model is one side. No image editing or generation beyond framing and compositing.",
+  "hero": {
+    "files": [
+      "hero-skeleton.webp",
+      "hero-skeleton-380.webp"
+    ],
+    "model": "apps/mission-shell/src/lib/xr/assets/reference-skeleton.glb",
+    "note": "Still render, mirrored about the midline, transparent background."
+  },
+  "renders": [
+    {
+      "region": "knee",
+      "files": [
+        "region-knee.webp",
+        "region-knee.webm",
+        "region-knee.mp4"
+      ],
+      "model": "apps/mission-shell/src/lib/lab/joints/assets/knee.glb",
+      "view": "bone=%23eadfc8&exp=0.9&focus=^Patella$&ty=-0.02&zoom=0.36&roll=-35&yaw=30",
+      "frames": 72,
+      "size": [
+        480,
+        360
+      ],
+      "bytes": {
+        "region-knee.webp": 3690,
+        "region-knee.webm": 34541,
+        "region-knee.mp4": 50154
+      }
+    },
+    {
+      "region": "hip",
+      "files": [
+        "region-hip.webp",
+        "region-hip.webm",
+        "region-hip.mp4"
+      ],
+      "model": "apps/mission-shell/src/lib/lab/joints/assets/hip.glb",
+      "view": "bone=%23eadfc8&exp=0.9&focus=FemoralCartilage&zoom=0.7&roll=-15&yaw=25",
+      "frames": 72,
+      "size": [
+        480,
+        360
+      ],
+      "bytes": {
+        "region-hip.webp": 2974,
+        "region-hip.webm": 35683,
+        "region-hip.mp4": 46755
+      }
+    },
+    {
+      "region": "head-neck",
+      "files": [
+        "region-head-neck.webp",
+        "region-head-neck.webm",
+        "region-head-neck.mp4"
+      ],
+      "model": "apps/mission-shell/src/lib/lab/joints/assets/cervical.glb",
+      "view": "bone=%23eadfc8&exp=0.9&hide=capsule|ligament|muscle|fascia|arter|tendon|control|reference|cartilage|disc|annulus|nucleus|occiput&yaw=60&zoom=0.8",
+      "frames": 72,
+      "size": [
+        480,
+        360
+      ],
+      "bytes": {
+        "region-head-neck.webp": 4904,
+        "region-head-neck.webm": 77151,
+        "region-head-neck.mp4": 96049
+      }
+    },
+    {
+      "region": "shoulder",
+      "files": [
+        "region-shoulder.webp",
+        "region-shoulder.webm",
+        "region-shoulder.mp4"
+      ],
+      "model": "apps/mission-shell/src/lib/lab/joints/assets/shoulder.glb",
+      "view": "bone=%23eadfc8&exp=0.9&yaw=25&zoom=0.8",
+      "frames": 72,
+      "size": [
+        480,
+        360
+      ],
+      "bytes": {
+        "region-shoulder.webp": 3506,
+        "region-shoulder.webm": 45547,
+        "region-shoulder.mp4": 58015
+      }
+    },
+    {
+      "region": "elbow-hand",
+      "files": [
+        "region-elbow-hand.webp",
+        "region-elbow-hand.webm",
+        "region-elbow-hand.mp4"
+      ],
+      "model": "apps/mission-shell/src/lib/lab/joints/assets/fingers.glb",
+      "view": "bone=%23eadfc8&exp=0.9&yaw=20&roll=-40&zoom=0.8",
+      "frames": 72,
+      "size": [
+        480,
+        360
+      ],
+      "bytes": {
+        "region-elbow-hand.webp": 5794,
+        "region-elbow-hand.webm": 75791,
+        "region-elbow-hand.mp4": 89434
+      }
+    },
+    {
+      "region": "thorax",
+      "files": [
+        "region-thorax.webp",
+        "region-thorax.webm",
+        "region-thorax.mp4"
+      ],
+      "model": "apps/mission-shell/src/lib/lab/joints/assets/ribs.glb",
+      "view": "bone=%23eadfc8&exp=0.9&yaw=30&zoom=0.8",
+      "frames": 72,
+      "size": [
+        480,
+        360
+      ],
+      "bytes": {
+        "region-thorax.webp": 7996,
+        "region-thorax.webm": 178489,
+        "region-thorax.mp4": 175996
+      }
+    },
+    {
+      "region": "lumbopelvic",
+      "files": [
+        "region-lumbopelvic.webp",
+        "region-lumbopelvic.webm",
+        "region-lumbopelvic.mp4"
+      ],
+      "model": "apps/mission-shell/src/lib/lab/joints/assets/lumbar.glb",
+      "view": "bone=%23eadfc8&exp=0.9&yaw=60&roll=-35&zoom=0.8",
+      "frames": 72,
+      "size": [
+        480,
+        360
+      ],
+      "bytes": {
+        "region-lumbopelvic.webp": 4086,
+        "region-lumbopelvic.webm": 69921,
+        "region-lumbopelvic.mp4": 86001
+      }
+    },
+    {
+      "region": "ankle-foot",
+      "files": [
+        "region-ankle-foot.webp",
+        "region-ankle-foot.webm",
+        "region-ankle-foot.mp4"
+      ],
+      "model": "apps/mission-shell/src/lib/lab/joints/assets/ankle.glb",
+      "view": "bone=%23eadfc8&exp=0.9&focus=^Talus$&ty=-0.05&zoom=0.55&roll=-20&yaw=55",
+      "frames": 72,
+      "size": [
+        480,
+        360
+      ],
+      "bytes": {
+        "region-ankle-foot.webp": 4018,
+        "region-ankle-foot.webm": 48696,
+        "region-ankle-foot.mp4": 61600
+      }
+    },
+    {
+      "region": "whole-body",
+      "files": [
+        "region-whole-body.webp",
+        "region-whole-body.webm",
+        "region-whole-body.mp4"
+      ],
+      "model": "apps/mission-shell/src/lib/xr/assets/reference-skeleton.glb",
+      "view": "bone=%23eadfc8&exp=0.9&yaw=155&mirror=vertebra|sacrum",
+      "frames": 72,
+      "size": [
+        480,
+        360
+      ],
+      "bytes": {
+        "region-whole-body.webp": 5564,
+        "region-whole-body.webm": 102036,
+        "region-whole-body.mp4": 93455
+      }
+    }
+  ]
+}
