@@ -6,6 +6,12 @@ DevPT offers a faculty-facing **Teaching Library** alongside its product pages: 
 
 The library uses the same models, teaching content and players as their owning products. DevPT owns discovery and resource selection; the owning product owns the activity. A local review build can expose candidates for inspection without making them approved public content. The first public release remains constrained by demonstrated readiness, rather than a target number of assets.
 
+## Owner direction, 21 October 2026: a reference library
+
+The homepage is a quick **reference library organized by region and topic**, carrying everything in simLAB's study surfaces as free, open-access resources: anatomy and imaging (simPACS), the Neuro lab, the Movement lab with its eye and vestibular examinations, all fifteen joint modules with manual therapy and muscle studies, Live Vitals, Aquatic therapy and the Gait lab. Every resource opens unlocked, and every item has its own link (a knee posterior glide, the Lachman test, the HINTS central pattern). Immersive XR, the Aquatic faculty case preview and experimental gait physics stay withheld.
+
+simLAB generates the reference from its labs' own definitions and publishes it in the same `/teaching/catalog.json` (schema version 1, with ordered `regions` and `topics`). DevPT renders it: region and topic index pages, a region page listing its topics (and a topic page its regions) with headings where they tell resources apart, a page filter, search across titles, headings and common terms, and the resource page with the source player. Saves and share links continue. The sections below record the earlier bounded release and are kept as history; where they describe ready-made collections or locked presentations, this direction supersedes them.
+
 ## Publication scope for this release
 
 The owner’s live-release request authorizes publishing selected resource experiences, independently of the clinical review records that remain pending. SimLab owns the explicit `publication-policy.json` and derives `/teaching/catalog.json` from the same canonical catalog. Public entry lookup enforces that policy, not just the website cards. The bounded entry locks the selected hip presets, suppresses neighboring unreviewed laboratory controls, and preserves supported viewing, layers, native playback and reference guidance. Public Gait Lab excludes ROM mutation, Practice and physics; it does not claim validated pathological gait or predicted compensation. Live Vitals and Neuro remain outside the public selection.

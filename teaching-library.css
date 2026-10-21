@@ -348,3 +348,24 @@ body.workspace-expanded {
   width: 100%;
   margin-top: auto;
 }
+/* Reference library: regions, topics, search and item lists. */
+.ref-hero{max-width:780px;padding:6px 0 42px}.ref-hero h1{font-size:clamp(36px,4vw,54px)}.ref-hero .lead{max-width:640px}.ref-hero .micro{gap:18px}
+.ref-search{display:flex;gap:10px;margin-top:26px;max-width:680px}.ref-search .search-box input{padding:15px 0;font-size:16px}
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.ref-card{display:flex;flex-direction:column;gap:8px;padding:18px 20px;background:#fff;border:1px solid var(--line);border-radius:10px;transition:border-color .15s,box-shadow .15s}.ref-card:hover{border-color:#84af93;box-shadow:var(--shadow)}
+.ref-card-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.ref-card-title strong{font-size:17px;letter-spacing:-.2px}.ref-card-topics{font-size:12.5px;line-height:1.5;color:var(--muted)}
+.ref-count{display:inline-flex;align-items:center;min-width:24px;justify-content:center;padding:2px 8px;border-radius:999px;background:var(--mint);color:var(--green);font-size:12px;font-weight:700;letter-spacing:0}
+.ref-chips{display:flex;flex-wrap:wrap;gap:8px}.ref-chips a{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;background:#fff;border:1px solid var(--line);border-radius:999px;font-size:14px;font-weight:600}.ref-chips a:hover{border-color:#84af93;color:var(--green)}.ref-chips span{font-size:12px;color:var(--muted);font-weight:500}
+.ref-head{margin-bottom:16px}.ref-filter{max-width:440px;margin-bottom:6px}.ref-filter input{padding:11px 0}
+.ref-jump{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:6px;padding:12px 0;background:var(--paper);border-bottom:1px solid var(--line)}.ref-jump button{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;background:#fff;border:1px solid var(--line);border-radius:999px;font-size:13px;font-weight:600}.ref-jump button:hover{border-color:#84af93;color:var(--green)}.ref-jump span{font-size:11px;color:var(--muted);font-weight:500}
+.ref-page [hidden]{display:none!important}.ref-none{margin:24px 0;color:var(--muted)}
+.ref-section{margin-top:26px;padding-top:20px;border-top:1px solid var(--line);scroll-margin-top:70px}.ref-section:first-of-type{border-top:0}.ref-section h2{display:flex;align-items:center;gap:10px;font-size:22px;margin-bottom:6px}.ref-section h2 a:hover{color:var(--green)}
+.ref-group h3{margin:16px 0 6px;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--green)}
+.ref-list{list-style:none;margin:0;padding:0;columns:3 230px;column-gap:30px}.ref-list li{break-inside:avoid;padding:5px 0}.ref-list a{font-size:14.5px;line-height:1.4}.ref-list a:hover{color:var(--green);text-decoration:underline;text-underline-offset:3px}
+.ref-more{margin-top:8px}.ref-more summary{display:inline-flex;margin:6px 0;color:var(--green);font-size:13px;font-weight:700;cursor:pointer}.ref-more[open] summary{margin-bottom:0}
+.ref-results{list-style:none;margin:0;padding:0;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}.ref-result{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 16px;border-top:1px solid var(--line)}.ref-result:first-child{border-top:0}.ref-result a{display:flex;flex-direction:column;gap:3px;min-width:0}.ref-result strong{font-size:15px}.ref-result a span{font-size:12.5px;color:var(--muted)}.ref-result a:hover strong{color:var(--green)}
+.ref-show-more{margin-top:14px}.ref-related{margin-top:34px}.ref-related h2{font-size:19px;margin-bottom:12px}.ref-related .text-link{margin-top:12px}
+/* The page moves focus to its main region on navigation; that programmatic focus needs no ring. */
+main[tabindex="-1"]:focus{outline:none}
+@media(max-width:800px){.ref-hero{padding-bottom:30px}.ref-list{columns:2 180px}.ref-section h2{font-size:20px}}
+@media(max-width:520px){.ref-search .button{padding-left:14px;padding-right:14px}.ref-grid{grid-template-columns:1fr}.ref-list{columns:1}.ref-jump{flex-wrap:nowrap;overflow-x:auto;margin:0 -20px;padding:10px 20px}.ref-jump button{flex-shrink:0}}
