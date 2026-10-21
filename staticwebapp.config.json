@@ -7,6 +7,9 @@
     { "route": "/", "headers": { "Cache-Control": "no-cache" } },
     { "route": "/*.html", "headers": { "Cache-Control": "no-cache" } },
     { "route": "/*.js", "headers": { "Cache-Control": "no-cache" } },
-    { "route": "/apps.json", "headers": { "Cache-Control": "no-cache" } }
-  ]
+    { "route": "/apps.json", "headers": { "Cache-Control": "no-cache" } },
+    { "route": "/assets/fonts/*", "headers": { "Cache-Control": "public, max-age=31536000, immutable" } },
+    { "route": "/assets/library/*", "headers": { "Cache-Control": "public, max-age=604800, stale-while-revalidate=86400" } }
+  ],
+  "mimeTypes": { ".webm": "video/webm", ".mp4": "video/mp4", ".woff2": "font/woff2" }
 }

@@ -147,3 +147,42 @@ test('resource activation uses only its canonical player and validates the sende
   await nav(page, '#/topics');
   await expect(page.locator('.native-frame')).toHaveCount(0);
 });
+
+test('the home hero renders before the catalog and region turntables load only on hover', async ({ page }, testInfo) => {
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  const videos = [];
+  page.on('request', request => /\/assets\/library\/.*\.(webm|mp4)$/.test(request.url()) && videos.push(request.url()));
+  await page.route(catalogUrl, async route => { await gate; await route.fulfill({ json: catalog }); });
+  await page.goto('/');
+  await expect(page.locator('.devpt-hero h1')).toHaveText('Reference library');
+  await expect(page.locator('.ref-grid.regions .ref-card-shell')).toHaveCount(9);
+  release();
+  await expect(page.locator('.region-card')).toHaveCount(3);
+  await expect(page.locator('.region-card').first().locator('img')).toHaveAttribute('src', '/assets/library/region-hip.webp');
+  await expect(page.locator('.topic-card .ref-card-glyph')).toHaveCount(3);
+  expect(videos).toEqual([]);
+  if (testInfo.project.name === 'phone') return;
+  await page.locator('.region-card').first().hover();
+  await expect(page.locator('.region-card').first().locator('video')).toHaveAttribute('src', /\/assets\/library\/region-hip\.(webm|mp4)$/);
+  expect(videos).toHaveLength(1);
+});
+
+test('report an issue names the resource and builds a report with its page details', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await routeCatalog(page);
+  await page.goto('/#/activity/exam-special-lachman');
+  await expect(page.locator('.beta-tag')).toHaveText('Beta');
+  await page.locator('[data-report="exam-special-lachman"]').click();
+  const dialog = page.locator('[data-report-form]');
+  await expect(dialog.locator('.report-about strong')).toHaveText('Lachman test — Knee › Special tests');
+  await dialog.getByRole('radio', { name: 'Animation or 3D model looks wrong' }).check();
+  await dialog.locator('textarea[name="details"]').fill('The tibia translates backward.');
+  await dialog.locator('[data-copy-report]').click();
+  const report = await page.evaluate(() => navigator.clipboard.readText());
+  expect(report).toContain('[Reference library]');
+  expect(report).toContain('Lachman test');
+  expect(report).toContain('The tibia translates backward.');
+  expect(report).toContain('Animation or 3D model looks wrong');
+  expect(report).toContain('#/activity/exam-special-lachman');
+});

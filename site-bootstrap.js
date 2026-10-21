@@ -22,7 +22,9 @@
   }
   function loadPublishedCatalog() {
     return fetch('https://lab.devpt.app/teaching/catalog.json', {
-      mode: 'cors', credentials: 'omit', cache: 'no-cache',
+      // Matches the <link rel="preload"> in index.html so the early request is reused.
+      // The catalog is served with Cache-Control: no-cache, so it is still revalidated.
+      mode: 'cors', credentials: 'same-origin',
       signal: AbortSignal.timeout(10000),
     }).then(response => {
       if (!response.ok) throw new Error('Teaching catalog unavailable');
