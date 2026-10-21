@@ -189,6 +189,27 @@ for (const reducedMotion of ['no-preference', 'reduce']) test(`hero tiles ${redu
   }
 });
 
+for (const reducedMotion of ['no-preference', 'reduce']) test(`region and topic headers ${reducedMotion === 'reduce' ? 'keep their posters still for reduced motion' : 'play their own clip and open the resource it shows'}`, async ({ page }) => {
+  const clips = [];
+  page.on('request', request => /\/assets\/library\/head-.*\.(webm|mp4)$/.test(request.url()) && clips.push(request.url()));
+  await page.emulateMedia({ reducedMotion });
+  await routeCatalog(page);
+  await page.goto('/#/topic/special-tests', { waitUntil: 'load' });
+  const tile = page.locator('.page-band .section-tile');
+  await expect(tile.locator('img')).toHaveAttribute('src', '/assets/library/head-topic-special-tests.webp');
+  await expect(tile).toHaveAttribute('href', '#/activity/exam-special-lachman');
+  await expect(tile.locator('.tile-label')).toHaveText('Lachman');
+  if (reducedMotion === 'reduce') {
+    await page.waitForTimeout(500);
+    expect(clips).toEqual([]);
+  } else {
+    await expect(tile.locator('video')).toHaveAttribute('src', /\/assets\/library\/head-topic-special-tests\.(webm|mp4)$/);
+    // A header whose resource is not in the catalog still plays, without a link.
+    await page.goto('/#/region/knee');
+    await expect(page.locator('.page-band span.section-tile video')).toHaveAttribute('src', /\/assets\/library\/head-region-knee\.(webm|mp4)$/);
+  }
+});
+
 test('report an issue names the resource and builds a report with its page details', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await routeCatalog(page);
