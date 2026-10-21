@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Validates apps.json (the DevPT hub catalog) and checks each listed app is
- * wired into index.html and reachable. Run by .github/workflows/check-apps.yml.
+ * wired into the actual homepage renderer and reachable. Run by
+ * .github/workflows/check-apps.yml.
  *
  *   node scripts/check-apps.mjs            # schema + page checks, then ping (warn-only)
  *   node scripts/check-apps.mjs --no-ping  # skip the network reachability check
@@ -14,6 +15,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { renderProducts } from "./render-homepage.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const strict = process.argv.includes("--strict");
@@ -56,6 +58,18 @@ if (!Array.isArray(data.apps)) {
 }
 
 const html = readFileSync(join(root, "index.html"), "utf8");
+// The homepage is rendered by the same source used by the local site. Exercise
+// its product route instead of treating an empty application shell as the UI.
+// No teaching catalog, source application, browser, or network is needed here.
+let productsHtml = '';
+if (!html.includes('src="/site-bootstrap.js"') || !readFileSync(join(root, 'site-bootstrap.js'), 'utf8').includes("script('/teaching-library.js')")) errors.push('index.html must load the actual teaching-library.js renderer through its bootstrap');
+if (!html.includes('id="app"')) errors.push('The homepage application mount is missing');
+try { productsHtml = renderProducts(root); }
+catch (error) { errors.push(`The homepage product route could not render: ${error.message}`); }
+const productCards = new Map(
+  [...productsHtml.matchAll(/<article\b([^>]*data-product="([^"]+)"[^>]*)>([\s\S]*?)<\/article>/g)]
+    .map((match) => [match[2], { attributes: match[1], content: match[3] }]),
+);
 const ids = new Set();
 
 for (const a of data.apps) {
@@ -89,16 +103,22 @@ for (const a of data.apps) {
           `${id}: placement "${p}" not in {${[...PLACEMENTS].join(", ")}}`,
         );
 
-  // Page consistency: a "plate" app must have its <article id="app-<id>"> and link its url.
+  // Plate apps retain their stable anchor on a rendered product card. Its
+  // actual product page must provide the canonical application destination.
   if (Array.isArray(a.placement) && a.placement.includes("plate")) {
-    if (!html.includes(`id="app-${a.id}"`))
+    const product = Array.isArray(data.productLines)
+      ? data.productLines.find((line) => line.appIds?.includes(a.id))
+      : null;
+    const card = product && productCards.get(product.id);
+    if (!card?.attributes.includes(`id="app-${a.id}"`))
       errors.push(
-        `${id}: placement includes "plate" but index.html has no id="app-${a.id}"`,
+        `${id}: placement includes "plate" but the rendered product card has no id="app-${a.id}"`,
       );
-    if (typeof a.url === "string" && !html.includes(a.url))
-      warnings.push(
-        `${id}: plate exists but index.html does not link ${a.url}`,
-      );
+    if (product && typeof product.walkthrough === "string" && typeof a.url === "string") {
+      const page = join(root, product.walkthrough.slice(1), "index.html");
+      if (!existsSync(page) || !readFileSync(page, "utf8").includes(`href="${a.url}"`))
+        errors.push(`${id}: its product page must link the canonical app ${a.url}`);
+    }
   }
 }
 
@@ -134,14 +154,14 @@ if (
     const productPage = join(root, product.walkthrough.slice(1), "index.html");
     if (!existsSync(productPage))
       errors.push(`${product.id}: walkthrough page is missing`);
-    if (
-      !html.includes(`data-product="${product.id}"`) ||
-      !html.includes(`href="${product.walkthrough}"`)
-    ) {
+    const card = productCards.get(product.id);
+    if (!card || !card.content.includes(`href="${product.walkthrough}"`)) {
       errors.push(
-        `${product.id}: the homepage must visibly link its product walkthrough`,
+        `${product.id}: the rendered homepage product card must visibly link its product walkthrough`,
       );
     }
+    if (!html.includes(`href="${product.walkthrough}"`))
+      errors.push(`${product.id}: the homepage must retain a product link when JavaScript is unavailable`);
     try {
       const source = new URL(product.showcase.url);
       const app = data.apps.find((app) => app.id === product.appIds[0]);

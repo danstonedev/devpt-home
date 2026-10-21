@@ -3,13 +3,32 @@
 (function () {
   "use strict";
   var endpoint = new URL("https://lab.devpt.app/showcase/");
-  if (["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)) {
+  var loopback = ["localhost", "127.0.0.1", "[::1]"];
+  var configured = null;
+  if (typeof NATIVE_SOURCE_BASE === "string" && NATIVE_SOURCE_BASE.trim()) {
+    try {
+      var base = new URL(NATIVE_SOURCE_BASE, location.href);
+      if (
+        ["http:", "https:"].includes(base.protocol) &&
+        !base.username && !base.password && !base.search && !base.hash &&
+        (base.origin === location.origin ||
+          base.origin === endpoint.origin ||
+          (loopback.includes(location.hostname) &&
+            loopback.includes(base.hostname) && base.port === "5180"))
+      )
+        configured = new URL(base.pathname.replace(/\/$/, "") + "/showcase/", base.origin);
+    } catch (_) {
+      /* An absent or invalid local configuration keeps the published source. */
+    }
+  }
+  if (configured) endpoint = configured;
+  else if (loopback.includes(location.hostname)) {
     try {
       var local = new URL(new URLSearchParams(location.search).get("simlab"));
       if (
         local.protocol === "http:" &&
-        ["localhost", "127.0.0.1", "[::1]"].includes(local.hostname) &&
-        local.port === "5180"
+        loopback.includes(local.hostname) &&
+        local.port === "5180" && !local.username && !local.password
       )
         endpoint = new URL("/showcase/", local.origin);
     } catch (_) {

@@ -266,6 +266,28 @@
     )
       throw new Error("Untrusted walkthrough endpoint");
 
+    var configuredBase = product === "emrs" && typeof EMR_SOURCE_BASE === "string"
+      ? EMR_SOURCE_BASE : null;
+    if (configuredBase && configuredBase.trim()) {
+      try {
+        var base = new URL(configuredBase, location.href);
+        if (
+          ["http:", "https:"].includes(base.protocol) &&
+          !base.username && !base.password && !base.search && !base.hash &&
+          (base.origin === location.origin ||
+            base.origin === trustedOrigins[product] ||
+            (loopback.includes(location.hostname) &&
+              loopback.includes(base.hostname) && base.port === "5181"))
+        )
+          // The local EMR bundle is rooted at this base. Its default entry
+          // retains the chapter contract used by this dedicated product page;
+          // the homepage launches presentation=workspace separately.
+          return new URL(base.pathname.replace(/\/$/, "") + "/", base.origin);
+      } catch (_) {
+        /* Invalid local configuration keeps the catalog's published source. */
+      }
+    }
+
     if (loopback.includes(location.hostname) && location.port === "8109") {
       try {
         var local = new URL(new URLSearchParams(location.search).get(product));
