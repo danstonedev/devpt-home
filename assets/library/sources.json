@@ -28,11 +28,8 @@
           "hero-movement.mp4",
           "hero-movement.webp"
         ],
-        "models": [
-          "apps/mission-shell/src/lib/lab/joints/assets/knee.glb"
-        ],
-        "instrument": "packages/ddx/src/props/layer/instruments.ts Goniometer with the printed scale from apps/mission-shell/src/lib/xr/practiceGoniometer.ts",
-        "method": "Knee flexion 0 to 120 degrees and back, tibia and fibula rotated about the hinge per knee-motion-paths.json, patella at 0.45 of flexion with its recorded glide. The goniometer's fulcrum sits at the lateral epicondyle, the fixed arm along the femur and the moving arm toward the lateral malleolus, zeroed at extension. The readout shows the rendered angle."
+        "source": "simLAB movement lab, PROM · Hip flexion (exam-prom-hip-flexion), right side, male model, run locally from danstonedev/simlab with its pinned submodules",
+        "method": "Frame-by-frame captures of the lab's own stage (supine patient, examiner hands, goniometer) stepped along its movement timeline at 24 fps, cropped to 4:3. The renderer-name check was overridden only so the headless software renderer drew at full resolution."
       },
       {
         "files": [
@@ -40,10 +37,8 @@
           "hero-vestibular.mp4",
           "hero-vestibular.webp"
         ],
-        "models": [
-          "apps/mission-shell/src/lib/lab/vestibular/assets/vestibular-demo.glb"
-        ],
-        "method": "The simLAB vestibular organ turning once. Each canal wall brightens in turn (anterior, horizontal, posterior) through its own colour as emissive; wall opacity raised for legibility at tile size."
+        "source": "simLAB eye and vestibular lab, Horizontal canal BPPV (geotropic): supine roll (eye-bppv-horizontal-geotropic), right, run locally",
+        "method": "Captures of the lab's stage: the patient rolled right, then its Frenzel close-up (8 to 12 s of the exam, real time at 24 fps) with both ears' canal views from the same moments. Recomposed into 4:3 with labels."
       },
       {
         "files": [
@@ -52,7 +47,7 @@
           "hero-imaging.webp"
         ],
         "source": "simPACS (danstonedev/simpacs at 199a4d0, pose-engine a38450b), lower-limb model, run locally",
-        "method": "Screen captures of the simPACS reconstruction viewport: an AP X-ray projection, then sagittal CT (soft-tissue window) and MRI T1 slices of the same right knee stepped across 48 mm, cropped to the knee and cross-faded. Labels name the modality and plane."
+        "method": "Screen captures of the simPACS reconstruction viewport on the full-body model: an AP X-ray projection cropped to the left shoulder, then coronal CT (soft-tissue window) and MRI T1 slices through the left shoulder stepped across 60 mm, cropped and cross-faded. Labels name the modality and plane."
       }
     ],
     "license": "Anatomy CC BY-SA 4.0 (AnatomyTool Open 3D Anatomical Model, LUMC et al., via Z-Anatomy and BodyParts3D)."
