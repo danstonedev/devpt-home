@@ -37,8 +37,8 @@
           "hero-vestibular.mp4",
           "hero-vestibular.webp"
         ],
-        "source": "simLAB eye and vestibular lab, Horizontal canal BPPV (geotropic): supine roll (eye-bppv-horizontal-geotropic), right, run locally",
-        "method": "Captures of the lab's stage: the patient rolled right, then its Frenzel close-up (8 to 12 s of the exam, real time at 24 fps) with both ears' canal views from the same moments. Recomposed into 4:3 with labels."
+        "source": "simLAB eye and vestibular lab, Horizontal canal BPPV (geotropic): supine roll (eye-bppv-horizontal-geotropic), left, run locally",
+        "method": "Captures of the lab's stage, close on the patient as the head turns from midline to the left (39.7 to 42.5 s of the exam), then its Frenzel close-up (43 to 47 s) with both ears' canal views from the same moments, all real time at 24 fps. Recomposed into 4:3 with labels."
       },
       {
         "files": [
