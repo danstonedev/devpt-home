@@ -78,11 +78,11 @@ test('regions and topics file every resource, and search finds an item by name o
   await page.getByRole('button', { name: 'Search', exact: true }).click();
   await expect(page).toHaveURL(/#\/library\?q=lachman$/);
   await expect(page.locator('.ref-result')).toHaveCount(1);
-  await expect(page.locator('.ref-result a span')).toHaveText('Knee › Special tests');
+  await expect(page.locator('.ref-result .result-copy > span')).toHaveText('Knee › Special tests');
   await page.locator('.ref-result a').click();
   await expect(page.getByRole('heading', { name: 'Lachman test', level: 1 })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toHaveText(/Knee\s*Special tests/);
-  await expect(page.locator('.ref-related li a')).toHaveText(['McMurray test', 'Positive McMurray (medial)']);
+  await expect(page.locator('.switcher-list a')).toHaveText(['Lachman test', 'McMurray test', 'Positive McMurray (medial)']);
 });
 
 test('earlier activity and collection links open their place in the reference', async ({ page }) => {
@@ -90,8 +90,9 @@ test('earlier activity and collection links open their place in the reference', 
   await page.goto('/#/activity/hip-anatomy');
   await expect(page.getByRole('heading', { name: 'Hip anatomy at rest', level: 1 })).toBeVisible();
   await expect(page.locator('[data-player-asset]')).toHaveAttribute('data-player-asset', 'anatomy-hip');
+  // The fixture's hip region holds one resource, so its page opens that resource directly.
   await page.goto('/#/collection/all-hip');
-  await expect(page).toHaveURL(/#\/region\/hip$/);
+  await expect(page).toHaveURL(/#\/activity\/anatomy-hip$/);
   await page.goto('/#/collection/eyes-vestibular');
   await expect(page.getByRole('heading', { name: 'Topic unavailable' })).toBeVisible();
 });
@@ -102,7 +103,8 @@ test('an earlier catalog without regions, topics or ids still renders by its lab
   await page.goto('/#/regions');
   await expect(page.locator('.ref-card strong')).toHaveText(['Hip', 'Whole body']);
   await page.goto('/#/collection/all-hip');
-  await expect(page.locator('.ref-section li a')).toHaveText(['Hip anatomy at rest']);
+  await expect(page).toHaveURL(/#\/activity\/hip-anatomy$/);
+  await expect(page.getByRole('heading', { name: 'Hip anatomy at rest', level: 1 })).toBeVisible();
 });
 
 test('selected resource IDs open in a clean browser without an account', async ({ page, browser }) => {
@@ -130,10 +132,9 @@ test('resource activation uses only its canonical player and validates the sende
   await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({
     contentType: 'text/html', body: '<!doctype html><title>Protocol-only source fixture</title><p>Protocol-only source fixture</p>',
   }));
+  // Opening a resource page loads its player straight away, with no second click.
   await page.goto('/#/activity/exam-special-lachman');
-  await expect(page.getByRole('button', { name: 'Open resource', exact: true })).toBeVisible();
-  await expect(page.locator('.native-frame')).toHaveCount(0);
-  await page.getByRole('button', { name: 'Open resource', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Open resource', exact: true })).toHaveCount(0);
   await expect(page.locator('.native-frame')).toHaveAttribute('src', 'https://lab.devpt.app/teaching/?activity=exam-special-lachman&embedded=1');
   await page.evaluate(() => dispatchEvent(new MessageEvent('message', {
     origin: 'https://lab.devpt.app', source: window,
@@ -152,10 +153,12 @@ test('the home hero renders before the catalog and region turntables load only o
   let release;
   const gate = new Promise(resolve => { release = resolve; });
   const videos = [];
-  page.on('request', request => /\/assets\/library\/.*\.(webm|mp4)$/.test(request.url()) && videos.push(request.url()));
+  page.on('request', request => /\/assets\/library\/region-.*\.(webm|mp4)$/.test(request.url()) && videos.push(request.url()));
   await page.route(catalogUrl, async route => { await gate; await route.fulfill({ json: catalog }); });
   await page.goto('/');
   await expect(page.locator('.devpt-hero h1')).toHaveText('Reference library');
+  await expect(page.locator('.hero-tile .tile-label')).toHaveText(['Anatomy', 'Movement', 'Vestibular', 'Imaging']);
+  await expect(page.locator('.hero-tile').first()).toHaveAttribute('href', '#/topic/anatomy');
   await expect(page.locator('.ref-grid.regions .ref-card-shell')).toHaveCount(9);
   release();
   await expect(page.locator('.region-card')).toHaveCount(3);
@@ -166,6 +169,45 @@ test('the home hero renders before the catalog and region turntables load only o
   await page.locator('.region-card').first().hover();
   await expect(page.locator('.region-card').first().locator('video')).toHaveAttribute('src', /\/assets\/library\/region-hip\.(webm|mp4)$/);
   expect(videos).toHaveLength(1);
+});
+
+for (const reducedMotion of ['no-preference', 'reduce']) test(`hero tiles ${reducedMotion === 'reduce' ? 'stay still for reduced motion' : 'play their simLAB clips once the page has loaded'}`, async ({ page }) => {
+  const clips = [];
+  page.on('request', request => /\/assets\/library\/hero-.*\.(webm|mp4)$/.test(request.url()) && clips.push(request.url()));
+  await page.emulateMedia({ reducedMotion });
+  await routeCatalog(page);
+  await page.goto('/', { waitUntil: 'load' });
+  const first = page.locator('.hero-tile').first();
+  await expect(first.locator('img')).toHaveAttribute('src', '/assets/library/hero-anatomy.webp');
+  if (reducedMotion === 'reduce') {
+    await page.waitForTimeout(500);
+    expect(clips).toEqual([]);
+    expect(await first.locator('video').getAttribute('src')).toBeNull();
+  } else {
+    await expect(first.locator('video')).toHaveAttribute('src', /\/assets\/library\/hero-anatomy\.(webm|mp4)$/);
+    expect(clips.length).toBeGreaterThan(0);
+  }
+});
+
+for (const reducedMotion of ['no-preference', 'reduce']) test(`region and topic headers ${reducedMotion === 'reduce' ? 'keep their posters still for reduced motion' : 'play their own clip and open the resource it shows'}`, async ({ page }) => {
+  const clips = [];
+  page.on('request', request => /\/assets\/library\/head-.*\.(webm|mp4)$/.test(request.url()) && clips.push(request.url()));
+  await page.emulateMedia({ reducedMotion });
+  await routeCatalog(page);
+  await page.goto('/#/topic/special-tests', { waitUntil: 'load' });
+  const tile = page.locator('.page-band .section-tile');
+  await expect(tile.locator('img')).toHaveAttribute('src', '/assets/library/head-topic-special-tests.webp');
+  await expect(tile).toHaveAttribute('href', '#/activity/exam-special-lachman');
+  await expect(tile.locator('.tile-label')).toHaveText('Lachman');
+  if (reducedMotion === 'reduce') {
+    await page.waitForTimeout(500);
+    expect(clips).toEqual([]);
+  } else {
+    await expect(tile.locator('video')).toHaveAttribute('src', /\/assets\/library\/head-topic-special-tests\.(webm|mp4)$/);
+    // A header whose resource is not in the catalog still plays, without a link.
+    await page.goto('/#/region/knee');
+    await expect(page.locator('.page-band span.section-tile video')).toHaveAttribute('src', /\/assets\/library\/head-region-knee\.(webm|mp4)$/);
+  }
 });
 
 test('report an issue names the resource and builds a report with its page details', async ({ page, context }) => {
@@ -185,4 +227,44 @@ test('report an issue names the resource and builds a report with its page detai
   expect(report).toContain('The tibia translates backward.');
   expect(report).toContain('Animation or 3D model looks wrong');
   expect(report).toContain('#/activity/exam-special-lachman');
+});
+
+const playerFixture = answersSelect => `<!doctype html><title>Protocol-only player</title><script>
+const parentOrigin = new URL(document.referrer).origin;
+window.loads = (window.loads || 0) + 1;
+const tell = activity => parent.postMessage({ type: 'devpt-teaching-ready', activity }, parentOrigin);
+addEventListener('message', event => { if (${answersSelect} && event.data?.type === 'devpt-teaching-select') { window.switched = event.data.activity; tell(event.data.activity); } });
+tell(new URLSearchParams(location.search).get('activity'));
+</script>`;
+
+test('resources in the same region and topic switch inside the loaded player', async ({ page }) => {
+  await routeCatalog(page);
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: playerFixture(true) }));
+  await page.goto('/#/activity/exam-special-lachman');
+  await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
+  const switcher = page.locator('.switcher');
+  await expect(switcher.locator('.switcher-list a')).toHaveText(['Lachman test', 'McMurray test', 'Positive McMurray (medial)']);
+  await expect(switcher.locator('[aria-current="page"]')).toHaveText('Lachman test');
+  await page.locator('.native-frame').evaluate(frame => { frame.dataset.probe = 'kept'; });
+  await switcher.getByRole('link', { name: 'McMurray test', exact: true }).click();
+  await expect(page).toHaveURL(/#\/activity\/exam-special-mcmurray$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('McMurray test');
+  await expect(switcher.locator('[aria-current="page"]')).toHaveText('McMurray test');
+  await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('.native-frame')).toHaveAttribute('data-probe', 'kept');
+  const source = page.frames().find(frame => frame.url().startsWith('https://lab.devpt.app/teaching/'));
+  expect(await source.evaluate(() => [window.loads, window.switched])).toEqual([1, 'exam-special-mcmurray']);
+  await switcher.getByRole('link', { name: /^Next:/ }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Positive McMurray (medial)');
+  await expect(page.locator('.native-frame')).toHaveAttribute('data-probe', 'kept');
+});
+
+test('an older player that cannot switch in place loads the next resource normally', async ({ page }) => {
+  await routeCatalog(page);
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: playerFixture(false) }));
+  await page.goto('/#/activity/exam-special-lachman');
+  await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
+  await page.locator('.switcher').getByRole('link', { name: 'McMurray test', exact: true }).click();
+  await expect(page.locator('.native-frame')).toHaveAttribute('src', 'https://lab.devpt.app/teaching/?activity=exam-special-mcmurray&embedded=1', { timeout: 8000 });
+  await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
 });
