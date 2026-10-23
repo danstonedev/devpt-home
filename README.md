@@ -129,12 +129,15 @@ continue to open their canonical real paths. Resource aliases redirect to their
 source-owned canonical IDs. The browser-local saved-resource storage key is
 unchanged. Local review on port 8110 retains hash routing and sends no analytics.
 
-The current public-site measurement ID is `G-VTLNJW0KKX`, centralized in
+The public-site measurement ID supplied by the owner is `G-61473CPT29`, centralized in
 `site-analytics.js`. Only `devpt.app` and `www.devpt.app` load the tag; localhost,
-Azure previews and local review do not. Existing product application tags are not
-modified. This remains a shared GA4 property until a dedicated public-site ID is
-provided; public events use `site_area=devpt_public` and content groups `library`,
-`products` or `information` so app traffic can be excluded from public reports.
+Azure previews and local review do not. The public site sends only to this ID;
+it does not also configure the previous `G-VTLNJW0KKX` ID. Product application tags
+remain managed in their owning repositories. Public events use
+`site_area=devpt_public` and content groups `library`, `products` or `information`.
+A new measurement ID identifies a web stream, not necessarily a separate GA4
+property. Confirm its property in Google; if application streams share that
+property, use the public-site labels or stream filters in reports.
 
 The wrapper owns initial and virtual `page_view` events and deduplicates catalogue
 refreshes and UI re-renders of the same page. Resource visits emit `resource_open`;
@@ -153,14 +156,13 @@ allowlist. Free-text campaign term/content are not copied.
 Account settings require access to the respective Google/Azure account. Before
 releasing the manual page-view integration:
 
-1. In GA4, select the web stream for `G-VTLNJW0KKX` under **Admin → Data streams**.
+1. In GA4, select the web stream for `G-61473CPT29` under **Admin → Data streams**.
    In **Enhanced measurement → Page views → Show advanced settings**, turn off
    **Page changes based on browser history events**. `send_page_view:false`
    disables the config-generated view but does not disable enhanced history
    events. Also turn off **Site search** and **Form interactions** to avoid
-   automatic collection of free text. These settings affect the shared stream;
-   review the app's reporting needs before changing them. A dedicated public-site
-   property can isolate this configuration later.
+   automatic collection of free text. Apply these settings to the new public-site
+   web stream; changing the previous stream is not required for this rollout.
 2. Register event-scoped custom dimensions `site_area`, `page_type`, `resource_id`,
    `region_id`, `topic_id`, `product_id` and `placement` for report use.
    `content_group` is built in. These definitions apply to future reporting.
@@ -177,8 +179,8 @@ releasing the manual page-view integration:
    root `/index.html` redirect are provided in code; the hostname redirect is an
    Azure account setting.
 
-Do not use a property-wide hostname exclusion to remove app traffic while this
-measurement ID is shared. Use report filters; collection exclusions permanently
+If the property also receives application traffic, use report filters to separate
+it from public-site traffic; property-wide collection exclusions permanently
 remove future data. Google account links and settings are described in the
 [page-view documentation](https://developers.google.com/analytics/devguides/collection/ga4/views)
 and [Azure default-domain documentation](https://learn.microsoft.com/en-us/azure/static-web-apps/custom-domain-default).
@@ -194,7 +196,7 @@ Create reports using these filters after the tag and dimensions are validated:
 | Library use | `site_area=devpt_public`, `content_group=library` | Resource opens, successful loads, saves, shares and search result counts |
 | Product interest | `product_link_click` with `site_area=devpt_public` | Product ID, placement, users and event count |
 
-In the shared property, `/` alone also identifies each application's home route.
+If application streams share the property, `/` alone also identifies each application's home route.
 For arrivals, check the hostname of the session's *first page view*, rather than
 combining an event-scoped hostname with a landing-path filter. Browser users and
 sessions are estimates, not verified people; neither screenshot totals nor a

@@ -1,10 +1,10 @@
 /* Public website measurement. Product applications retain their own tracking.
- * Keep the ID here so a future dedicated public-site property is one change.
+ * The public-site stream ID is centralized here; application tags stay separate.
  * Disable enhanced history/form/search measurement in the GA stream: this file
  * owns page views and emits bounded metadata instead of free-text input. */
 (function () {
   'use strict';
-  const measurementId = 'G-VTLNJW0KKX';
+  const measurementId = 'G-61473CPT29';
   const enabled = ['devpt.app', 'www.devpt.app'].includes(location.hostname);
   const legacyEntry = location.hash.startsWith('#/') || ['#contact','#products','#flow','#student','#faculty','#labs','#references','#research-opportunities'].includes(location.hash);
   const productPaths = { '/simlab/': 'simlab', '/emrs/': 'emrs', '/3dpain/': 'painmap' };

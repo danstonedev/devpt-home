@@ -73,7 +73,9 @@ test('public analytics measures homepage, resource use and product interest with
     expect(data.filter(event=>event[1]==='resource_save')).toHaveLength(1);
     expect(data.filter(event=>event[1]==='resource_remove')).toHaveLength(1);
     expect(JSON.stringify(data)).not.toContain('private@example.com');
-    expect(attemptedTags).toHaveLength(1);
+    expect(attemptedTags).toEqual(['https://www.googletagmanager.com/gtag/js?id=G-61473CPT29']);
+    expect(data.every(event=>event[2].send_to==='G-61473CPT29')).toBe(true);
+    expect(JSON.stringify(data)).not.toContain('G-VTLNJW0KKX');
     await page.locator('footer a[href="/emrs/"]').evaluate(link=>link.addEventListener('click',event=>event.preventDefault()));
     await page.locator('footer a[href="/emrs/"]').click();
     await expect.poll(async () => (await events()).filter(event=>event[1]==='product_link_click').length).toBe(1);

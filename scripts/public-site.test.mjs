@@ -79,6 +79,12 @@ test('analytics emits one initial view, separates resource use and deduplicates 
   api.page(home);
   const events=calls().filter(call=>call[0]==='event');
   assert.equal(scripts.length,1);
+  assert.equal(scripts[0].src,'https://www.googletagmanager.com/gtag/js?id=G-61473CPT29');
+  const configurations=calls().filter(call=>call[0]==='config');
+  assert.equal(configurations.length,1);
+  assert.equal(configurations[0][1],'G-61473CPT29');
+  assert.ok(events.every(call=>call[2].send_to==='G-61473CPT29'));
+  assert.doesNotMatch(JSON.stringify(calls()),/G-VTLNJW0KKX/);
   assert.equal(events.filter(call=>call[1]==='page_view').length,3);
   assert.equal(events.filter(call=>call[1]==='resource_open').length,1);
   assert.equal(events.filter(call=>call[1]==='resource_ready').length,1);
