@@ -268,3 +268,40 @@ test('an older player that cannot switch in place loads the next resource normal
   await expect(page.locator('.native-frame')).toHaveAttribute('src', 'https://lab.devpt.app/teaching/?activity=exam-special-mcmurray&embedded=1', { timeout: 8000 });
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
 });
+
+const gameFixture = `<!doctype html><title>Game player</title><button id="play">Play</button><button id="quit">Quit</button><script>
+const parentOrigin = new URL(document.referrer).origin;
+window.heard = [];
+addEventListener('message', event => { if (event.data?.type === 'devpt-teaching-fullscreen') window.heard.push(event.data.on); });
+parent.postMessage({ type: 'devpt-teaching-ready', activity: new URLSearchParams(location.search).get('activity') }, parentOrigin);
+const screen = on => parent.postMessage({ type: 'devpt-teaching-fullscreen', on }, parentOrigin);
+document.querySelector('#play').onclick = () => screen(true);
+document.querySelector('#quit').onclick = () => screen(false);
+</script>`;
+
+test('a game played in the player takes the whole screen, and Back gives the page back', async ({ page }) => {
+  await routeCatalog(page);
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: gameFixture }));
+  await page.goto('/#/activity/exam-special-lachman');
+  const player = page.locator('.native-player');
+  await expect(player).toHaveAttribute('data-ready', 'true');
+  const game = page.frameLocator('.native-frame');
+
+  // The game asks for the screen when play starts: the player covers the window.
+  await game.locator('#play').click();
+  await expect(player).toHaveClass(/\bfullscreen\b/);
+  const view = page.viewportSize();
+  await expect.poll(async () => { const box = await player.boundingBox(); return [Math.round(box.width), Math.round(box.height)]; }).toEqual([view.width, view.height]);
+  // Quit gives the page back.
+  await game.locator('#quit').click();
+  await expect(player).not.toHaveClass(/\bfullscreen\b/);
+
+  // Back leaves full screen, not the page, and the game hears that it is back in the page.
+  await game.locator('#play').click();
+  await expect(player).toHaveClass(/\bfullscreen\b/);
+  await page.goBack();
+  await expect(player).not.toHaveClass(/\bfullscreen\b/);
+  await expect(page).toHaveURL(/#\/activity\/exam-special-lachman$/);
+  const source = page.frames().find(frame => frame.url().startsWith('https://lab.devpt.app/teaching/'));
+  await expect.poll(() => source.evaluate(() => window.heard)).toEqual([false]);
+});
