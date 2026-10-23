@@ -8,6 +8,7 @@ const REGION_MODELS = ['head-neck','shoulder','elbow-hand','thorax','lumbopelvic
 const regionModel = id => REGION_MODELS.includes(id)?{poster:`/assets/library/region-${id}.webp`,video:`/assets/library/region-${id}`}:null;
 const TOPIC_GLYPHS = {
  anatomy:'M12 2.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM6.5 9.5h11L16 15h-1.8l-.7 6.5h-3L9.8 15H8z',
+ games:'M4 8h4a2 2 0 1 1 4 0h4v4a2 2 0 1 1 0 4v4H4v-4a2 2 0 1 0 0-4Z',
  imaging:'M3 4h18v16H3zM8.6 8.6l6.8 6.8M9.2 6.9a1.6 1.6 0 1 0-2.3 2.3M14.8 17.1a1.6 1.6 0 1 0 2.3-2.3',
  'joint-mechanics':'M4 20l6.6-6.6M13.2 12.4 19 4M11.9 10.6a2 2 0 1 1 0 4 2 2 0 0 1 0-4ZM17 16.5a6 6 0 0 0 .2-6.4',
  'manual-therapy':'M7.5 12V5.5a1.5 1.5 0 0 1 3 0V11M10.5 10V4a1.5 1.5 0 0 1 3 0v6.5M13.5 10.5V5.5a1.5 1.5 0 0 1 3 0V12M16.5 11a1.5 1.5 0 0 1 3 0v3a7.5 7.5 0 0 1-7.5 7.5h-.8a6 6 0 0 1-5.1-2.9L3.6 15a1.5 1.5 0 0 1 2.6-1.5l1.3 2',
