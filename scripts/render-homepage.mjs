@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import routes from '../library-routes.js';
 import { runInNewContext } from 'node:vm';
 
 // Exercise the actual product route without a simulator, browser or network.
@@ -12,8 +13,8 @@ export function renderProducts(root) {
       querySelector: selector => selector === '#app' ? mount : selector === '#modal' ? modal : null,
       querySelectorAll: () => [], addEventListener() {}, dispatchEvent() {},
     },
-    window: { addEventListener() {} },
-    location: { hash: '#/products', href: 'http://127.0.0.1:8109/#/products', protocol: 'http:' },
+    window: { DEVPT_ROUTES: routes, DEVPT_STATIC_RENDER: true, addEventListener() {} },
+    location: { hash: '', pathname: '/products/', search: '', href: 'http://127.0.0.1:8109/products/', protocol: 'http:' },
     localStorage: { getItem: () => null }, URL, URLSearchParams, Event, clearTimeout, setTimeout,
   }, { filename: 'teaching-library.js', timeout: 1000 });
   return mount.innerHTML;

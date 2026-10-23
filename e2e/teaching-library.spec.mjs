@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import routes from '../library-routes.js';
 
 const catalogUrl = 'https://lab.devpt.app/teaching/catalog.json';
 // Protocol-only fixtures exercise discovery/sharing. Actual model/player
@@ -20,7 +21,7 @@ const activities = [
 ];
 const catalog = { schemaVersion: 1, status: 'public-resources', source: 'simlab', regions, topics, activities };
 async function nav(page, href) {
-  const link=page.locator('.topbar a[href="'+href+'"]');
+  const link=page.locator('.topbar a[href="'+routes.href(href)+'"]');
   if (!(await link.isVisible())) await page.getByRole('button', { name: 'Toggle navigation' }).click();
   await link.click();
 }
@@ -60,7 +61,7 @@ test('regions and topics file every resource, and search finds an item by name o
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Reference library', exact: true })).toBeVisible();
   await page.getByRole('link', { name: 'Knee, 3 resources' }).click();
-  await expect(page).toHaveURL(/#\/region\/knee$/);
+  await expect(page).toHaveURL(/\/regions\/knee\/$/);
   const tests = page.locator('#part-special-tests');
   await expect(tests.getByRole('heading', { name: /Special tests/ })).toBeVisible();
   await expect(tests.locator('.ref-group h3')).toHaveText(['Example findings']);
@@ -76,7 +77,7 @@ test('regions and topics file every resource, and search finds an item by name o
   await page.goto('/');
   await page.getByRole('searchbox', { name: /Search, for example/ }).fill('lachman');
   await page.getByRole('button', { name: 'Search', exact: true }).click();
-  await expect(page).toHaveURL(/#\/library\?q=lachman$/);
+  await expect(page).toHaveURL(/\/search\/\?q=lachman$/);
   await expect(page.locator('.ref-result')).toHaveCount(1);
   await expect(page.locator('.ref-result .result-copy > span')).toHaveText('Knee › Special tests');
   await page.locator('.ref-result a').click();
@@ -90,9 +91,9 @@ test('earlier activity and collection links open their place in the reference', 
   await page.goto('/#/activity/hip-anatomy');
   await expect(page.getByRole('heading', { name: 'Hip anatomy at rest', level: 1 })).toBeVisible();
   await expect(page.locator('[data-player-asset]')).toHaveAttribute('data-player-asset', 'anatomy-hip');
-  // The fixture's hip region holds one resource, so its page opens that resource directly.
+  // Earlier collection links open the equivalent crawlable region page.
   await page.goto('/#/collection/all-hip');
-  await expect(page).toHaveURL(/#\/activity\/anatomy-hip$/);
+  await expect(page).toHaveURL(/\/regions\/hip\/$/);
   await page.goto('/#/collection/eyes-vestibular');
   await expect(page.getByRole('heading', { name: 'Topic unavailable' })).toBeVisible();
 });
@@ -103,7 +104,8 @@ test('an earlier catalog without regions, topics or ids still renders by its lab
   await page.goto('/#/regions');
   await expect(page.locator('.ref-card strong')).toHaveText(['Hip', 'Whole body']);
   await page.goto('/#/collection/all-hip');
-  await expect(page).toHaveURL(/#\/activity\/hip-anatomy$/);
+  await expect(page).toHaveURL(/\/regions\/hip\/$/);
+  await page.getByRole('link', {name:'Hip anatomy at rest',exact:true}).click();
   await expect(page.getByRole('heading', { name: 'Hip anatomy at rest', level: 1 })).toBeVisible();
 });
 
@@ -111,10 +113,10 @@ test('selected resource IDs open in a clean browser without an account', async (
   await routeCatalog(page);
   await page.goto('/#/library');
   for (const id of ['anatomy-hip', 'gait']) await page.locator(`[data-add="${id}"]`).click();
-  await page.locator('.topbar a[href="#/saved"]').click();
+  await page.locator('.topbar a[href="/saved/"]').click();
   await page.locator('[data-share-saved]').click();
   const url = await page.getByRole('textbox', { name: 'Resource share link' }).inputValue();
-  expect(new URL(url).hash).toBe('#/saved?ids=anatomy-hip,gait');
+  expect(new URL(url).pathname+new URL(url).search).toBe('/saved/?ids=anatomy-hip,gait');
   await expect(page.getByText('Local build · recipients need access to this site.')).toHaveCount(0);
   const context = await browser.newContext();
   try {
@@ -158,8 +160,10 @@ test('the home hero renders before the catalog and region turntables load only o
   await page.goto('/');
   await expect(page.locator('.devpt-hero h1')).toHaveText('Reference library');
   await expect(page.locator('.hero-tile .tile-label')).toHaveText(['Anatomy', 'Movement', 'Vestibular', 'Imaging']);
-  await expect(page.locator('.hero-tile').first()).toHaveAttribute('href', '#/topic/anatomy');
-  await expect(page.locator('.ref-grid.regions .ref-card-shell')).toHaveCount(9);
+  await expect(page.locator('.hero-tile').first()).toHaveAttribute('href', '/topics/anatomy/');
+  // The published export remains readable while the authoritative catalog loads.
+  await expect(page.locator('.region-card')).toHaveCount(3);
+  await expect(page.locator('#app')).toHaveAttribute('aria-busy','true');
   release();
   await expect(page.locator('.region-card')).toHaveCount(3);
   await expect(page.locator('.region-card').first().locator('img')).toHaveAttribute('src', '/assets/library/region-hip.webp');
@@ -197,7 +201,7 @@ for (const reducedMotion of ['no-preference', 'reduce']) test(`region and topic 
   await page.goto('/#/topic/special-tests', { waitUntil: 'load' });
   const tile = page.locator('.page-band .section-tile');
   await expect(tile.locator('img')).toHaveAttribute('src', '/assets/library/head-topic-special-tests.webp');
-  await expect(tile).toHaveAttribute('href', '#/activity/exam-special-lachman');
+  await expect(tile).toHaveAttribute('href', '/resources/exam-special-lachman/');
   await expect(tile.locator('.tile-label')).toHaveText('Lachman');
   if (reducedMotion === 'reduce') {
     await page.waitForTimeout(500);
@@ -226,7 +230,7 @@ test('report an issue names the resource and builds a report with its page detai
   expect(report).toContain('Lachman test');
   expect(report).toContain('The tibia translates backward.');
   expect(report).toContain('Animation or 3D model looks wrong');
-  expect(report).toContain('#/activity/exam-special-lachman');
+  expect(report).toContain('/resources/exam-special-lachman/');
 });
 
 const playerFixture = answersSelect => `<!doctype html><title>Protocol-only player</title><script>
@@ -247,7 +251,7 @@ test('resources in the same region and topic switch inside the loaded player', a
   await expect(switcher.locator('[aria-current="page"]')).toHaveText('Lachman test');
   await page.locator('.native-frame').evaluate(frame => { frame.dataset.probe = 'kept'; });
   await switcher.getByRole('link', { name: 'McMurray test', exact: true }).click();
-  await expect(page).toHaveURL(/#\/activity\/exam-special-mcmurray$/);
+  await expect(page).toHaveURL(/\/resources\/exam-special-mcmurray\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('McMurray test');
   await expect(switcher.locator('[aria-current="page"]')).toHaveText('McMurray test');
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
