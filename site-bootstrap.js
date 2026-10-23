@@ -37,6 +37,12 @@
   }
   function legacyBookmark() {
     const section = location.hash.slice(1);
+    if (['contact','products'].includes(section)) {
+      const url = new URL('/' + section + '/', location.origin);
+      url.search = location.search;
+      location.replace(url.href);
+      return true;
+    }
     if (!['flow', 'student', 'faculty', 'labs', 'references', 'research-opportunities'].includes(section)) return false;
     const url = new URL('/simlab/', location.origin);
     url.hash = section;

@@ -1,6 +1,8 @@
 # DevPT — devpt.app
 
-DevPT introduces three distinct product lines for physical therapy education and care:
+DevPT is a free physical therapy reference library, organized by body region and topic. Browsing, opening resources and sharing public resource collections require no account. The interactive players remain in their owning applications.
+
+Product overviews provide a separate route to the three DevPT product lines:
 
 | Product    | DevPT walkthrough | Product-owned public entry           | Owning repository                |
 | ---------- | ----------------- | ------------------------------------ | -------------------------------- |
@@ -8,11 +10,13 @@ DevPT introduces three distinct product lines for physical therapy education and
 | EMRs       | `/emrs/`          | `https://simemr.devpt.app/showcase/` | `danstonedev/devpt-emr-platform` |
 | 3Dpain.app | `/3dpain/`        | `https://www.3dpain.app/showcase/`   | `danstonedev/3DPainMap`          |
 
-The homepage is the shared introduction. Each product has a dedicated walkthrough, and the actual public demonstration is built in its owning product repository. DevPT does not vendor another simulator, EMR or symptom-mapping application.
+The homepage leads with the reference library. Each product has a dedicated walkthrough, and the actual public demonstration is built in its owning product repository. DevPT does not vendor another simulator, EMR or symptom-mapping application.
 
 ## Static site and ownership
 
-- `index.html` — three-product introduction and shared contact section.
+- `index.html` — public library shell; the release build adds source-rendered content and metadata.
+- `library-routes.js` — shared browser/build mapping for real resource, region and topic URLs.
+- `site-analytics.js` — public website measurement, separate from product application instrumentation.
 - `simlab/index.html` — James Morgan's guided simLAB visit, live study tools and student/faculty introduction.
 - `emrs/index.html` and `3dpain/index.html` — dedicated product walkthroughs.
 - `apps.json` — canonical product/app registry, launch URLs, repositories and public walkthrough endpoints.
@@ -25,7 +29,7 @@ The homepage is the shared introduction. Each product has a dedicated walkthroug
 - `assets/` — brand marks and supporting screenshots.
 - `assets/features/` — native launch posters and retired recordings, with source provenance and capture instructions.
 
-Fonts load from Google Fonts; supporting imagery is local. Every homepage feature has a fixed-ratio native poster before its app starts. Display-sized simLAB wordmark derivatives retain the original artwork and transparency; their source hash and resize settings are recorded in `assets/brand/simlab-wordmark.source.json`. Product public entries use sample demonstration data. Protected production workspaces retain their normal sign-in and access requirements.
+Library fonts are self-hosted; supporting imagery is local. Every homepage feature has a fixed-ratio native poster before its app starts. Display-sized simLAB wordmark derivatives retain the original artwork and transparency; their source hash and resize settings are recorded in `assets/brand/simlab-wordmark.source.json`. Product public entries use sample demonstration data. Protected production workspaces retain their normal sign-in and access requirements.
 
 ## One product, one walkthrough source
 
@@ -47,8 +51,8 @@ Use the npm scripts so a local preview cannot silently drift behind production:
 
 ```bash
 npm ci
-npm start          # clean main, current origin/main; http://localhost:8099
-npm run preview    # current feature-branch draft; http://127.0.0.1:8109
+npm start          # clean, current main; builds public pages; http://localhost:8099
+npm run preview    # current feature draft; builds public pages; http://127.0.0.1:8109
 ```
 
 `npm start` fetches `origin/main` and fast-forwards a clean, behind local `main`. It refuses a dirty, ahead, diverged, detached or feature checkout, or an unavailable remote. `npm run preview` permits draft changes after confirming the checkout contains the latest production commit. Neither path has a stale-base bypass.
@@ -87,7 +91,7 @@ The homepage browser checks cover the nine native features, exact product contra
 
 ## Deployment and compatibility
 
-Azure Static Web Apps deploys the repository root on push to `main` via `.github/workflows/azure-static-web-apps-black-tree-0e898330f.yml`, with `skip_app_build: true`. All HTML, CSS and JavaScript needed by DevPT must therefore be committed. The owning repositories build and deploy their public product entries.
+Azure Static Web Apps deploys the repository root on push to `main` via `.github/workflows/azure-static-web-apps-black-tree-0e898330f.yml`, with `skip_app_build: true`. All website templates, CSS and JavaScript must therefore be committed; the workflow generates the public pages before upload. The owning repositories build and deploy their public product entries.
 
 For a new public entry or a contract change, deploy the compatible product entry first, confirm it independently, then deploy the DevPT framing. The source's signed-in routes and protected APIs remain unchanged by the public walkthrough.
 
@@ -100,3 +104,108 @@ Custom domains and DNS live in Azure. Prefer Azure DNS ALIAS for apex changes an
 The root site is a reference library: every resource simLAB publishes, filed by body region and topic (a region page lists its topics, a topic page its regions), with search across titles, headings and common terms, browser-local saves and account-free sharing. Each resource opens its own selection in simLAB's public player (`https://lab.devpt.app/teaching/?activity=<id>`). The site consumes SimLab’s source-owned published catalog at `https://lab.devpt.app/teaching/catalog.json`, including its ordered regions and topics; models, players and the resource list are never copied into this repository. A curated activity that names a reference item in `aliasOf` is listed once, as that item, and its own links keep opening it; earlier `#/collection/<id>` links open the matching region or topic. Public entry controls and publication live in SimLab ([public teaching resources](https://github.com/danstonedev/simlab/blob/main/docs/public-teaching-resources.md)). Gait physics remains an experimental local tool.
 
 `npm run build:public` exports only public website files to `.cache/public-site`, which is the Azure deployment input. The workflow waits for compatible source-owned walkthroughs and the published teaching entry before upload. `npm run build:local` and `npm run preview:local` retain the complete local source review; see `docs/local-site-preview.md`.
+
+## Public search pages and analytics
+
+`npm run build:public` requires curl and fetches the revisioned public catalogue from
+`https://lab.devpt.app/teaching/catalog.json`. The actual website renderer generates
+readable HTML, canonical URLs, descriptions, Open Graph metadata and structured
+data for `/`, `/regions/`, `/regions/<id>/`, `/topics/`, `/topics/<id>/`, and
+`/resources/<id>/`. The same export includes `/products/`, `/faculty/`, `/contact/`,
+`robots.txt`, an XML sitemap and a catalogue-derived HTML sitemap. Search results
+and saved collections are `noindex, follow` and excluded from the XML sitemap.
+Unknown paths retain real 404 responses; there is no blanket application fallback.
+
+Only the source-owned public projection may produce a release. Development
+catalogues, invalid IDs, duplicate IDs and non-source player URLs fail the build.
+No catalogue or model copy is maintained in this repository. A website export
+must be rebuilt when new resources are published so the corresponding HTML and
+sitemap exist. Re-run the website deployment through its manual workflow trigger
+when the catalogue changes without a website commit. `release.json` identifies
+both the website revision and the catalogue build used for the export.
+
+Old `#/activity/…`, `#/region/…`, `#/topic/…`, collection and saved-list links
+continue to open their canonical real paths. Resource aliases redirect to their
+source-owned canonical IDs. The browser-local saved-resource storage key is
+unchanged. Local review on port 8110 retains hash routing and sends no analytics.
+
+The public-site measurement ID supplied by the owner is `G-61473CPT29`, centralized in
+`site-analytics.js`. Only `devpt.app` and `www.devpt.app` load the tag; localhost,
+Azure previews and local review do not. The public site sends only to this ID;
+it does not also configure the previous `G-VTLNJW0KKX` ID. Product application tags
+remain managed in their owning repositories. Public events use
+`site_area=devpt_public` and content groups `library`, `products` or `information`.
+A new measurement ID identifies a web stream, not necessarily a separate GA4
+property. Confirm its property in Google; if application streams share that
+property, use the public-site labels or stream filters in reports.
+
+The wrapper owns initial and virtual `page_view` events and deduplicates catalogue
+refreshes and UI re-renders of the same page. Resource visits emit `resource_open`;
+`resource_ready` requires the existing trusted player handshake. Saving, removing,
+completed share-link copying and submitted library searches have distinct events.
+`product_link_click` records a product ID and placement, and `inquiry_click`
+records an email inquiry link click. These actions are not purchase conversions.
+The tag disables Google signals and ad personalization. Custom payloads contain
+canonical public paths and bounded identifiers/counts, without search text,
+issue-report content, saved collection IDs/URLs or email addresses. Entry campaign
+source, medium, name and ID are retained only when they match a bounded character
+allowlist. Free-text campaign term/content are not copied.
+
+### Google and hosting setup
+
+Account settings require access to the respective Google/Azure account. Before
+releasing the manual page-view integration:
+
+1. In GA4, select the web stream for `G-61473CPT29` under **Admin → Data streams**.
+   In **Enhanced measurement → Page views → Show advanced settings**, turn off
+   **Page changes based on browser history events**. `send_page_view:false`
+   disables the config-generated view but does not disable enhanced history
+   events. Also turn off **Site search** and **Form interactions** to avoid
+   automatic collection of free text. Apply these settings to the new public-site
+   web stream; changing the previous stream is not required for this rollout.
+2. Register event-scoped custom dimensions `site_area`, `page_type`, `resource_id`,
+   `region_id`, `topic_id`, `product_id` and `placement` for report use.
+   `content_group` is built in. These definitions apply to future reporting.
+3. Validate in GA4 DebugView/Realtime after release: one homepage view; one new
+   view per resource/region/topic navigation; separate `resource_ready` and
+   `product_link_click` events; no duplicate view on saving or catalogue refresh.
+   Browser tests inspect queued payloads without contacting Google; they cannot
+   verify remote stream settings or account-side processing.
+4. Verify the Search Console domain property for `devpt.app` (DNS ownership may
+   be required), submit `https://devpt.app/sitemap.xml`, then inspect the homepage,
+   one region and one resource URL. Track indexed pages, impressions and clicks.
+5. In Azure Static Web Apps → **Custom domains**, select `devpt.app` and choose
+   **Set default** to redirect alternate hostnames to the apex. Canonicals and the
+   root `/index.html` redirect are provided in code; the hostname redirect is an
+   Azure account setting.
+
+If the property also receives application traffic, use report filters to separate
+it from public-site traffic; property-wide collection exclusions permanently
+remove future data. Google account links and settings are described in the
+[page-view documentation](https://developers.google.com/analytics/devguides/collection/ga4/views)
+and [Azure default-domain documentation](https://learn.microsoft.com/en-us/azure/static-web-apps/custom-domain-default).
+
+### Public website reports
+
+Create reports using these filters after the tag and dimensions are validated:
+
+| Report | Scope | Measures |
+| --- | --- | --- |
+| Homepage reach | `site_area=devpt_public`, `page_type=homepage` | Users, sessions containing a homepage view, views and engagement |
+| Homepage arrivals | Session's first `page_view` has a DevPT public hostname and homepage location | Sessions, session source/medium and device |
+| Library use | `site_area=devpt_public`, `content_group=library` | Resource opens, successful loads, saves, shares and search result counts |
+| Product interest | `product_link_click` with `site_area=devpt_public` | Product ID, placement, users and event count |
+
+If application streams share the property, `/` alone also identifies each application's home route.
+For arrivals, check the hostname of the session's *first page view*, rather than
+combining an event-scoped hostname with a landing-path filter. Browser users and
+sessions are estimates, not verified people; neither screenshot totals nor a
+country distribution establish bot traffic. Compare date/hostname/page/source,
+engagement and technical patterns with any retained hosting logs to investigate
+spikes. Collection gaps cannot be backfilled by this change.
+
+`npm test` includes source-contract, generated-page and analytics payload checks.
+`npm run test:ui` builds an explicit protocol-only fixture export and exercises
+actual routes, old links, no-JavaScript pages, player trust, sharing, mobile layout
+and public event wiring. Fixtures are confined to `e2e/fixtures/` and never enter
+the deployment export.

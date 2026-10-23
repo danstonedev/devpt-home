@@ -1,14 +1,14 @@
 {
   "name": "devpt-app",
   "version": "2.0.0",
-  "description": "DevPT \u2014 master hub for physical therapy education simulation tools (devpt.app)",
+  "description": "DevPT \u2014 free physical therapy reference library and product overviews",
   "main": "index.js",
   "scripts": {
     "prestart": "node scripts/ensure-fresh-main.mjs",
-    "start": "npx http-server -c-1 -p 8099",
+    "start": "npm run build:public && http-server .cache/public-site -c-1 -p 8099",
     "prepreview": "node scripts/ensure-fresh-main.mjs --preview",
-    "preview": "http-server -c-1 -p 8109 -a 127.0.0.1",
-    "test": "node scripts/check-live-showcase.mjs && node scripts/check-apps.mjs --no-ping && npm run check:brand && node --test scripts/wait-for-showcases.test.mjs && node --test scripts/wait-for-teaching-catalog.test.mjs",
+    "preview": "npm run build:public && http-server .cache/public-site -c-1 -p 8109 -a 127.0.0.1",
+    "test": "node scripts/check-live-showcase.mjs && node scripts/check-apps.mjs --no-ping && npm run check:brand && node --test scripts/wait-for-showcases.test.mjs && node --test scripts/wait-for-teaching-catalog.test.mjs && node --test scripts/public-site.test.mjs",
     "build:demos": "node scripts/build-demos.mjs",
     "preview:teaching": "node scripts/serve-local-site.mjs --open",
     "build:teaching-preview": "node scripts/build-local-site.mjs",

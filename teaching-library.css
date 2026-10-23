@@ -456,3 +456,6 @@ main[tabindex="-1"]:focus{outline:none}
 @media(max-width:800px){.section-tile .tile-art{aspect-ratio:4/3}.page-band.has-tile{grid-template-columns:minmax(0,1fr) 38%;column-gap:16px}.page-band.has-tile .section-tile{grid-row:1/span 2;align-self:start}.page-band.has-tile .ref-filter{grid-column:1/-1}.page-band.has-tile{grid-template-rows:none}.page-band.has-tile .ref-head{display:contents}.page-band.has-tile .ref-head>div:not(.actions){grid-column:1;align-self:center}.page-band.has-tile .ref-head .actions{grid-column:1/-1;margin:14px 0 0}.page-band.has-tile .ref-head-glyph{display:none}}
 @media(max-width:520px){.section-tile{border-radius:10px}.section-tile .tile-label{font-size:11px;padding:5px 8px;gap:5px}.section-tile .tile-label i{width:6px;height:6px}.page-band.has-tile .ref-head .actions .button{flex:1 1 auto}}
 @media(prefers-reduced-motion:reduce){a.section-tile:hover{transform:none}}
+
+/* Contain decorative full-bleed glows without expanding the phone viewport. */
+@media(max-width:520px){.devpt-hero:before{right:0}}

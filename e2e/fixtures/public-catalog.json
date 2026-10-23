@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "status": "public-resources",
+  "source": "simlab",
+  "regions": [
+    {
+      "id": "hip",
+      "label": "Hip"
+    },
+    {
+      "id": "knee",
+      "label": "Knee"
+    },
+    {
+      "id": "whole-body",
+      "label": "Whole body"
+    }
+  ],
+  "topics": [
+    {
+      "id": "anatomy",
+      "label": "Anatomy"
+    },
+    {
+      "id": "special-tests",
+      "label": "Special tests"
+    },
+    {
+      "id": "gait-balance",
+      "label": "Gait & balance"
+    }
+  ],
+  "activities": [
+    {
+      "id": "hip-anatomy",
+      "nativeId": "hip-anatomy",
+      "title": "Hip anatomy at rest",
+      "regionId": "hip",
+      "region": "Hip",
+      "topicId": "anatomy",
+      "topic": "Anatomy",
+      "type": "Interactive resource",
+      "context": "Fixture lab",
+      "minutes": 0,
+      "level": "Reference",
+      "media": "anatomy",
+      "symbol": "layers",
+      "desc": "Protocol fixture",
+      "outcome": "Protocol fixture",
+      "source": "Source-owned fixture",
+      "aliasOf": "anatomy-hip",
+      "url": "https://lab.devpt.app/teaching/?activity=hip-anatomy"
+    },
+    {
+      "id": "gait",
+      "nativeId": "gait",
+      "title": "Native walk",
+      "regionId": "whole-body",
+      "region": "Whole body",
+      "topicId": "gait-balance",
+      "topic": "Gait & balance",
+      "type": "Interactive resource",
+      "context": "Fixture lab",
+      "minutes": 0,
+      "level": "Reference",
+      "media": "gait",
+      "symbol": "layers",
+      "desc": "Protocol fixture",
+      "outcome": "Protocol fixture",
+      "source": "Source-owned fixture",
+      "url": "https://lab.devpt.app/teaching/?activity=gait"
+    },
+    {
+      "id": "anatomy-hip",
+      "nativeId": "anatomy-hip",
+      "title": "Hip anatomy at rest",
+      "regionId": "hip",
+      "region": "Hip",
+      "topicId": "anatomy",
+      "topic": "Anatomy",
+      "type": "Interactive resource",
+      "context": "Fixture lab",
+      "minutes": 0,
+      "level": "Reference",
+      "media": "anatomy",
+      "symbol": "layers",
+      "desc": "Protocol fixture",
+      "outcome": "Protocol fixture",
+      "source": "Source-owned fixture",
+      "launch": {
+        "kind": "joint",
+        "initial": "hip:flexion",
+        "rest": true
+      },
+      "url": "https://lab.devpt.app/teaching/?activity=anatomy-hip"
+    },
+    {
+      "id": "exam-special-lachman",
+      "nativeId": "exam-special-lachman",
+      "title": "Lachman test",
+      "regionId": "knee",
+      "region": "Knee",
+      "topicId": "special-tests",
+      "topic": "Special tests",
+      "type": "Interactive resource",
+      "context": "Fixture lab",
+      "minutes": 0,
+      "level": "Reference",
+      "media": "anatomy",
+      "symbol": "layers",
+      "desc": "Protocol fixture",
+      "outcome": "Protocol fixture",
+      "source": "Source-owned fixture",
+      "keywords": [
+        "ACL"
+      ],
+      "launch": {
+        "kind": "movement",
+        "entry": "exam:special:lachman"
+      },
+      "url": "https://lab.devpt.app/teaching/?activity=exam-special-lachman"
+    },
+    {
+      "id": "exam-special-mcmurray",
+      "nativeId": "exam-special-mcmurray",
+      "title": "McMurray test",
+      "regionId": "knee",
+      "region": "Knee",
+      "topicId": "special-tests",
+      "topic": "Special tests",
+      "type": "Interactive resource",
+      "context": "Fixture lab",
+      "minutes": 0,
+      "level": "Reference",
+      "media": "anatomy",
+      "symbol": "layers",
+      "desc": "Protocol fixture",
+      "outcome": "Protocol fixture",
+      "source": "Source-owned fixture",
+      "launch": {
+        "kind": "movement",
+        "entry": "exam:special:mcmurray"
+      },
+      "url": "https://lab.devpt.app/teaching/?activity=exam-special-mcmurray"
+    },
+    {
+      "id": "demo-mcmurray-medial",
+      "nativeId": "demo-mcmurray-medial",
+      "title": "Positive McMurray (medial)",
+      "regionId": "knee",
+      "region": "Knee",
+      "topicId": "special-tests",
+      "topic": "Special tests",
+      "type": "Interactive resource",
+      "context": "Fixture lab",
+      "minutes": 0,
+      "level": "Reference",
+      "media": "anatomy",
+      "symbol": "layers",
+      "desc": "Protocol fixture",
+      "outcome": "Protocol fixture",
+      "source": "Source-owned fixture",
+      "group": "Example findings",
+      "launch": {
+        "kind": "movement",
+        "preset": "mcmurray-medial"
+      },
+      "url": "https://lab.devpt.app/teaching/?activity=demo-mcmurray-medial"
+    }
+  ],
+  "build": "0000000000000000000000000000000000000000"
+}
