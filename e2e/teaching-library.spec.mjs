@@ -27,6 +27,13 @@ async function nav(page, href) {
 async function routeCatalog(context, value = catalog) {
   await context.route(catalogUrl, route => route.fulfill({ json: value }));
 }
+/** On a phone a resource opens full screen, its player covering the page; Back gives the page back, as on a phone. */
+async function pageBack(page, testInfo) {
+  if (testInfo.project.name !== 'phone') return;
+  await expect(page.locator('.native-player')).toHaveClass(/\bfullscreen\b/);
+  await page.goBack();
+  await expect(page.locator('.native-player')).not.toHaveClass(/\bfullscreen\b/);
+}
 
 test('a delayed catalog cannot block or remount the product route', async ({ page }) => {
   let release;
@@ -127,7 +134,7 @@ test('selected resource IDs open in a clean browser without an account', async (
   } finally { await context.close(); }
 });
 
-test('resource activation uses only its canonical player and validates the sender', async ({ page }) => {
+test('resource activation uses only its canonical player and validates the sender', async ({ page }, testInfo) => {
   await routeCatalog(page);
   await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({
     contentType: 'text/html', body: '<!doctype html><title>Protocol-only source fixture</title><p>Protocol-only source fixture</p>',
@@ -145,6 +152,7 @@ test('resource activation uses only its canonical player and validates the sende
   await source.evaluate(parentOrigin => parent.postMessage({ type: 'devpt-teaching-ready', activity: 'exam-special-lachman' }, parentOrigin), new URL(page.url()).origin);
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
   await expect(page.locator('.native-status')).toHaveText('Ready');
+  await pageBack(page, testInfo);
   await nav(page, '#/topics');
   await expect(page.locator('.native-frame')).toHaveCount(0);
 });
@@ -210,10 +218,11 @@ for (const reducedMotion of ['no-preference', 'reduce']) test(`region and topic 
   }
 });
 
-test('report an issue names the resource and builds a report with its page details', async ({ page, context }) => {
+test('report an issue names the resource and builds a report with its page details', async ({ page, context }, testInfo) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await routeCatalog(page);
   await page.goto('/#/activity/exam-special-lachman');
+  await pageBack(page, testInfo);
   await expect(page.locator('.beta-tag')).toHaveText('Beta');
   await page.locator('[data-report="exam-special-lachman"]').click();
   const dialog = page.locator('[data-report-form]');
@@ -237,11 +246,12 @@ addEventListener('message', event => { if (${answersSelect} && event.data?.type 
 tell(new URLSearchParams(location.search).get('activity'));
 </script>`;
 
-test('resources in the same region and topic switch inside the loaded player', async ({ page }) => {
+test('resources in the same region and topic switch inside the loaded player', async ({ page }, testInfo) => {
   await routeCatalog(page);
   await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: playerFixture(true) }));
   await page.goto('/#/activity/exam-special-lachman');
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
+  await pageBack(page, testInfo);
   const switcher = page.locator('.switcher');
   await expect(switcher.locator('.switcher-list a')).toHaveText(['Lachman test', 'McMurray test', 'Positive McMurray (medial)']);
   await expect(switcher.locator('[aria-current="page"]')).toHaveText('Lachman test');
@@ -259,11 +269,12 @@ test('resources in the same region and topic switch inside the loaded player', a
   await expect(page.locator('.native-frame')).toHaveAttribute('data-probe', 'kept');
 });
 
-test('an older player that cannot switch in place loads the next resource normally', async ({ page }) => {
+test('an older player that cannot switch in place loads the next resource normally', async ({ page }, testInfo) => {
   await routeCatalog(page);
   await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: playerFixture(false) }));
   await page.goto('/#/activity/exam-special-lachman');
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
+  await pageBack(page, testInfo);
   await page.locator('.switcher').getByRole('link', { name: 'McMurray test', exact: true }).click();
   await expect(page.locator('.native-frame')).toHaveAttribute('src', 'https://lab.devpt.app/teaching/?activity=exam-special-mcmurray&embedded=1', { timeout: 8000 });
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
@@ -279,12 +290,13 @@ document.querySelector('#play').onclick = () => screen(true);
 document.querySelector('#quit').onclick = () => screen(false);
 </script>`;
 
-test('a game played in the player takes the whole screen, and Back gives the page back', async ({ page }) => {
+test('a game played in the player takes the whole screen, and Back gives the page back', async ({ page }, testInfo) => {
   await routeCatalog(page);
   await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: gameFixture }));
   await page.goto('/#/activity/exam-special-lachman');
   const player = page.locator('.native-player');
   await expect(player).toHaveAttribute('data-ready', 'true');
+  await pageBack(page, testInfo);
   const game = page.frameLocator('.native-frame');
 
   // The game asks for the screen when play starts: the player covers the window.
@@ -303,5 +315,44 @@ test('a game played in the player takes the whole screen, and Back gives the pag
   await expect(player).not.toHaveClass(/\bfullscreen\b/);
   await expect(page).toHaveURL(/#\/activity\/exam-special-lachman$/);
   const source = page.frames().find(frame => frame.url().startsWith('https://lab.devpt.app/teaching/'));
-  await expect.poll(() => source.evaluate(() => window.heard)).toEqual([false]);
+  // A phone's player also heard that it opened full screen, and that Back first gave the page back.
+  await expect.poll(() => source.evaluate(() => window.heard)).toEqual(testInfo.project.name === 'phone' ? [true, false, false] : [false]);
+});
+
+test('on a phone a resource opens full screen and is told so; Back gives the page back and Full view takes the screen again', async ({ page }, testInfo) => {
+  await routeCatalog(page);
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: gameFixture }));
+  await page.goto('/#/activity/exam-special-lachman');
+  const player = page.locator('.native-player');
+  await expect(player).toHaveAttribute('data-ready', 'true');
+  const heard = () => page.frames().find(frame => frame.url().startsWith('https://lab.devpt.app/teaching/')).evaluate(() => window.heard);
+  if (testInfo.project.name !== 'phone') {
+    // A wide screen keeps the resource in the page until it asks for the screen.
+    await expect(player).not.toHaveClass(/\bfullscreen\b/);
+    expect(await heard()).toEqual([]);
+    return;
+  }
+  await expect(player).toHaveClass(/\bfullscreen\b/);
+  const view = page.viewportSize();
+  await expect.poll(async () => { const box = await player.boundingBox(); return [Math.round(box.width), Math.round(box.height)]; }).toEqual([view.width, view.height]);
+  await expect.poll(heard).toEqual([true]);
+  // Back gives the page back, with its title, details and Full view button.
+  await page.goBack();
+  await expect(player).not.toHaveClass(/\bfullscreen\b/);
+  await expect(page).toHaveURL(/#\/activity\/exam-special-lachman$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Lachman test');
+  // Full view takes the screen again in place, rather than opening another tab.
+  await page.locator('.native-direct').click();
+  await expect(player).toHaveClass(/\bfullscreen\b/);
+  expect(page.context().pages()).toHaveLength(1);
+  await expect.poll(heard).toEqual([true, false, true]);
+});
+
+test('a case brief stays in the page, even on a phone', async ({ page }) => {
+  const brief = item('case-hip-practice', 'Hip case practice', 'hip', 'anatomy', { launch: { kind: 'case', missionId: 'hip-ddx' } });
+  await routeCatalog(page, { ...catalog, activities: [...activities, brief] });
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: gameFixture }));
+  await page.goto('/#/activity/case-hip-practice');
+  await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('.native-player')).not.toHaveClass(/\bfullscreen\b/);
 });
