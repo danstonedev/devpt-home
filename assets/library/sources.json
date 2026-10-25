@@ -426,17 +426,18 @@
       {
         "header": "topic/gait-balance",
         "files": [
-          "head-topic-gait-balance.webm",
-          "head-topic-gait-balance.mp4",
-          "head-topic-gait-balance.webp"
+          "head-topic-gait-balance-recorded.webm",
+          "head-topic-gait-balance-recorded.mp4",
+          "head-topic-gait-balance-recorded.webp"
         ],
-        "activity": "gait-normal",
+        "activity": "gait",
+        "commit": "3d76438",
         "bytes": {
-          "head-topic-gait-balance.webm": 22814,
-          "head-topic-gait-balance.mp4": 33427,
-          "head-topic-gait-balance.webp": 1742
+          "head-topic-gait-balance-recorded.webm": 37083,
+          "head-topic-gait-balance-recorded.mp4": 37367,
+          "head-topic-gait-balance-recorded.webp": 2546
         },
-        "method": "Screen capture of the simLAB teaching player at ?activity=gait-normal, scrubbed frame by frame across its whole timeline."
+        "method": "Screen capture of the simLAB teaching player at ?activity=gait (the Gait lab's recorded Character Creator walking take, CC HD Walk_M, side view), its native clip time scrubbed frame by frame at 24 fps from 2.0 s and cut on one whole repeat (73 frames) so the loop is seamless. Replaced the designed in-place walk of gait-normal (owner direction, 25 October 2026: recorded gait supersedes the designed walk)."
       },
       {
         "header": "topic/joint-mechanics",
