@@ -321,6 +321,11 @@ test('a game played in the player takes the whole screen, and Back gives the pag
 
 test('on a phone a resource opens full screen and is told so; Back gives the page back and Full view takes the screen again', async ({ page }, testInfo) => {
   await routeCatalog(page);
+  await page.addInitScript(() => {
+    window.browserFullscreenRequests = 0;
+    const request = Element.prototype.requestFullscreen;
+    Element.prototype.requestFullscreen = function (...args) { window.browserFullscreenRequests++; return request.apply(this, args); };
+  });
   await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: gameFixture }));
   await page.goto('/#/activity/exam-special-lachman');
   const player = page.locator('.native-player');
@@ -336,6 +341,9 @@ test('on a phone a resource opens full screen and is told so; Back gives the pag
   const view = page.viewportSize();
   await expect.poll(async () => { const box = await player.boundingBox(); return [Math.round(box.width), Math.round(box.height)]; }).toEqual([view.width, view.height]);
   await expect.poll(heard).toEqual([true]);
+  // The page's own full view: a touch screen's browser full screen closes on a downward swipe, which is also a drag
+  // that turns a model.
+  expect(await page.evaluate(() => [window.browserFullscreenRequests, document.fullscreenElement])).toEqual([0, null]);
   // Back gives the page back, with its title, details and Full view button.
   await page.goBack();
   await expect(player).not.toHaveClass(/\bfullscreen\b/);
