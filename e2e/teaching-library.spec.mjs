@@ -356,3 +356,30 @@ test('a case brief stays in the page, even on a phone', async ({ page }) => {
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
   await expect(page.locator('.native-player')).not.toHaveClass(/\bfullscreen\b/);
 });
+
+test('a playing resource retains its frame and fullscreen through catalog refresh and browser fullscreen loss', async ({ page }) => {
+  await routeCatalog(page);
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: gameFixture }));
+  await page.goto('/#/activity/exam-special-lachman');
+  const player = page.locator('.native-player');
+  await expect(player).toHaveAttribute('data-ready', 'true');
+  const game = page.frameLocator('.native-frame');
+  await game.locator('#play').click();
+  await expect(player).toHaveClass(/\bfullscreen\b/);
+  await game.locator('#play').evaluate(element => { element.dataset.gameProgress = 'kept'; });
+  const frame = await page.locator('.native-frame').elementHandle();
+  // A late catalog response must not destroy a game already in progress.
+  await page.evaluate(() => document.dispatchEvent(new Event('devpt:catalog-ready')));
+  await expect(player).toHaveClass(/\bfullscreen\b/);
+  expect(await frame.evaluate(element => element.isConnected && element === document.querySelector('.native-frame'))).toBe(true);
+  await expect(game.locator('#play')).toHaveAttribute('data-game-progress', 'kept');
+  // OS/browser fullscreen is optional; its loss must not collapse the app's player.
+  await page.evaluate(async () => {
+    if (document.fullscreenElement) await document.exitFullscreen();
+    else document.dispatchEvent(new Event('fullscreenchange'));
+  });
+  await expect(player).toHaveClass(/\bfullscreen\b/);
+  await expect(game.locator('#play')).toHaveAttribute('data-game-progress', 'kept');
+  await game.locator('#quit').click();
+  await expect(player).not.toHaveClass(/\bfullscreen\b/);
+});
