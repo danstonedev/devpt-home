@@ -516,17 +516,18 @@
       {
         "header": "topic/range-of-motion",
         "files": [
-          "head-topic-range-of-motion.webm",
-          "head-topic-range-of-motion.mp4",
-          "head-topic-range-of-motion.webp"
+          "head-topic-range-of-motion-knee.webm",
+          "head-topic-range-of-motion-knee.mp4",
+          "head-topic-range-of-motion-knee.webp"
         ],
-        "activity": "range-shoulder-flexion",
+        "activity": "exam-arom-knee-flexion",
         "bytes": {
-          "head-topic-range-of-motion.webm": 11415,
-          "head-topic-range-of-motion.mp4": 17537,
-          "head-topic-range-of-motion.webp": 1140
+          "head-topic-range-of-motion-knee.webm": 28914,
+          "head-topic-range-of-motion-knee.mp4": 28671,
+          "head-topic-range-of-motion-knee.webp": 3382
         },
-        "method": "Screen capture of the simLAB teaching player at ?activity=range-shoulder-flexion, scrubbed frame by frame across its whole timeline."
+        "commit": "30cf6ed",
+        "method": "Screen capture of the simLAB teaching player at ?activity=exam-arom-knee-flexion (supine, goniometer at the knee), paused and scrubbed frame by frame at 24 fps across its whole timeline, from the lab's own 4:3 framing with its camera still. Replaced range-shoulder-flexion (owner direction, 25 October 2026): that motion raises the humerus alone, with no scapulohumeral rhythm, and the clip shook."
       },
       {
         "header": "topic/reflexes-sensation",
