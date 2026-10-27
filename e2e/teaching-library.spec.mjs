@@ -319,7 +319,7 @@ test('a game played in the player takes the whole screen, and Back gives the pag
   await expect.poll(() => source.evaluate(() => window.heard)).toEqual(testInfo.project.name === 'phone' ? [true, false, false] : [false]);
 });
 
-test('on a phone a resource opens full screen and is told so; Back gives the page back and Full view takes the screen again', async ({ page }, testInfo) => {
+test('on a phone a resource opens full screen; Back restores the compact page and the resource can ask for the screen again', async ({ page }, testInfo) => {
   await routeCatalog(page);
   await page.addInitScript(() => {
     window.browserFullscreenRequests = 0;
@@ -330,6 +330,7 @@ test('on a phone a resource opens full screen and is told so; Back gives the pag
   await page.goto('/#/activity/exam-special-lachman');
   const player = page.locator('.native-player');
   await expect(player).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('.activity-heading .native-direct')).toHaveCount(0);
   const heard = () => page.frames().find(frame => frame.url().startsWith('https://lab.devpt.app/teaching/')).evaluate(() => window.heard);
   if (testInfo.project.name !== 'phone') {
     // A wide screen keeps the resource in the page until it asks for the screen.
@@ -344,16 +345,20 @@ test('on a phone a resource opens full screen and is told so; Back gives the pag
   // The page's own full view: a touch screen's browser full screen closes on a downward swipe, which is also a drag
   // that turns a model.
   expect(await page.evaluate(() => [window.browserFullscreenRequests, document.fullscreenElement])).toEqual([0, null]);
-  // Back gives the page back, with its title, details and Full view button.
+  // Back gives the page back with its title and resource actions.
   await page.goBack();
   await expect(player).not.toHaveClass(/\bfullscreen\b/);
   await expect(page).toHaveURL(/#\/activity\/exam-special-lachman$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Lachman test');
-  // Full view takes the screen again in place, rather than opening another tab.
-  await page.locator('.native-direct').click();
+  // The canonical resource still owns its fullscreen action; the outer page
+  // does not duplicate it or open a second tab.
+  await page.frameLocator('.native-frame').locator('#play').click();
   await expect(player).toHaveClass(/\bfullscreen\b/);
+  await expect.poll(async () => { const box = await player.boundingBox(); return [Math.round(box.width), Math.round(box.height)]; }).toEqual([view.width, view.height]);
   expect(page.context().pages()).toHaveLength(1);
-  await expect.poll(heard).toEqual([true, false, true]);
+  // The source already knows the state it requested: the host applies it
+  // without echoing the fullscreen request back into the native player.
+  await expect.poll(heard).toEqual([true, false]);
 });
 
 test('a case brief stays in the page, even on a phone', async ({ page }) => {
