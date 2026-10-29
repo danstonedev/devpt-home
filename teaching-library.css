@@ -428,17 +428,6 @@ body.workspace-expanded {
 .mark-result.mark-model{width:56px}.mark-result.mark-glyph{width:42px;height:42px}
 .mark-inline.mark-glyph{width:auto;height:auto;background:none;color:var(--green);border-radius:0}.mark-inline.mark-glyph svg{width:14px;height:14px}
 .activity-page .page-band{display:flex;align-items:center;gap:16px}.activity-page .band-copy{flex:1;min-width:0}.band-model.mark-model{width:76px;border-radius:7px;box-shadow:0 0 0 1px #ffffff1f}
-/* Switcher: every resource in the same region and topic, one tap apart, in the same player. */
-.switcher{margin:0 0 14px;padding:10px 12px 12px;background:#fff;border:1px solid var(--line);border-radius:11px}
-.switcher-head{display:flex;align-items:center;gap:10px;margin-bottom:9px}.switcher-head .mark-glyph{width:26px;height:26px;border-radius:7px}.switcher-head .mark-glyph svg{width:15px;height:15px}.switcher-head strong{font-size:13.5px}.switcher-pos{font-size:12px;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
-.switcher-head .icon-button{width:32px;height:32px}.switcher-head .icon-button:first-of-type svg{transform:rotate(180deg)}
-.switcher-list{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;padding-bottom:2px;scroll-snap-type:x proximity}
-.switcher-list a{flex-shrink:0;scroll-snap-align:start;padding:7px 12px;border:1px solid var(--line);border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;background:#fff;transition:border-color .15s,color .15s}
-.switcher-list a:hover{border-color:#84af93;color:var(--green)}.switcher-list a[aria-current]{background:#0b120e;border-color:#0b120e;color:#fff}
-.workspace-related{margin:12px 0;border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden}
-.workspace-related>summary{display:flex;align-items:center;min-height:44px;padding:8px 12px;color:var(--green);font-size:13px;font-weight:700;cursor:pointer}
-.workspace-related>summary:before{content:'›';font-size:20px;margin-right:8px}.workspace-related[open]>summary:before{transform:rotate(90deg)}
-.workspace-related .switcher{border:0;border-top:1px solid var(--line);border-radius:0;margin:0}
 .share-view-note{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.5}.share-view-note button{font:inherit;color:var(--green);background:transparent;border:0;text-decoration:underline;cursor:pointer}
 @media(pointer:coarse){.share-view-note button{min-height:44px}.activity-page .page-band .actions>button{min-width:44px;min-height:44px}}
 /* Report an issue */
@@ -451,7 +440,7 @@ body.workspace-expanded {
 .report-actions{display:flex;gap:10px;flex-wrap:wrap}
 @media(max-width:1050px){.beta-tag{margin-left:-14px}}
 @media(max-width:800px){.devpt-hero{grid-template-columns:minmax(0,1fr);gap:18px;padding:34px 0 30px;margin-bottom:30px}.devpt-hero:before{width:340px;right:-120px;top:120px}.hero-copy{display:contents}.devpt-hero .eyebrow,.devpt-hero h1,.devpt-hero .lead{grid-column:1}.hero-tiles{grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;gap:10px}.devpt-hero .ref-search,.hero-stats{grid-column:1/-1}.hero-stats{margin-top:6px;gap:26px}.hero-stats dd{font-size:24px}.ref-head{flex-wrap:wrap}.ref-head-media{width:96px}}
-@media(max-width:520px){.band-model.mark-model{width:56px}.switcher-head strong{font-size:12.5px}.ref-section h2 a{gap:9px}.ref-section h2 .mark-model{width:36px}.ref-section h2 .mark-glyph{width:28px;height:28px}.page-band{margin-top:-25px;padding:18px 0 20px}.activity-page .page-band{padding:10px 0 12px}.activity-page .page-band .activity-heading h1{font-size:21px}.page-band .page-head h1,.page-band .activity-heading h1{font-size:27px}.devpt-hero{padding-top:22px;margin-top:-25px}.devpt-hero h1{font-size:34px;letter-spacing:-1.2px}.devpt-hero .lead{font-size:15px;margin-top:12px}.hero-tiles{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -16px;padding:0 16px;scroll-padding:0 16px}.hero-tiles::-webkit-scrollbar{display:none}.hero-tile{flex:0 0 46%;scroll-snap-align:start}.hero-tile:hover{transform:none}.hero-tiles{width:auto;justify-self:stretch}.tile-label{font-size:12px;padding:7px 10px}.devpt-hero:before{width:260px;right:-110px;top:40px}.beta-tag{margin-left:-6px;padding:2px 7px;font-size:9px}.ref-grid.regions,.ref-page .ref-grid:not(.topics){grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.region-card{padding:6px 6px 11px;gap:8px}.region-card .ref-card-title,.region-card .ref-card-topics{padding:0 5px}.region-card .ref-card-title strong{font-size:15px}.region-card .ref-card-topics{display:none}.ref-grid.topics{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.topic-card{grid-template-columns:1fr;padding:14px;row-gap:10px}.topic-card .ref-card-glyph{grid-row:auto;width:38px;height:38px}.topic-card .ref-card-title strong{font-size:15px}.topic-card .ref-card-topics{display:none}.ref-head .actions{width:100%;margin-left:0}}
+@media(max-width:520px){.band-model.mark-model{width:56px}.ref-section h2 a{gap:9px}.ref-section h2 .mark-model{width:36px}.ref-section h2 .mark-glyph{width:28px;height:28px}.page-band{margin-top:-25px;padding:18px 0 20px}.activity-page .page-band{padding:10px 0 12px}.activity-page .page-band .activity-heading h1{font-size:21px}.page-band .page-head h1,.page-band .activity-heading h1{font-size:27px}.devpt-hero{padding-top:22px;margin-top:-25px}.devpt-hero h1{font-size:34px;letter-spacing:-1.2px}.devpt-hero .lead{font-size:15px;margin-top:12px}.hero-tiles{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -16px;padding:0 16px;scroll-padding:0 16px}.hero-tiles::-webkit-scrollbar{display:none}.hero-tile{flex:0 0 46%;scroll-snap-align:start}.hero-tile:hover{transform:none}.hero-tiles{width:auto;justify-self:stretch}.tile-label{font-size:12px;padding:7px 10px}.devpt-hero:before{width:260px;right:-110px;top:40px}.beta-tag{margin-left:-6px;padding:2px 7px;font-size:9px}.ref-grid.regions,.ref-page .ref-grid:not(.topics){grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.region-card{padding:6px 6px 11px;gap:8px}.region-card .ref-card-title,.region-card .ref-card-topics{padding:0 5px}.region-card .ref-card-title strong{font-size:15px}.region-card .ref-card-topics{display:none}.ref-grid.topics{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.topic-card{grid-template-columns:1fr;padding:14px;row-gap:10px}.topic-card .ref-card-glyph{grid-row:auto;width:38px;height:38px}.topic-card .ref-card-title strong{font-size:15px}.topic-card .ref-card-topics{display:none}.ref-head .actions{width:100%;margin-left:0}}
 @media(prefers-reduced-motion:reduce){.ref-card:hover{transform:none}.shell-line:after,.ref-card-shell .ref-card-media:after{animation:none}}
 /* The page moves focus to its main region on navigation; that programmatic focus needs no ring. */
 main[tabindex="-1"]:focus{outline:none}
@@ -467,3 +456,23 @@ html.player-fullscreen,html.player-fullscreen body{overflow:hidden}
 .native-player.fullscreen{position:fixed;inset:0;z-index:1000;width:100vw;height:100vh;height:100dvh;margin:0;border-radius:0;background:#0b130e}
 .native-player.fullscreen .native-stage,.focused-activity .native-player.fullscreen .native-stage{height:100%;min-height:0;border-radius:0}
 .native-player.fullscreen .native-status{display:none}
+
+/* Resource switch: the resources of one region and topic as a menu in the page header, in place of a strip below it. */
+.resource-switch{position:relative;display:inline-flex;align-items:center;min-width:0;max-width:min(300px,100%)}
+.resource-switch select{appearance:none;-webkit-appearance:none;max-width:100%;min-height:35px;padding:0 34px 0 13px;border:1px solid #ffffff2e;border-radius:8px;background:#ffffff0d;color:#fff;font:600 13px/1.2 inherit;font-family:inherit;text-overflow:ellipsis;cursor:pointer}
+.resource-switch select:hover{background:#ffffff1f}.resource-switch select:focus-visible{outline:3px solid var(--color-brand-green-light,#00b44f);outline-offset:2px}
+.resource-switch option{color:var(--ink);background:#fff}
+.resource-switch svg{position:absolute;right:11px;width:14px;height:14px;transform:rotate(90deg);color:#a9bbaf;pointer-events:none}
+@media(pointer:coarse){.resource-switch select{min-height:44px}}
+@media(max-width:620px){.activity-page .page-band .activity-heading{flex-wrap:wrap}.activity-page .page-band .compact-activity-heading .actions{width:100%;flex-wrap:wrap}.resource-switch{order:-1;flex:1 1 100%;max-width:none}.resource-switch select{width:100%}}
+
+/* Share dialog: the link beside its QR code and, for one resource, an embed code for Canvas or Blackboard. */
+.share-body{display:flex;flex-direction:column;gap:16px}.share-body p{margin:0}
+.share-modes{display:flex;gap:8px}
+.share-link{display:flex;gap:20px;align-items:flex-start}.share-link-fields{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}.share-link-fields .copy-box{margin:0}
+.share-qr{flex:none;width:152px;height:152px;padding:6px;border:1px solid var(--line);border-radius:var(--radius);background:#fff}.share-qr svg{display:block;width:100%;height:100%}
+[data-share-panel][hidden]{display:none}
+#share-embed{width:100%;resize:none;padding:11px 12px;border:1px solid var(--color-input-border,#bdcbbf);border-radius:6px;background:var(--color-neutral-50,#fafafa);color:var(--ink);font:12px/1.55 var(--font-mono,ui-monospace,monospace)}
+.share-embed-actions{display:flex;margin:10px 0 14px}
+.share-local-note{font-size:12px}
+@media(max-width:520px){.share-link{flex-direction:column;align-items:stretch}.share-qr{align-self:center}}
