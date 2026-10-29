@@ -70,6 +70,48 @@ async function tell(page, frame, data) {
 const message = view => ({ type: 'devpt-teaching-view', activity: workspace, view });
 const validView = { resource: 'joint-ankle-posterior-glide', side: 'L', cohort: 'female' };
 
+test('individual anatomy bookmarks open their exact selection in the common workspace', async ({ page }, testInfo) => {
+  await setup(page);
+  await open(page, testInfo, '?side=L&cohort=female', 'joint-shoulder-flexion');
+  await expect(page).toHaveURL(/#\/activity\/anatomy-explorer\?view=joint-shoulder-flexion&side=L&cohort=female$/);
+  await expect(page.locator('.native-frame')).toHaveAttribute('src', sourceOrigin + '/teaching/?activity=anatomy-explorer&embedded=1&view=joint-shoulder-flexion&side=L&cohort=female');
+  await expect(page.locator('.anatomy-workspace-band')).toHaveCount(1);
+  await expect(page.locator('.page-band [data-add="joint-shoulder-flexion"]')).toHaveCount(1);
+});
+
+test('search and saved anatomy entries return to the common player with the resource identity intact', async ({ page }, testInfo) => {
+  await setup(page);
+  await page.goto('/#/library?q=Shoulder%20flexion');
+  await page.locator('.ref-result a').filter({ hasText: 'Shoulder flexion' }).click();
+  await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
+  if (testInfo.project.name === 'phone' && await page.locator('.native-player').evaluate(el => el.classList.contains('fullscreen'))) await page.goBack();
+  await expect(page).toHaveURL(/#\/activity\/anatomy-explorer\?view=joint-shoulder-flexion/);
+  await page.locator('.page-band [data-add="joint-shoulder-flexion"]').click();
+  await page.goto('/#/saved');
+  await page.locator('.ref-result a').filter({ hasText: 'Shoulder flexion' }).click();
+  await expect(page).toHaveURL(/#\/activity\/anatomy-explorer\?view=joint-shoulder-flexion/);
+});
+
+test('a legacy anatomy link changes the exact view in place without replacing the workspace iframe', async ({ page }, testInfo) => {
+  await setup(page);
+  const source = await open(page, testInfo, '?view=joint-shoulder-flexion', 'anatomy-explorer');
+  await page.locator('.native-frame').evaluate(el => { el.dataset.routeRetention = 'keep'; });
+  await page.evaluate(() => { location.hash = '#/activity/anatomy-hip?side=L&cohort=female'; });
+  await expect(page).toHaveURL(/#\/activity\/anatomy-explorer\?view=anatomy-hip&side=L&cohort=female$/);
+  await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('.native-frame')).toHaveAttribute('data-route-retention', 'keep');
+  await expect.poll(() => source.evaluate(() => window.receivedSelections.at(-1)?.view)).toEqual({ resource: 'anatomy-hip', side: 'L', cohort: 'female' });
+});
+
+test('independent historical source studies keep their own qualified launch', async ({ page }, testInfo) => {
+  await setup(page);
+  for (const id of ['archived-ankle-muscle', 'ankle-source-preview']) {
+    await open(page, testInfo, '', id);
+    await expect(page).toHaveURL(new RegExp('#/activity/' + id + '$'));
+    await expect(page.locator('.native-frame')).toHaveAttribute('src', sourceOrigin + '/teaching/?activity=' + id + '&embedded=1');
+  }
+});
+
 test('the whole-body workspace uses the source scope for upper-limb views and retains the trusted player while sharing', async ({ page }, testInfo) => {
   await setup(page);
   const id = 'anatomy-explorer';
@@ -182,7 +224,7 @@ test('invalid explorer view query falls back cleanly while retained archives rem
     await expect(page.locator('.native-frame')).toHaveAttribute('src', sourceOrigin + '/teaching/?activity=' + workspace + '&embedded=1');
     await expect(page.locator('[data-current-view]')).not.toContainText('Left ·');
   }
-  for (const id of ['archived-ankle-muscle', 'ankle-source-preview', 'joint-shoulder-flexion']) {
+  for (const id of ['archived-ankle-muscle', 'ankle-source-preview']) {
     await open(page, testInfo, '?view=combined-ankle-dorsiflexion&side=L&cohort=female', id);
     await expect(page.locator('.native-frame')).toHaveAttribute('src', sourceOrigin + '/teaching/?activity=' + id + '&embedded=1');
     await expect(page.locator('[data-player-asset]')).toHaveAttribute('data-player-asset', id);
