@@ -435,6 +435,12 @@ body.workspace-expanded {
 .switcher-list{display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;padding-bottom:2px;scroll-snap-type:x proximity}
 .switcher-list a{flex-shrink:0;scroll-snap-align:start;padding:7px 12px;border:1px solid var(--line);border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap;background:#fff;transition:border-color .15s,color .15s}
 .switcher-list a:hover{border-color:#84af93;color:var(--green)}.switcher-list a[aria-current]{background:#0b120e;border-color:#0b120e;color:#fff}
+.workspace-related{margin:12px 0;border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden}
+.workspace-related>summary{display:flex;align-items:center;min-height:44px;padding:8px 12px;color:var(--green);font-size:13px;font-weight:700;cursor:pointer}
+.workspace-related>summary:before{content:'›';font-size:20px;margin-right:8px}.workspace-related[open]>summary:before{transform:rotate(90deg)}
+.workspace-related .switcher{border:0;border-top:1px solid var(--line);border-radius:0;margin:0}
+.share-view-note{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.5}.share-view-note button{font:inherit;color:var(--green);background:transparent;border:0;text-decoration:underline;cursor:pointer}
+@media(pointer:coarse){.share-view-note button{min-height:44px}.activity-page .page-band .actions>button{min-width:44px;min-height:44px}}
 /* Report an issue */
 .report-form{display:flex;flex-direction:column;gap:16px}.report-form p{margin:0}
 .report-about{display:flex;flex-direction:column;gap:3px;padding:12px 14px;background:var(--mint);border-radius:8px}.report-about span{font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--green)}.report-about strong{font-size:15px;color:var(--ink)}
