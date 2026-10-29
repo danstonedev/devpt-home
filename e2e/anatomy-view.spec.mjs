@@ -22,6 +22,7 @@ const catalog = { schemaVersion: 1, status: 'public-resources', source: 'simlab'
   item('combined-ankle-dorsiflexion', 'Combined ankle dorsiflexion', { kind: 'joint', initial: 'ankle:dorsiflexion', mode: 'original-anatomy', ensemble: 'ankle-dorsiflexion' }, 'ankle-foot', 'muscle-function'),
   item('joint-ankle-posterior-glide', 'Posterior talar glide', { kind: 'joint', initial: 'ankle:posterior-glide' }, 'ankle-foot', 'manual-therapy'),
   item('archived-ankle-muscle', 'Archived ankle source study', { kind: 'joint', initial: 'ankle:dorsiflexion', muscle: 'tibialis-anterior', muscleSource: true }, 'ankle-foot', 'muscle-function'),
+  { ...item('archived-source-alias', 'Earlier source bookmark', { kind: 'joint', initial: 'ankle:dorsiflexion' }, 'ankle-foot'), aliasOf: 'archived-ankle-muscle' },
   item('ankle-source-preview', 'Ankle source preview', { kind: 'joint', initial: 'ankle:dorsiflexion', mode: 'source-preview' }, 'ankle-foot', 'anatomy'),
   item('joint-shoulder-flexion', 'Shoulder flexion', { kind: 'joint', initial: 'shoulder:flexion' }, 'shoulder', 'anatomy'),
 ] };
@@ -127,6 +128,14 @@ test('independent historical source studies keep their own qualified launch', as
     await expect(page).toHaveURL(new RegExp('#/activity/' + id + '$'));
     await expect(page.locator('.native-frame')).toHaveAttribute('src', sourceOrigin + '/teaching/?activity=' + id + '&embedded=1');
   }
+});
+
+test('a retained alias owns its canonical native player and receives readiness', async ({ page }) => {
+  await setup(page);
+  await page.goto('/#/activity/archived-source-alias');
+  await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('.native-frame')).toHaveAttribute('src', sourceOrigin + '/teaching/?activity=archived-ankle-muscle&embedded=1');
+  await expect(page).toHaveURL(/#\/activity\/archived-source-alias$/);
 });
 
 test('the whole-body workspace uses the source scope for upper-limb views and retains the trusted player while sharing', async ({ page }, testInfo) => {
