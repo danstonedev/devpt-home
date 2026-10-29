@@ -103,6 +103,23 @@ test('a legacy anatomy link changes the exact view in place without replacing th
   await expect.poll(() => source.evaluate(() => window.receivedSelections.at(-1)?.view)).toEqual({ resource: 'anatomy-hip', side: 'L', cohort: 'female' });
 });
 
+for (const type of ['devpt-teaching-view', 'devpt-teaching-selected']) test(`a queued ${type} cannot undo leaving the player`, async ({ page }, testInfo) => {
+  await setup(page);
+  await open(page, testInfo, '?view=joint-shoulder-flexion', 'anatomy-explorer');
+  await page.evaluate(({ origin, type }) => {
+    const source = document.querySelector('.native-frame').contentWindow;
+    location.hash = '#/saved';
+    // Reproduce a legitimate already-queued frame message arriving before the
+    // hashchange handler tears down the old iframe. Keep exact origin/source.
+    window.dispatchEvent(new MessageEvent('message', { origin, source, data: type === 'devpt-teaching-view'
+      ? { type, activity: 'anatomy-explorer', view: { resource: 'anatomy-hip', side: 'R', cohort: 'male' } }
+      : { type, activity: 'anatomy-hip' } }));
+  }, { origin: sourceOrigin, type });
+  await expect(page).toHaveURL(/#\/saved$/);
+  await expect(page.getByRole('heading', { name: 'Saved resources', exact: true })).toBeVisible();
+  await expect(page.locator('.native-frame')).toHaveCount(0);
+});
+
 test('independent historical source studies keep their own qualified launch', async ({ page }, testInfo) => {
   await setup(page);
   for (const id of ['archived-ankle-muscle', 'ankle-source-preview']) {
