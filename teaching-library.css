@@ -462,6 +462,15 @@ html.player-fullscreen,html.player-fullscreen body{overflow:hidden}
 .resource-switch select{appearance:none;-webkit-appearance:none;max-width:100%;min-height:35px;padding:0 34px 0 13px;border:1px solid #ffffff2e;border-radius:8px;background:#ffffff0d;color:#fff;font:600 13px/1.2 inherit;font-family:inherit;text-overflow:ellipsis;cursor:pointer}
 .resource-switch select:hover{background:#ffffff1f}.resource-switch select:focus-visible{outline:3px solid var(--color-brand-green-light,#00b44f);outline-offset:2px}
 .resource-switch option{color:var(--ink);background:#fff}
+.anatomy-workspace-band{display:flex;align-items:center;gap:16px;padding-block:14px}
+.anatomy-workspace-band .band-copy{flex:1;min-width:0}
+.anatomy-workspace-band .breadcrumb{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0}
+.anatomy-workspace-band .breadcrumb>.icon{flex-shrink:0}
+.anatomy-workspace-band .resource-switch{max-width:min(460px,100%);font-size:14px}
+.anatomy-workspace-band .resource-switch select{width:100%;min-height:40px}
+.anatomy-workspace-band .actions{display:flex;gap:8px;flex-shrink:0}
+.anatomy-workspace-band .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+@media(max-width:620px){.anatomy-workspace-band{align-items:flex-start;gap:8px}.anatomy-workspace-band .workspace-crumb{font-size:12px}.anatomy-workspace-band .resource-switch{flex:1 1 100%;order:0}.anatomy-workspace-band .actions{gap:4px}.anatomy-workspace-band .actions .icon-button{width:36px;height:40px}}
 .resource-switch svg{position:absolute;right:11px;width:14px;height:14px;transform:rotate(90deg);color:#a9bbaf;pointer-events:none}
 @media(pointer:coarse){.resource-switch select{min-height:44px}}
 @media(max-width:620px){.activity-page .page-band .activity-heading{flex-wrap:wrap}.activity-page .page-band .compact-activity-heading .actions{width:100%;flex-wrap:wrap}.resource-switch{order:-1;flex:1 1 100%;max-width:none}.resource-switch select{width:100%}}

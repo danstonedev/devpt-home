@@ -77,6 +77,11 @@ test('the whole-body workspace uses the source scope for upper-limb views and re
   const frame = page.locator('.native-frame');
   await expect(frame).toHaveAttribute('src', sourceOrigin + '/teaching/?activity=' + id + '&embedded=1&view=joint-shoulder-flexion&side=L&cohort=female&practice=match');
   await expect(page.getByRole('navigation', { name: 'Breadcrumb', exact: true })).toContainText('Anatomy workspace');
+  await expect(page.locator('.anatomy-workspace-band .breadcrumb select[data-switch]')).toHaveCount(1);
+  await expect(page.locator('.anatomy-workspace-band .actions select[data-switch]')).toHaveCount(0);
+  await expect(page.locator('.anatomy-workspace-band h1')).toHaveClass('sr-only');
+  await expect(page.locator('.anatomy-workspace-band [data-current-view]')).toHaveClass('sr-only');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await frame.evaluate(element => { element.dataset.retentionProbe = 'whole-body'; });
   await tell(page, source, { type: 'devpt-teaching-view', activity: id, view: { resource: 'anatomy-hip', side: 'R', cohort: 'male' } });
   await expect(page).toHaveURL(/#\/activity\/anatomy-explorer\?view=anatomy-hip&side=R&cohort=male$/);
@@ -98,7 +103,7 @@ test('an explorer view link opens its exact native view with generic context and
   await expect(page.locator('[data-current-view]')).toHaveText('Left · Combined ankle dorsiflexion · Match anatomy');
   const breadcrumb = page.getByRole('navigation', { name: 'Breadcrumb', exact: true });
   await expect(breadcrumb).toContainText('Regions'); await expect(breadcrumb).toContainText('Lower extremity workspace');
-  await expect(breadcrumb).not.toContainText('Hip');
+  await expect(breadcrumb.locator('.workspace-crumb')).not.toContainText('Hip');
   // Related resources are a menu in the page header, not a panel below the player.
   const related = page.locator('select[data-switch]');
   await expect(related).toHaveCount(1);
