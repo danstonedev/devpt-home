@@ -89,7 +89,7 @@ test('regions and topics file every resource, and search finds an item by name o
   await page.locator('.ref-result a').click();
   await expect(page.getByRole('heading', { name: 'Lachman test', level: 1 })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toHaveText(/Knee\s*Special tests/);
-  await expect(page.locator('.switcher-list a')).toHaveText(['Lachman test', 'McMurray test', 'Positive McMurray (medial)']);
+  await expect(page.getByRole('combobox', { name: 'Switch Knee › Special tests resource' }).locator('option')).toHaveText(['Lachman test', 'McMurray test', 'Positive McMurray (medial)']);
 });
 
 test('earlier activity and collection links open their place in the reference', async ({ page }) => {
@@ -122,6 +122,9 @@ test('selected resource IDs open in a clean browser without an account', async (
   await page.locator('[data-share-saved]').click();
   const url = await page.getByRole('textbox', { name: 'Resource share link' }).inputValue();
   expect(new URL(url).hash).toBe('#/saved?ids=anatomy-hip,gait');
+  // A list gets a QR code but no embed code: the player frames one resource.
+  await expect(page.locator('[data-share-qr] svg[role="img"]')).toBeVisible();
+  await expect(page.getByRole('radio', { name: 'Embed' })).toHaveCount(0);
   await expect(page.getByText('Local build · recipients need access to this site.')).toHaveCount(0);
   const context = await browser.newContext();
   try {
@@ -252,19 +255,21 @@ test('resources in the same region and topic switch inside the loaded player', a
   await page.goto('/#/activity/exam-special-lachman');
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
   await pageBack(page, testInfo);
-  const switcher = page.locator('.switcher');
-  await expect(switcher.locator('.switcher-list a')).toHaveText(['Lachman test', 'McMurray test', 'Positive McMurray (medial)']);
-  await expect(switcher.locator('[aria-current="page"]')).toHaveText('Lachman test');
+  const switcher = page.locator('select[data-switch]');
+  await expect(switcher.locator('option')).toHaveText(['Lachman test', 'McMurray test', 'Positive McMurray (medial)']);
+  await expect(switcher).toHaveValue('exam-special-lachman');
   await page.locator('.native-frame').evaluate(frame => { frame.dataset.probe = 'kept'; });
-  await switcher.getByRole('link', { name: 'McMurray test', exact: true }).click();
+  await switcher.selectOption('exam-special-mcmurray');
   await expect(page).toHaveURL(/#\/activity\/exam-special-mcmurray$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('McMurray test');
-  await expect(switcher.locator('[aria-current="page"]')).toHaveText('McMurray test');
+  await expect(switcher).toHaveValue('exam-special-mcmurray');
+  // The menu stays focused, so a keyboard user can keep going.
+  await expect(switcher).toBeFocused();
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
   await expect(page.locator('.native-frame')).toHaveAttribute('data-probe', 'kept');
   const source = page.frames().find(frame => frame.url().startsWith('https://lab.devpt.app/teaching/'));
   expect(await source.evaluate(() => [window.loads, window.switched])).toEqual([1, 'exam-special-mcmurray']);
-  await switcher.getByRole('link', { name: /^Next:/ }).click();
+  await switcher.selectOption('demo-mcmurray-medial');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Positive McMurray (medial)');
   await expect(page.locator('.native-frame')).toHaveAttribute('data-probe', 'kept');
 });
@@ -275,7 +280,7 @@ test('an older player that cannot switch in place loads the next resource normal
   await page.goto('/#/activity/exam-special-lachman');
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
   await pageBack(page, testInfo);
-  await page.locator('.switcher').getByRole('link', { name: 'McMurray test', exact: true }).click();
+  await page.locator('select[data-switch]').selectOption('exam-special-mcmurray');
   await expect(page.locator('.native-frame')).toHaveAttribute('src', 'https://lab.devpt.app/teaching/?activity=exam-special-mcmurray&embedded=1', { timeout: 8000 });
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
 });
@@ -289,6 +294,43 @@ const screen = on => parent.postMessage({ type: 'devpt-teaching-fullscreen', on 
 document.querySelector('#play').onclick = () => screen(true);
 document.querySelector('#quit').onclick = () => screen(false);
 </script>`;
+
+test('the resource menu sits in the page header and no strip of resources follows it', async ({ page }) => {
+  await routeCatalog(page);
+  await page.goto('/#/activity/exam-special-lachman');
+  const menu = page.getByRole('combobox', { name: 'Switch Knee › Special tests resource' });
+  await expect(menu).toBeVisible();
+  expect(await menu.evaluate(element => !!element.closest('.page-band'))).toBe(true);
+  await expect(page.locator('.switcher, .switcher-list')).toHaveCount(0);
+  // A resource with no siblings has no menu.
+  await page.goto('/#/activity/gait');
+  await expect(page.getByRole('heading', { name: 'Native walk', level: 1 })).toBeVisible();
+  await expect(page.locator('select[data-switch]')).toHaveCount(0);
+});
+
+test('share gives the link with a QR code, and an embed code for Canvas or Blackboard for one resource', async ({ page }, testInfo) => {
+  await routeCatalog(page);
+  await page.goto('/#/activity/exam-special-lachman');
+  await pageBack(page, testInfo);
+  await page.getByRole('button', { name: 'Share Lachman test', exact: true }).click();
+  const dialog = page.locator('#modal');
+  const link = dialog.getByRole('textbox', { name: 'Resource share link', exact: true });
+  await expect(link).toHaveValue(/#\/activity\/exam-special-lachman$/);
+  await expect(dialog.locator('[data-share-qr] svg[role="img"]')).toBeVisible();
+  await expect(dialog.getByRole('textbox', { name: 'Embed code', exact: true })).toBeHidden();
+  await dialog.getByRole('radio', { name: 'Embed' }).check();
+  const embed = dialog.getByRole('textbox', { name: 'Embed code', exact: true });
+  await expect(embed).toBeVisible();
+  await expect(link).toBeHidden();
+  const code = await embed.inputValue();
+  expect(code).toContain('<iframe src="https://lab.devpt.app/teaching/?activity=exam-special-lachman&amp;embedded=1"');
+  expect(code).toContain('title="Lachman test · DevPT"');
+  expect(code).toContain('allow="fullscreen"');
+  await dialog.getByRole('button', { name: 'Copy embed code', exact: true }).click();
+  await expect(page.locator('#announcer')).toHaveText('Copied');
+  await dialog.getByRole('radio', { name: 'Link' }).check();
+  await expect(link).toBeVisible();
+});
 
 test('a game played in the player takes the whole screen, and Back gives the page back', async ({ page }, testInfo) => {
   await routeCatalog(page);

@@ -99,11 +99,11 @@ test('an explorer view link opens its exact native view with generic context and
   const breadcrumb = page.getByRole('navigation', { name: 'Breadcrumb', exact: true });
   await expect(breadcrumb).toContainText('Regions'); await expect(breadcrumb).toContainText('Lower extremity workspace');
   await expect(breadcrumb).not.toContainText('Hip');
-  const related = page.locator('.workspace-related');
-  await expect(related).toHaveCount(1); await expect(related).not.toHaveAttribute('open');
-  expect(await related.evaluate(element => !!(document.querySelector('.native-player').compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
-  await related.getByText('Related resources', { exact: true }).click();
-  await expect(related.getByRole('link', { name: 'Hip anatomy at rest', exact: true })).toBeVisible();
+  // Related resources are a menu in the page header, not a panel below the player.
+  const related = page.locator('select[data-switch]');
+  await expect(related).toHaveCount(1);
+  expect(await related.evaluate(element => !!element.closest('.page-band'))).toBe(true);
+  await expect(related.locator('option', { hasText: 'Hip anatomy at rest' })).toHaveCount(1);
 });
 
 test('only the loaded trusted source can update the current view and Share preserves it without remounting', async ({ page }, testInfo) => {
