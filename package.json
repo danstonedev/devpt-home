@@ -14,7 +14,7 @@
     "build:teaching-preview": "node scripts/build-local-site.mjs",
     "package:teaching-preview": "node scripts/package-local-site.mjs",
     "check:walkthrough": "node scripts/check-live-showcase.mjs",
-    "test:ui": "playwright test",
+    "test:ui": "node --test scripts/navigation-state.test.mjs && playwright test",
     "check:brand": "node scripts/sync-emr-foundation.mjs --check --snapshot-only",
     "check:brand:source": "node scripts/sync-emr-foundation.mjs --check --source ../devpt-emr-platform",
     "sync:brand": "node scripts/sync-emr-foundation.mjs --source ../devpt-emr-platform",

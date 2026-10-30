@@ -144,8 +144,8 @@ test('the whole-body workspace uses the source scope for upper-limb views and re
   const source = await open(page, testInfo, '?view=joint-shoulder-flexion&side=L&cohort=female&practice=match', id);
   const frame = page.locator('.native-frame');
   await expect(frame).toHaveAttribute('src', sourceOrigin + '/teaching/?activity=' + id + '&embedded=1&view=joint-shoulder-flexion&side=L&cohort=female&practice=match');
-  await expect(page.getByRole('navigation', { name: 'Breadcrumb', exact: true })).toContainText('Anatomy workspace');
-  await expect(page.locator('.anatomy-workspace-band .breadcrumb select[data-switch]')).toHaveCount(1);
+  await expect(page.getByRole('navigation', { name: 'Breadcrumb', exact: true })).toContainText('Shoulder');
+  await expect(page.locator('.anatomy-workspace-band .breadcrumb select[data-switch]')).toHaveCount(0);
   await expect(page.locator('.anatomy-workspace-band .actions select[data-switch]')).toHaveCount(0);
   await expect(page.locator('.anatomy-workspace-band h1')).toHaveClass('sr-only');
   await expect(page.locator('.anatomy-workspace-band [data-current-view]')).toHaveClass('sr-only');
@@ -163,20 +163,18 @@ test('the whole-body workspace uses the source scope for upper-limb views and re
   }
 });
 
-test('an explorer view link opens its exact native view with generic context and related resources below the player', async ({ page }, testInfo) => {
+test('an explorer view link opens its exact native view with contextual breadcrumbs and one anatomy navigator', async ({ page }, testInfo) => {
   await setup(page);
   await open(page, testInfo, '?view=combined-ankle-dorsiflexion&side=L&cohort=female&practice=match');
   const frame = page.locator('.native-frame');
   await expect(frame).toHaveAttribute('src', sourceOrigin + '/teaching/?activity=' + workspace + '&embedded=1&view=combined-ankle-dorsiflexion&side=L&cohort=female&practice=match');
   await expect(page.locator('[data-current-view]')).toHaveText('Left · Combined ankle dorsiflexion · Match anatomy');
   const breadcrumb = page.getByRole('navigation', { name: 'Breadcrumb', exact: true });
-  await expect(breadcrumb).toContainText('Regions'); await expect(breadcrumb).toContainText('Lower extremity workspace');
+  await expect(breadcrumb).toContainText('Regions'); await expect(breadcrumb).toContainText('Ankle & foot');
+  await expect(breadcrumb).toContainText('Muscle function');
   await expect(breadcrumb.locator('.workspace-crumb')).not.toContainText('Hip');
-  // Related resources are a menu in the page header, not a panel below the player.
-  const related = page.locator('select[data-switch]');
-  await expect(related).toHaveCount(1);
-  expect(await related.evaluate(element => !!element.closest('.page-band'))).toBe(true);
-  await expect(related.locator('option', { hasText: 'Hip anatomy at rest' })).toHaveCount(1);
+  // Region/Focus/Action stay owned by the source player; no competing atlas switcher.
+  await expect(page.locator('select[data-switch]')).toHaveCount(0);
 });
 
 test('only the loaded trusted source can update the current view and Share preserves it without remounting', async ({ page }, testInfo) => {
