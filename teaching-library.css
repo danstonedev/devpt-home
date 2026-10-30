@@ -383,7 +383,7 @@ body.workspace-expanded {
 .beta-note .link-button{color:#0b5f2c}.footer .link-button{color:inherit;font-weight:inherit}
 /* Subsection band: the hero's dark style, condensed for region, topic, search, saved and product pages. */
 .page-band{position:relative;margin:-38px 0 26px;padding:22px 0 24px;color:#fff;background:#0b120e;box-shadow:0 0 0 100vmax #0b120e;clip-path:inset(0 -100vmax);isolation:isolate}
-.page-band:before{content:'';position:absolute;z-index:-1;right:-4%;top:50%;width:min(460px,50vw);aspect-ratio:1;transform:translateY(-50%);background:radial-gradient(closest-side,#1b5232 0%,#113522 45%,#0b120e00 100%);pointer-events:none}
+.page-band:before{content:'';position:absolute;z-index:-1;right:0;top:50%;width:min(460px,50vw);aspect-ratio:1;transform:translateY(-50%);background:radial-gradient(closest-side,#1b5232 0%,#113522 45%,#0b120e00 100%);pointer-events:none}
 .page-band .page-head,.page-band .activity-heading{margin-bottom:0}.page-band .page-head h1,.page-band .activity-heading h1{color:#fff;font-size:clamp(28px,3vw,38px);letter-spacing:-1px;margin:0}
 .page-band .breadcrumb{margin-bottom:16px;color:#8fa596}.page-band .breadcrumb a{color:#29c46e}
 .page-band .activity-meta,.page-band .page-head p{color:#a9bbaf}
@@ -455,7 +455,13 @@ main[tabindex="-1"]:focus{outline:none}
 html.player-fullscreen,html.player-fullscreen body{overflow:hidden}
 .native-player.fullscreen{position:fixed;inset:0;z-index:1000;width:100vw;height:100vh;height:100dvh;margin:0;border-radius:0;background:#0b130e}
 .native-player.fullscreen .native-stage,.focused-activity .native-player.fullscreen .native-stage{height:100%;min-height:0;border-radius:0}
-.native-player.fullscreen .native-status{display:none}
+.native-recovery{position:absolute;z-index:20;left:12px;right:12px;bottom:12px;padding:12px;background:#101814f5;border:1px solid #6b8272;border-radius:8px;color:#edf5ef}
+.native-recovery[hidden]{display:none}
+.native-player .native-recovery .native-status{position:static;display:block;margin:0 0 8px;padding:0;border:0;background:none;font-size:13px;color:inherit}
+.native-recovery .actions{display:flex;flex-wrap:wrap;gap:8px}
+.native-recovery .button{min-height:38px}
+.native-player:not(.fullscreen) [data-player-exit]{display:none}
+.saved-view-note{display:block;color:var(--green);font-size:12px;margin-top:5px}
 
 /* Resource switch: the resources of one region and topic as a menu in the page header, in place of a strip below it. */
 .resource-switch{position:relative;display:inline-flex;align-items:center;min-width:0;max-width:min(300px,100%)}

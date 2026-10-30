@@ -121,7 +121,7 @@ test('selected resource IDs open in a clean browser without an account', async (
   await page.locator('.topbar a[href="#/saved"]').click();
   await page.locator('[data-share-saved]').click();
   const url = await page.getByRole('textbox', { name: 'Resource share link' }).inputValue();
-  expect(new URL(url).hash).toBe('#/saved?ids=anatomy-hip,gait');
+  expect(new URL(url).hash).toMatch(/^#\/saved\?set=[dj]1\./);
   // A list gets a QR code but no embed code: the player frames one resource.
   await expect(page.locator('[data-share-qr] svg[role="img"]')).toBeVisible();
   await expect(page.getByRole('radio', { name: 'Embed' })).toHaveCount(0);

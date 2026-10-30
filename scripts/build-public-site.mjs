@@ -12,7 +12,7 @@ for (const dir of ['assets','simlab','emrs','3dpain','showcase','platform-terms'
 // This explicit export excludes source docs, development catalogs, local servers,
 // simulation runners, node_modules, caches and generated product copies.
 const html = readFileSync(resolve(output, 'index.html'), 'utf8');
-for (const required of ['/site-bootstrap.js','/site-media.js','/site-fonts.css','/teaching-library.css']) {
+for (const required of ['/site-bootstrap.js','/site-media.js','/site-fonts.css','/teaching-library.css','/assets/navigation-state.js']) {
   if (!html.includes(required) || !existsSync(resolve(output, required.slice(1)))) throw new Error(`Missing public entry dependency: ${required}`);
 }
 if (/noindex|local-site-config\.js|local-site-fonts\.css/.test(html)) throw new Error('The public entry must not depend on local-only artifacts.');

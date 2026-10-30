@@ -13,6 +13,7 @@ export function renderProducts(root) {
       querySelectorAll: () => [], addEventListener() {}, dispatchEvent() {},
     },
     window: { addEventListener() {} },
+    history: { state: null }, cancelAnimationFrame() {},
     location: { hash: '#/products', href: 'http://127.0.0.1:8109/#/products', protocol: 'http:' },
     localStorage: { getItem: () => null }, URL, URLSearchParams, Event, clearTimeout, setTimeout,
   }, { filename: 'teaching-library.js', timeout: 1000 });
