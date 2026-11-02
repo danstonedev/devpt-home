@@ -202,7 +202,7 @@ test("primary navigation reaches the product directory and each product", async 
   }
   const nav = page.getByRole("navigation", { name: "Primary", exact: true });
   await nav.getByRole("link", { name: "Products", exact: true }).click();
-  await expect(page).toHaveURL(/#\/products$/);
+  await expect(page).toHaveURL(/\/products\/$/);
   await expect(page.locator("main h1")).toHaveText("DevPT products");
   if (testInfo.project.name === "phone")
     await expect(page.getByRole("button", { name: "Toggle navigation", exact: true })).toHaveAttribute("aria-expanded", "false");
@@ -529,4 +529,13 @@ test("a blocked embed exposes a visible connection fallback with a direct full v
     "href",
     `${products[1].origin}/showcase/`,
   );
+});
+
+
+test("earlier homepage contact and product links open their real pages", async ({ page }) => {
+  for (const [name, title] of [["contact", "Let’s talk"], ["products", "DevPT products"]]) {
+    await page.goto("/#" + name);
+    await expect(page).toHaveURL(new RegExp("/" + name + "/$"));
+    await expect(page.locator("main h1")).toBeVisible();
+  }
 });

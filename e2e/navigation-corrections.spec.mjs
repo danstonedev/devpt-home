@@ -1,3 +1,4 @@
+const publicLocation=value=>{const url=new URL(value);return url.pathname+url.search;};
 import {test,expect} from '@playwright/test';
 
 // Host protocol/failure fixtures. Actual layered model continuity is verified in simLAB.
@@ -14,7 +15,7 @@ async function open(page,testInfo){await page.goto('/#/activity/anatomy-explorer
 for(const count of [35,61])test(`complete ${count}-item collection with long IDs opens in a clean browser`,async({page,browser},info)=>{
  await setup(page);await page.addInitScript(ids=>localStorage.setItem('devpt.saved-resources.v1',JSON.stringify(ids)),entries.slice(0,count).map(x=>x.id));
  await page.goto('/#/saved');await expect(page.locator('.ref-result')).toHaveCount(count);await page.locator('.page-head [data-share-saved]').click();
- const url=await page.getByLabel('Resource share link',{exact:true}).inputValue();expect(new URL(url).hash).toMatch(/^#\/saved\?set=d1\./);
+ const url=await page.getByLabel('Resource share link',{exact:true}).inputValue();expect(publicLocation(new URL(url))).toMatch(/^\/saved\/\?set=d1\./);
  const ctx=await browser.newContext({viewport:info.project.use.viewport});try{const receiver=await ctx.newPage();await setup(receiver);await receiver.goto(url);await expect(receiver.locator('.ref-result')).toHaveCount(count);await expect(receiver.locator('.ref-result strong')).toHaveText(entries.slice(0,count).map(x=>x.title));}finally{await ctx.close();}
 });
 test('legacy collections over 50 are preserved; malformed and missing IDs are explicit',async({page})=>{
@@ -36,8 +37,8 @@ test('a shared view cannot substitute another resource; re-sharing retains missi
  await setup(page);await page.goto('/#/saved');
  const entries=[{id:'joint-ankle-posterior-glide',view:{resource:'anatomy-hip',side:'L',cohort:'female'}},{id:'retired-public-resource'}];
  const token=await page.evaluate(values=>DevptNavigation.encodeCollection(values),entries);
- await page.goto('/#/saved?set='+token);await expect(page.locator('main')).toContainText('1 saved views are no longer supported');await expect(page.locator('.ref-result a')).toHaveAttribute('href','#/activity/joint-ankle-posterior-glide');
- await page.locator('.page-head [data-share-saved]').click();const url=await page.getByLabel('Resource share link',{exact:true}).inputValue();const received=await page.evaluate(url=>DevptNavigation.decodeCollection(new URLSearchParams(new URL(url).hash.split('?')[1]).get('set')),url);expect(received).toEqual(entries);
+ await page.goto('/#/saved?set='+token);await expect(page.locator('main')).toContainText('1 saved views are no longer supported');await expect(page.locator('.ref-result a')).toHaveAttribute('href','/resources/joint-ankle-posterior-glide/');
+ await page.locator('.page-head [data-share-saved]').click();const url=await page.getByLabel('Resource share link',{exact:true}).inputValue();const received=await page.evaluate(url=>DevptNavigation.decodeCollection(new URL(url).searchParams.get('set')),url);expect(received).toEqual(entries);
 });
 test('a delayed catalog preserves list restoration rather than replacing it with loading-state scroll',async({page})=>{
  await setup(page);await page.goto('/#/library?q=glide');const link=page.locator('.ref-result a').nth(65);await link.scrollIntoViewIfNeeded();await settle(page);const before=await page.evaluate(()=>scrollY);

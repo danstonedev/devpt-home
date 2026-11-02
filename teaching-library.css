@@ -491,3 +491,6 @@ html.player-fullscreen,html.player-fullscreen body{overflow:hidden}
 .share-embed-actions{display:flex;margin:10px 0 14px}
 .share-local-note{font-size:12px}
 @media(max-width:520px){.share-link{flex-direction:column;align-items:stretch}.share-qr{align-self:center}}
+
+/* Contain decorative full-bleed glows without expanding the phone viewport. */
+@media(max-width:520px){.devpt-hero:before{right:0}}
