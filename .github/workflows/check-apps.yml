@@ -1,10 +1,11 @@
 name: Check apps.json
 
 # Owner direction, 26 October 2026 (all repositories): hosted CI is requested
-# deliberately. Pushes, pull requests and the old weekly schedule start no run;
-# run this from Actions on the branch to verify it, or on main to check that
-# every advertised app is still online.
+# deliberately for routine changes. Run this from Actions on a branch to verify
+# it. The independent weekly check still catches advertised apps going offline.
 on:
+  schedule:
+    - cron: "17 13 * * 1" # weekly (Mon) - catch apps that have gone offline
   workflow_dispatch:
 
 permissions:

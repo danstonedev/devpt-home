@@ -79,7 +79,7 @@ node scripts/check-apps.mjs --no-ping
 git diff --check
 ```
 
-`check:walkthrough` verifies the dedicated simLAB page, both trusted live frames, root-relative assets, preserved live catalogue and visibility bridge. It rejects a walkthrough on the three-product homepage or a vendored simulator. The app checks validate the registry, product pages and launch links. The on-request `Check apps.json` workflow additionally checks advertised URLs; temporary reachability failures warn unless strict mode is selected.
+`check:walkthrough` verifies the dedicated simLAB page, both trusted live frames, root-relative assets, preserved live catalogue and visibility bridge. It rejects a walkthrough on the three-product homepage or a vendored simulator. The app checks validate the registry, product pages and launch links. The weekly and on-request `Check apps.json` workflow additionally checks advertised URLs; temporary reachability failures warn unless strict mode is selected.
 
 Inspect all four routes at desktop and phone widths. Check shared navigation, chapter selection, full view, local assets, reduced motion and unavailable-frame links. The real demonstration and its clinical behavior are tested in the owning product repository. See [Product introduction](docs/homepage-refresh.md) for the editorial and ownership rules.
 
@@ -105,11 +105,10 @@ The root site is a reference library: every resource simLAB publishes, filed by 
 
 Owner direction, 26 October 2026, applies to all repositories: minimize hosted
 CI runs. Verify locally while iterating, batch coherent changes, and request
-hosted validation deliberately: Actions → the CI workflow → Run workflow, on
+hosted validation deliberately: Actions → Check apps.json → Run workflow, on
 the branch to verify. Opening a pull request, updating a draft or pushing starts
-no test suites, and there is no automatic nightly run to compensate.
+no routine test suites. The independent weekly app and link check remains scheduled.
 
 Changes reach the default branch through a pull request and the owner decides
-what merges; no CI status is a merge requirement (as simLAB's ruleset since
-27 October 2026). Production deploys still build on merge, and automated
-pose-engine updates still dispatch their own verification.
+what merges. Production deploys still build on merge. Pull-request closure only
+cleans up existing Azure preview environments; it does not build a preview.
