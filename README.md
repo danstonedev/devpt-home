@@ -79,7 +79,7 @@ node scripts/check-apps.mjs --no-ping
 git diff --check
 ```
 
-`check:walkthrough` verifies the dedicated simLAB page, both trusted live frames, root-relative assets, preserved live catalogue and visibility bridge. It rejects a walkthrough on the three-product homepage or a vendored simulator. The app checks validate the registry, product pages and launch links. CI additionally checks advertised URLs; temporary reachability failures warn unless strict mode is selected.
+`check:walkthrough` verifies the dedicated simLAB page, both trusted live frames, root-relative assets, preserved live catalogue and visibility bridge. It rejects a walkthrough on the three-product homepage or a vendored simulator. The app checks validate the registry, product pages and launch links. The weekly and on-request `Check apps.json` workflow additionally checks advertised URLs; temporary reachability failures warn unless strict mode is selected.
 
 Inspect all four routes at desktop and phone widths. Check shared navigation, chapter selection, full view, local assets, reduced motion and unavailable-frame links. The real demonstration and its clinical behavior are tested in the owning product repository. See [Product introduction](docs/homepage-refresh.md) for the editorial and ownership rules.
 
@@ -100,3 +100,15 @@ Custom domains and DNS live in Azure. Prefer Azure DNS ALIAS for apex changes an
 The root site is a reference library: every resource simLAB publishes, filed by body region and topic (a region page lists its topics, a topic page its regions), with search across titles, headings and common terms, browser-local saves and account-free sharing. Each resource opens its own selection in simLAB's public player (`https://lab.devpt.app/teaching/?activity=<id>`). The site consumes SimLab’s source-owned published catalog at `https://lab.devpt.app/teaching/catalog.json`, including its ordered regions and topics; models, players and the resource list are never copied into this repository. A curated activity that names a reference item in `aliasOf` is listed once, as that item, and its own links keep opening it; earlier `#/collection/<id>` links open the matching region or topic. Public entry controls and publication live in SimLab ([public teaching resources](https://github.com/danstonedev/simlab/blob/main/docs/public-teaching-resources.md)). Gait physics remains an experimental local tool.
 
 `npm run build:public` exports only public website files to `.cache/public-site`, which is the Azure deployment input. The workflow waits for compatible source-owned walkthroughs and the published teaching entry before upload. `npm run build:local` and `npm run preview:local` retain the complete local source review; see `docs/local-site-preview.md`.
+
+## Hosted CI is requested, not automatic
+
+Owner direction, 26 October 2026, applies to all repositories: minimize hosted
+CI runs. Verify locally while iterating, batch coherent changes, and request
+hosted validation deliberately: Actions → Check apps.json → Run workflow, on
+the branch to verify. Opening a pull request, updating a draft or pushing starts
+no routine test suites. The independent weekly app and link check remains scheduled.
+
+Changes reach the default branch through a pull request and the owner decides
+what merges. Production deploys still build on merge. Pull-request closure only
+cleans up existing Azure preview environments; it does not build a preview.
