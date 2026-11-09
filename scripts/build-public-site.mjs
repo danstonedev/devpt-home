@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const output = resolve(root, '.cache/public-site');
-const files = ['index.html','privacy.html','terms.html','accessibility.html','sitemap.html','resource-credits.html','apps.json','styles.css','emr-foundation.css','portfolio.css','native-showcase.css','product-walkthrough.css','app.js','walkthrough.js','product-walkthrough.js','portfolio.js','feature-workspaces.js','teaching-library.js','teaching-library.css','site-bootstrap.js','site-media.js','site-fonts.css','staticwebapp.config.json','favicon.ico','robots.txt','sitemap.xml'];
+const files = ['index.html','privacy.html','terms.html','accessibility.html','sitemap.html','resource-credits.html','apps.json','styles.css','emr-foundation.css','portfolio.css','native-showcase.css','product-walkthrough.css','app.js','walkthrough.js','product-walkthrough.js','portfolio.js','feature-workspaces.js','teaching-library.js','teaching-library.css','classroom-lesson.js','classroom-session.js','classroom-session.css','site-bootstrap.js','site-media.js','site-fonts.css','staticwebapp.config.json','favicon.ico','robots.txt','sitemap.xml'];
 rmSync(output, { recursive: true, force: true });
 mkdirSync(output, { recursive: true });
 for (const file of files) if (existsSync(resolve(root, file))) cpSync(resolve(root, file), resolve(output, file));
