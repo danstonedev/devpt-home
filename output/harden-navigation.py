@@ -1,0 +1,10 @@
+from pathlib import Path
+p=Path('teaching-library.js');s=p.read_text(encoding='utf-8')
+s=s.replace("document.addEventListener('devpt:catalog-ready',()=>{updateCatalog();", "document.addEventListener('devpt:catalog-ready',()=>{rememberNavigation();updateCatalog();")
+s=s.replace("}}rememberNavigation();if(!['products'", "}}if(!['products'")
+s=s.replace("function displayedCollection(){return sharedCollection(route().params)?.items||collectionItems();}","function displayedCollection(){return ['saved','lesson','teach'].includes(route().path)?sharedCollection(route().params)?.items||collectionItems():collectionItems();}")
+s=s.replace("shell.querySelector('.native-status').textContent='Loading…';frame.title=", "showRecovery(shell,url);frame.title=")
+s=s.replace("shell.dataset.playerAsset===next.id)frame.src=url.href;", "shell.dataset.playerAsset===next.id)retryPlayer();")
+s=s.replace("const unavailable=unknown.length?", "const invalidViews=items.filter(item=>item.view&&!savedView(item.id,item.view));\n const viewIssue=invalidViews.length?`<p role=\"status\">${invalidViews.length} saved views are no longer supported. Their resources open at the default view; the original settings are retained in this collection.</p>`:'';\n const unavailable=unknown.length?")
+s=s.replace("${issue}${unavailable}${items.length?", "${issue}${unavailable}${viewIssue}${items.length?")
+p.write_text(s,encoding='utf-8')
