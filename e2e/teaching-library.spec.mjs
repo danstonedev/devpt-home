@@ -93,6 +93,63 @@ test('regions and topics file every resource, and search finds an item by name o
   await expect(page.getByRole('combobox', { name: 'Switch Knee › Special tests resource' }).locator('option')).toHaveText(['Lachman test', 'McMurray test', 'Positive McMurray (medial)']);
 });
 
+// The source's sections (simLAB's five shelves, in course order) with the topics filed under them. A section with no
+// listed topic is left out; a topic under no section stays listed and linked, off the shelves.
+const sections = [{ id: 'structure-function', label: 'Structure & function' }, { id: 'examination', label: 'Examination' }, { id: 'clinical-reasoning', label: 'Clinical reasoning' }, { id: 'intervention', label: 'Intervention' }];
+const shelvedTopics = [
+  { id: 'anatomy', label: 'Anatomy', sectionId: 'structure-function' }, { id: 'special-tests', label: 'Special tests', sectionId: 'examination' },
+  { id: 'gait-balance', label: 'Gait & balance', sectionId: 'examination' }, { id: 'clinical-cases', label: 'Clinical cases', sectionId: 'clinical-reasoning' },
+  { id: 'manual-therapy', label: 'Manual therapy', sectionId: 'intervention' }, { id: 'source-previews', label: 'Native motion previews' },
+];
+const shelved = (id, title, regionId, topicId) => ({ ...item(id, title, regionId, 'anatomy'), topicId, topic: shelvedTopics.find(topic => topic.id === topicId).label });
+const sectioned = { ...catalog, sections, topics: shelvedTopics, activities: [...activities,
+  shelved('anatomy-knee', 'Knee anatomy at rest', 'knee', 'anatomy'),
+  shelved('joint-knee-posterior-glide', 'Tibial posterior glide', 'knee', 'manual-therapy'), shelved('joint-knee-anterior-glide', 'Tibial anterior glide', 'knee', 'manual-therapy'),
+  shelved('native-walk-f', 'Walk F source take', 'whole-body', 'source-previews'), shelved('native-idle-m', 'Idle M source take', 'whole-body', 'source-previews'),
+] };
+
+test('sections shelve the topics in course order on every page, and an unshelved topic stays linked off the shelves', async ({ page }) => {
+  await routeCatalog(page, sectioned);
+  await page.goto('/');
+  // Home: one row per section that has topics, in the source's order, then the topic filed under no section.
+  const byTopic = page.getByRole('region', { name: 'By topic' });
+  await expect(byTopic.getByRole('heading', { level: 3 })).toHaveText([/^Structure & function/, /^Examination/, /^Intervention/]);
+  await expect(byTopic.getByRole('listitem').filter({ has: page.getByRole('heading', { name: /^Examination/ }) }).getByRole('link')).toHaveText(['Examination', /^Special tests/, /^Gait & balance/]);
+  await expect(byTopic.getByText('Also in the library').locator('..').getByRole('link')).toHaveText([/^Native motion previews/]);
+  await byTopic.getByRole('link', { name: 'Special tests, 3 resources' }).click();
+  await expect(page).toHaveURL(/#\/topic\/special-tests$/);
+  // A topic names its section on the way back up, and the section has its own page.
+  await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toHaveText(/Topics\s*Examination\s*Special tests/);
+  await page.getByRole('navigation', { name: 'Breadcrumb' }).getByRole('link', { name: 'Examination' }).click();
+  await expect(page).toHaveURL(/#\/section\/examination$/);
+  await expect(page.getByRole('heading', { name: 'Examination', level: 1 })).toBeVisible();
+  await expect(page).toHaveTitle('Examination · DevPT');
+  await expect(page.locator('main').getByRole('link', { name: /, \d+ resources$/ })).toHaveText([/^Special tests/, /^Gait & balance/]);
+  await page.goto('/#/section/clinical-reasoning');
+  await expect(page.getByRole('heading', { name: 'Section unavailable' })).toBeVisible();
+  // Topics: the same sections as headings over their topic cards.
+  await page.goto('/#/topics');
+  await expect(page.locator('main').getByRole('heading', { level: 2 })).toHaveText([/^Structure & function/, /^Examination/, /^Intervention/, 'Also in the library']);
+  await expect(page.getByRole('region', { name: 'Also in the library' }).getByRole('link')).toHaveText([/^Native motion previews/]);
+  // A region reads as a chapter: sections, then topics, then a topic's own headings, each one level down.
+  await page.goto('/#/region/knee');
+  const main = page.locator('main');
+  await expect(main.getByRole('heading', { level: 2 })).toHaveText(['Structure & function', 'Examination', 'Intervention']);
+  await expect(main.getByRole('heading', { level: 3 })).toHaveText([/^Anatomy/, /^Special tests/, /^Manual therapy/]);
+  await expect(main.getByRole('heading', { level: 4 })).toHaveText(['Example findings']);
+  await page.getByRole('searchbox', { name: 'Filter Knee resources' }).fill('glide');
+  await expect(main.getByRole('heading', { level: 2 })).toHaveText(['Intervention']);
+  await expect(main.locator('li:visible a')).toHaveText(['Tibial posterior glide', 'Tibial anterior glide']);
+  await page.goto('/#/region/whole-body');
+  await expect(page.locator('main').getByRole('heading', { level: 2 })).toHaveText(['Examination', 'Also in the library']);
+  // Search offers the topics under the same sections.
+  await page.goto('/#/library');
+  expect(await page.getByRole('combobox', { name: 'Filter by topic' }).locator('optgroup').evaluateAll(groups => groups.map(group => [group.label, [...group.children].map(option => option.textContent)])))
+    .toEqual([['Structure & function', ['Anatomy']], ['Examination', ['Special tests', 'Gait & balance']], ['Intervention', ['Manual therapy']], ['Also in the library', ['Native motion previews']]]);
+  await page.getByRole('combobox', { name: 'Filter by topic' }).selectOption('source-previews');
+  await expect(page.locator('.ref-result')).toHaveCount(2);
+});
+
 test('earlier activity and collection links open their place in the reference', async ({ page }, testInfo) => {
   await routeCatalog(page);
   await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: playerFixture(false) }));
