@@ -62,7 +62,7 @@ test('unpublished catalog data fails closed while product navigation works', asy
   expect(requests.some(url => /local-site-config|\/native\/|__local\/gait-physics/.test(url))).toBe(false);
 });
 
-test('regions and topics file every resource, and search finds an item by name or common term', async ({ page }) => {
+test('regions and topics file every resource, and search finds an item by name or common term', async ({ page }, testInfo) => {
   await routeCatalog(page);
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Reference library', exact: true })).toBeVisible();
@@ -87,14 +87,17 @@ test('regions and topics file every resource, and search finds an item by name o
   await expect(page.locator('.ref-result')).toHaveCount(1);
   await expect(page.locator('.ref-result .result-copy > span')).toHaveText('Knee › Special tests');
   await page.locator('.ref-result a').click();
+  await pageBack(page, testInfo);
   await expect(page.getByRole('heading', { name: 'Lachman test', level: 1 })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Breadcrumb' })).toHaveText(/Knee\s*Special tests/);
   await expect(page.getByRole('combobox', { name: 'Switch Knee › Special tests resource' }).locator('option')).toHaveText(['Lachman test', 'McMurray test', 'Positive McMurray (medial)']);
 });
 
-test('earlier activity and collection links open their place in the reference', async ({ page }) => {
+test('earlier activity and collection links open their place in the reference', async ({ page }, testInfo) => {
   await routeCatalog(page);
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: playerFixture(false) }));
   await page.goto('/#/activity/hip-anatomy');
+  await pageBack(page, testInfo);
   await expect(page.getByRole('heading', { name: 'Hip anatomy at rest', level: 1 })).toBeVisible();
   await expect(page.locator('[data-player-asset]')).toHaveAttribute('data-player-asset', 'anatomy-hip');
   // The fixture's hip region holds one resource, so its page opens that resource directly.
@@ -104,13 +107,14 @@ test('earlier activity and collection links open their place in the reference', 
   await expect(page.getByRole('heading', { name: 'Topic unavailable' })).toBeVisible();
 });
 
-test('an earlier catalog without regions, topics or ids still renders by its labels', async ({ page }) => {
+test('an earlier catalog without regions, topics or ids still renders by its labels', async ({ page }, testInfo) => {
   const legacy = activities.filter(activity => !activity.launch).map(({ regionId, topicId, aliasOf, context, ...rest }) => rest);
   await routeCatalog(page, { schemaVersion: 1, status: 'public-resources', source: 'simlab', activities: legacy });
   await page.goto('/#/regions');
   await expect(page.locator('.ref-card strong')).toHaveText(['Hip', 'Whole body']);
   await page.goto('/#/collection/all-hip');
   await expect(page).toHaveURL(/#\/activity\/hip-anatomy$/);
+  await pageBack(page, testInfo);
   await expect(page.getByRole('heading', { name: 'Hip anatomy at rest', level: 1 })).toBeVisible();
 });
 
@@ -295,15 +299,17 @@ document.querySelector('#play').onclick = () => screen(true);
 document.querySelector('#quit').onclick = () => screen(false);
 </script>`;
 
-test('the resource menu sits in the page header and no strip of resources follows it', async ({ page }) => {
+test('the resource menu sits in the page header and no strip of resources follows it', async ({ page }, testInfo) => {
   await routeCatalog(page);
   await page.goto('/#/activity/exam-special-lachman');
+  await pageBack(page, testInfo);
   const menu = page.getByRole('combobox', { name: 'Switch Knee › Special tests resource' });
   await expect(menu).toBeVisible();
   expect(await menu.evaluate(element => !!element.closest('.page-band'))).toBe(true);
   await expect(page.locator('.switcher, .switcher-list')).toHaveCount(0);
   // A resource with no siblings has no menu.
   await page.goto('/#/activity/gait');
+  await pageBack(page, testInfo);
   await expect(page.getByRole('heading', { name: 'Native walk', level: 1 })).toBeVisible();
   await expect(page.locator('select[data-switch]')).toHaveCount(0);
 });
@@ -392,8 +398,8 @@ test('on a phone a resource opens full screen; Back restores the compact page an
   await expect(player).not.toHaveClass(/\bfullscreen\b/);
   await expect(page).toHaveURL(/#\/activity\/exam-special-lachman$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Lachman test');
-  // The canonical resource still owns its fullscreen action; the outer page
-  // does not duplicate it or open a second tab.
+  // The canonical resource's own fullscreen action still works with the host
+  // control and the same frame; neither opens a second tab.
   await page.frameLocator('.native-frame').locator('#play').click();
   await expect(player).toHaveClass(/\bfullscreen\b/);
   await expect.poll(async () => { const box = await player.boundingBox(); return [Math.round(box.width), Math.round(box.height)]; }).toEqual([view.width, view.height]);
@@ -438,3 +444,127 @@ test('a playing resource retains its frame and fullscreen through catalog refres
   await game.locator('#quit').click();
   await expect(player).not.toHaveClass(/\bfullscreen\b/);
 });
+
+for (const resource of ['exam-special-lachman', 'anatomy-hip', 'gait']) {
+  test(`Library expansion preserves the ${resource} iframe, progress and return focus`, async ({ page }, testInfo) => {
+    await routeCatalog(page);
+    // The same host control must work when OS fullscreen is unavailable, as on iPad Safari.
+    await page.addInitScript(() => { Element.prototype.requestFullscreen = () => Promise.reject(new Error('Fullscreen unavailable in fixture')); });
+    await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: gameFixture }));
+    await page.goto('/#/activity/' + resource);
+    const player = page.locator('.native-player'), toggle = player.locator('[data-player-screen]');
+    await expect(player).toHaveAttribute('data-ready', 'true');
+    await pageBack(page, testInfo);
+    await expect(toggle).toHaveAccessibleName('Expand resource');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    const frame = await page.locator('.native-frame').elementHandle();
+    await page.frameLocator('.native-frame').locator('#play').evaluate(element => { element.dataset.progress = 'retained'; });
+    await page.locator('.footer').evaluate(element => { element.inert = true; }); // Preserve another owner's prior state.
+    await toggle.focus(); await page.keyboard.press('Enter');
+    await expect(toggle).toHaveAccessibleName('Back to page');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(player).toHaveClass(/\bfullscreen\b/);
+    await expect(player).toHaveAttribute('role', 'dialog');
+    await expect(player).toHaveAttribute('aria-modal', 'true');
+    expect(await page.locator('.topbar').evaluate(element => element.inert)).toBe(true);
+    const viewport = page.viewportSize();
+    await expect.poll(async () => { const box = await player.boundingBox(); return [Math.round(box.width), Math.round(box.height)]; }).toEqual([viewport.width, viewport.height]);
+    const tools = await player.locator('.native-view-tools').boundingBox(), stage = await player.locator('.native-stage').boundingBox();
+    expect(stage.y).toBeGreaterThanOrEqual(tools.y + tools.height - 1); // Return control never covers source controls.
+    expect(stage.height).toBeGreaterThan(0);
+    await page.keyboard.press('Escape');
+    await expect(player).not.toHaveClass(/\bfullscreen\b/);
+    await expect(toggle).toBeFocused();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(player).toHaveAttribute('role', 'region');
+    await expect(player).not.toHaveAttribute('aria-modal');
+    expect(await page.locator('.topbar').evaluate(element => element.inert)).toBe(false);
+    expect(await page.locator('.footer').evaluate(element => element.inert)).toBe(true);
+    await toggle.click(); await expect(player).toHaveClass(/\bfullscreen\b/);
+    await toggle.click(); await expect(player).not.toHaveClass(/\bfullscreen\b/);
+    expect(await frame.evaluate(element => element.isConnected && element === document.querySelector('.native-frame'))).toBe(true);
+    await expect(page.frameLocator('.native-frame').locator('#play')).toHaveAttribute('data-progress', 'retained');
+    expect(page.context().pages()).toHaveLength(1);
+  });
+}
+
+test('leaving an expanded resource restores host accessibility without retaining stale focus', async ({ page }) => {
+  await routeCatalog(page);
+  await page.addInitScript(() => { Element.prototype.requestFullscreen = () => Promise.reject(new Error('Fullscreen unavailable in fixture')); });
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: gameFixture }));
+  await page.goto('/#/activity/exam-special-lachman');
+  const player = page.locator('.native-player'); await expect(player).toHaveAttribute('data-ready', 'true');
+  if (!(await player.getAttribute('class')).includes('fullscreen')) await player.locator('[data-player-screen]').click();
+  await expect(player).toHaveClass(/\bfullscreen\b/);
+  expect(await page.locator('#modal').evaluate(element => element.inert)).toBe(true);
+  await page.evaluate(() => { location.hash = '#/topics'; });
+  await expect(page.locator('.native-frame')).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'By topic', exact: true })).toBeVisible();
+  expect(await page.locator('#modal').evaluate(element => element.inert)).toBe(false);
+  await expect(page.locator('#main')).toBeFocused();
+});
+
+
+const postureProtocolFixture = `<!doctype html><title>Posture protocol fixture</title>
+<output id="position">Standing</output><output id="model">Patient</output>
+<button id="sitting">Sitting</button><button id="basic">Basic male</button><button id="exit">Exit</button>
+<script>
+const parentOrigin = new URL(document.referrer).origin;
+window.receivedSelections = [];
+let activity = new URLSearchParams(location.search).get('activity');
+const ready = () => parent.postMessage({type:'devpt-teaching-ready',activity}, parentOrigin);
+const select = next => { activity=next; document.querySelector('#position').textContent=next.endsWith('sitting')?'Sitting':'Standing'; };
+addEventListener('message',event=>{
+ if(event.origin!==parentOrigin||event.source!==parent)return;
+ if(event.data?.type==='devpt-teaching-select'){window.receivedSelections.push(event.data.activity);select(event.data.activity);ready();}
+});
+document.querySelector('#sitting').onclick=()=>{select('posture-assessment-sitting');parent.postMessage({type:'devpt-teaching-selected',activity},parentOrigin);ready();};
+document.querySelector('#basic').onclick=()=>{document.querySelector('#model').textContent='Basic male';};
+document.querySelector('#exit').onclick=()=>parent.postMessage({type:'devpt-teaching-fullscreen',on:false},parentOrigin);
+ready();
+</script>`;
+
+for (const exit of ['host Back', 'browser Back', 'native Exit']) {
+ test(`${exit} keeps the latest source-selected posture intent when collapsing`, async ({page},testInfo)=>{
+  const standing=item('posture-assessment-standing','Standing posture','whole-body','gait-balance',{launch:{kind:'posture',example:'standing-reference'}});
+  const sitting=item('posture-assessment-sitting','Sitting posture','whole-body','gait-balance',{launch:{kind:'posture',example:'sitting-reference'}});
+  await routeCatalog(page,{...catalog,activities:[...activities,standing,sitting]});
+  await page.addInitScript(()=>{Element.prototype.requestFullscreen=()=>Promise.reject(new Error('OS fullscreen unavailable'));});
+  await page.route(url=>url.origin==='https://lab.devpt.app'&&url.pathname==='/teaching/',route=>route.fulfill({contentType:'text/html',body:postureProtocolFixture}));
+  await page.goto('/#/library');
+  await page.locator('.ref-result a[href="#/activity/posture-assessment-standing"]').click();
+  const player=page.locator('.native-player'),frame=page.locator('.native-frame');
+  await expect(player).toHaveAttribute('data-ready','true');
+  if(testInfo.project.name!=='phone')await player.locator('[data-player-screen]').click();
+  await expect(player).toHaveClass(/\bfullscreen\b/);
+  const retained=await frame.elementHandle(),originalSrc=await frame.getAttribute('src');
+  const source=page.frameLocator('.native-frame');
+  await source.locator('#sitting').click();await source.locator('#basic').click();
+  await expect(page).toHaveURL(/#\/activity\/posture-assessment-sitting$/);
+  await expect(player).toHaveAttribute('data-player-asset','posture-assessment-sitting');
+  await expect(source.locator('#position')).toHaveText('Sitting');
+  await expect(source.locator('#model')).toHaveText('Basic male');
+  if(exit==='host Back')await player.locator('[data-player-screen]').click();
+  else if(exit==='browser Back')await page.goBack();
+  else await source.locator('#exit').click();
+  await expect(player).not.toHaveClass(/\bfullscreen\b/);
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  await expect(page).toHaveURL(/#\/activity\/posture-assessment-sitting$/);
+  await expect(source.locator('#position')).toHaveText('Sitting');
+  await expect(source.locator('#model')).toHaveText('Basic male');
+  expect(await retained.evaluate(element=>element.isConnected&&element===document.querySelector('.native-frame'))).toBe(true);
+  await expect(frame).toHaveAttribute('src',originalSrc);
+  const sourceFrame=page.frames().find(value=>value.url().startsWith('https://lab.devpt.app/teaching/'));
+  expect(await sourceFrame.evaluate(()=>window.receivedSelections)).toEqual([]);
+  await page.goForward();await expect(player).toHaveClass(/\bfullscreen\b/);
+  await page.goBack();await expect(player).not.toHaveClass(/\bfullscreen\b/);
+  await expect(page).toHaveURL(/#\/activity\/posture-assessment-sitting$/);
+  await expect(source.locator('#position')).toHaveText('Sitting');
+  await expect(source.locator('#model')).toHaveText('Basic male');
+  expect(await sourceFrame.evaluate(()=>window.receivedSelections)).toEqual([]);
+  await page.goBack();
+  await expect(page).toHaveURL(/#\/library$/);
+  await expect(frame).toHaveCount(0);
+  await expect(page.getByRole('heading',{name:'Search the library',exact:true})).toBeVisible();
+ });
+}
