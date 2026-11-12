@@ -6,6 +6,34 @@ const catalog = JSON.parse(readFileSync(new URL('./fixtures/public-catalog.json'
 const output = resolve('.cache/public-test');
 const catalogUrl = 'https://lab.devpt.app/teaching/catalog.json';
 
+test('Evidence flows and the named Posture Lab have independent direct pages and searchable entries', async ({browser,page,baseURL}) => {
+  const ids=['evidence-diagnostic-results','evidence-test-clusters','posture-assessment-standing'];
+  const staticContext=await browser.newContext({javaScriptEnabled:false});
+  try{
+    const direct=await staticContext.newPage();
+    for(const id of ids){
+      const resource=catalog.activities.find(item=>item.id===id);
+      const response=await direct.goto(baseURL+'/resources/'+id+'/',{waitUntil:'domcontentloaded'});
+      expect(response.status()).toBe(200);
+      await expect(direct.getByRole('heading',{level:1})).toHaveText(resource.title);
+      await expect(direct.locator('iframe')).toHaveCount(0);
+    }
+  }finally{await staticContext.close();}
+  await page.route(catalogUrl,route=>route.fulfill({json:catalog}));
+  await page.route(url=>url.origin==='https://lab.devpt.app'&&/^\/teaching\/?$/u.test(url.pathname),route=>route.fulfill({contentType:'text/html',body:'<title>Source launch protocol fixture</title>'}));
+  for(const id of ids){
+    await page.goto('/resources/'+id+'/',{waitUntil:'domcontentloaded'});
+    const frame=page.locator('.native-frame');await expect(frame).toHaveCount(1);
+    const source=new URL(await frame.getAttribute('src'));
+    expect(source.origin).toBe('https://lab.devpt.app');expect(source.searchParams.get('activity')).toBe(id);
+  }
+  for(const [query,expected] of [['Sankey',ids.slice(0,2)],['postural assessment',['posture-assessment-standing']]]){
+    await page.goto('/search/?q='+encodeURIComponent(query),{waitUntil:'domcontentloaded'});
+    await page.waitForFunction(()=>window.DEVPT_CATALOG_STATE==='ready');
+    for(const id of expected)await expect(page.locator('a[href="/resources/'+id+'/"]').first()).toBeVisible();
+  }
+});
+
 async function isolatedPublicSite(browser, value, projectUse) {
   const context = await browser.newContext({ viewport: projectUse.viewport, isMobile: projectUse.isMobile, hasTouch: projectUse.hasTouch });
   const tags = [];

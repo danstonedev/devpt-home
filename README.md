@@ -2,6 +2,13 @@
 
 DevPT is a free physical therapy reference library, organized by body region and topic. Browsing, opening resources and sharing public resource collections require no account. The interactive players remain in their owning applications.
 
+The Evidence Lab's diagnostic-results and test-cluster Sankeys have independent
+resource pages under Whole body → Measurement & evidence. Posture Assessment Lab
+opens directly under Whole body → Movement screens. These entries and their
+search terms come from simLAB's catalog; the Library retains the same workbench.
+The public-site smoke fixture covers their direct pages and search discovery so
+a catalog addition is also checked as a standalone Library entry.
+
 Product overviews provide a separate route to the three DevPT product lines:
 
 | Product    | DevPT walkthrough | Product-owned public entry           | Owning repository                |
