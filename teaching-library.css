@@ -547,4 +547,4 @@ html.player-fullscreen,html.player-fullscreen body{overflow:hidden}
 .native-view-tools .button{background:transparent;color:#fff;border-color:#555}
 
 /* Retained workbench stays connected, invisible and unfocusable while browsing. */
-[data-retained-clinical][hidden]{display:none!important}
+[data-retained-workspace][hidden]{display:none!important}
