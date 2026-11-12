@@ -5,6 +5,13 @@ import { createContext, Script } from 'node:vm';
 // Use the actual website templates with the source's public projection.
 export function libraryRenderer(root, catalog) {
   if (catalog?.schemaVersion !== 1 || catalog.status !== 'public-resources' || catalog.source !== 'simlab' || !/^[a-f0-9]{40}$/.test(catalog.build || '')) throw new Error('Expected a revisioned, source-owned public teaching catalog.');
+  if (catalog.sections !== undefined && (!Array.isArray(catalog.sections)
+      || !catalog.sections.every(section => section && typeof section === 'object' && !Array.isArray(section)
+        && typeof section.id === 'string' && /^[a-z0-9][a-z0-9-]*$/.test(section.id)
+        && typeof section.label === 'string' && section.label.trim().length > 0)
+      || new Set(catalog.sections.map(section => section.id)).size !== catalog.sections.length)) {
+    throw new Error('Expected unique public section identifiers and labels.');
+  }
   const mount = { innerHTML: '' }, modal = { addEventListener() {} };
   const context = createContext({
     window: { DEVPT_STATIC_RENDER: true, DEVPT_CATALOG_STATE: 'ready', DEVPT_TEACHING_CATALOG: catalog, addEventListener() {} },
@@ -20,7 +27,7 @@ export function libraryRenderer(root, catalog) {
     const url = new URL(item.url);
     if (url.origin !== 'https://lab.devpt.app' || url.pathname !== '/teaching/' || url.searchParams.get('activity') !== (item.nativeId || item.id)) throw new Error('Resource escaped its source-owned public player: ' + item.id);
   }
-  const summary = new Script('({activities:LISTED,regions:REGIONS,topics:TOPICS})').runInContext(context);
+  const summary = new Script('({activities:LISTED,regions:REGIONS,topics:TOPICS,sections:typeof SECTIONS === "undefined" ? [] : SECTIONS})').runInContext(context);
   const render = new Script('render(); window.DEVPT_PAGE', { filename: 'render-public-page' });
   return { ...JSON.parse(JSON.stringify(summary)), render(path) {
     context.location = new URL(path, 'https://devpt.app');

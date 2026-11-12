@@ -9,6 +9,26 @@
   const legacyEntry = location.hash.startsWith('#/') || ['#contact','#products','#flow','#student','#faculty','#labs','#references','#research-opportunities'].includes(location.hash);
   const productPaths = { '/simlab/': 'simlab', '/emrs/': 'emrs', '/3dpain/': 'painmap' };
   const productHosts = { 'lab.devpt.app': 'simlab', 'simemr.devpt.app': 'emrs', 'emr.devpt.app': 'emrs', 'www.3dpain.app': 'painmap', '3dpain.app': 'painmap' };
+  const staticPageTypes = {
+    '/simlab/': 'product_overview', '/emrs/': 'product_overview', '/3dpain/': 'product_overview',
+    '/privacy.html': 'information', '/terms.html': 'information', '/accessibility.html': 'information',
+    '/resource-credits.html': 'information', '/sitemap.html': 'information',
+  };
+  const publicIndexTypes = {
+    '/': 'homepage', '/regions/': 'regions', '/topics/': 'topics', '/search/': 'library',
+    '/saved/': 'saved', '/products/': 'products', '/faculty/': 'faculty', '/contact/': 'contact',
+  };
+  const pageGroups = {
+    homepage: 'library', resource: 'library', regions: 'library', topics: 'library', region: 'library',
+    topic: 'library', section: 'library', library: 'library', saved: 'library', products: 'products',
+    faculty: 'information', contact: 'information', product_overview: 'products', information: 'information',
+  };
+  function pageType(path) {
+    if (Object.hasOwn(staticPageTypes, path)) return staticPageTypes[path];
+    if (Object.hasOwn(publicIndexTypes, path)) return publicIndexTypes[path];
+    const family = /^\/(resources|regions|topics|sections)\/[a-z0-9][a-z0-9-]*\/$/.exec(path)?.[1];
+    return ({resources:'resource',regions:'region',topics:'topic',sections:'section'})[family] || null;
+  }
   const campaign = {};
   const entryParams = new URLSearchParams(location.search);
   for (const field of ['source','medium','name','id']) {
@@ -37,13 +57,19 @@
     script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
     document.head.append(script);
   }
-  const allowed = new Set(['resource_id', 'region_id', 'topic_id', 'product_id', 'placement', 'share_type', 'resource_count', 'result_count']);
+  const allowed = new Set(['resource_id', 'region_id', 'topic_id', 'section_id', 'product_id', 'placement', 'share_type', 'resource_count', 'result_count']);
+  const identifier = value => typeof value === 'string' && /^[a-z0-9][a-z0-9_-]{0,119}$/.test(value);
+  const identifierKeys = ['resource_id', 'region_id', 'topic_id', 'section_id'];
+  function identifierParams(info) {
+    return Object.fromEntries(identifierKeys.filter(key=>identifier(info[key])).map(key=>[key,info[key]]));
+  }
   function track(name, values = {}) {
-    if (!enabled || !current || !/^(resource_open|resource_ready|resource_save|resource_remove|resource_share|resources_save|library_search|product_link_click|inquiry_click)$/.test(name)) return;
+    if (!enabled || !current || !/^(resource_open|resource_ready|resource_full_view|resource_save|resource_remove|resource_share|resources_save|library_search|product_link_click|inquiry_click)$/.test(name)) return;
     const params = { send_to: measurementId, site_area: 'devpt_public', content_group: current.content_group, page_type: current.page_type,
-      page_location: current.canonical, page_title: current.title, page_referrer: current.referrer };
+      page_location: current.canonical, page_title: current.title, page_referrer: current.referrer,
+      ...identifierParams(current), ...identifierParams(values) };
     for (const [key, value] of Object.entries(values)) {
-      if (!allowed.has(key)) continue;
+      if (!allowed.has(key) || identifierKeys.includes(key)) continue;
       if (typeof value === 'number' && Number.isFinite(value) && value >= 0) params[key] = Math.min(Math.floor(value), 100000);
       else if (typeof value === 'string' && /^[a-z0-9][a-z0-9_-]{0,119}$/.test(value)) params[key] = value;
     }
@@ -54,12 +80,22 @@
     send('event', name, params);
   }
   function page(info) {
-    if (!enabled || !info?.canonical || !info.title) return;
-    const url = new URL(info.canonical);
-    if (url.origin !== 'https://devpt.app' || url.search || url.hash) return;
+    if (!enabled) return;
+    const prefix = 'https://devpt.app';
+    const path = typeof info?.canonical === 'string' && info.canonical.startsWith(prefix + '/') ? info.canonical.slice(prefix.length) : null;
+    const expectedType = path && pageType(path);
+    // Validate the raw canonical shape, before URL parsing could normalize a
+    // dot segment or escaped identifier into a different public address.
+    if (!expectedType || !pageType(location.pathname) || typeof info.title !== 'string' || !info.title.trim()
+        || info.page_type !== expectedType || info.content_group !== pageGroups[expectedType]
+        || expectedType === 'resource' && (!identifier(info.resource_id) || info.resource_id !== path.split('/')[2])) {
+      current = null; lastPage = null; readyResource = null;
+      return;
+    }
     if (lastPage === info.canonical) return;
     const previous = current?.canonical || referrer(document.referrer);
-    current = { ...info, referrer: previous };
+    current = { canonical:info.canonical, title:info.title, content_group:info.content_group,
+      page_type:info.page_type, ...identifierParams(info), referrer:previous };
     lastPage = info.canonical;
     readyResource = null;
     start(current);
@@ -67,18 +103,23 @@
     send('set', defaults);
     send('event', 'page_view', { ...defaults, send_to: measurementId,
       site_area: 'devpt_public', content_group: current.content_group, page_type: current.page_type,
-      ...(current.resource_id ? { resource_id: current.resource_id, region_id: current.region_id, topic_id: current.topic_id } : {}),
+      ...identifierParams(current),
     });
-    if (current.resource_id) track('resource_open', current);
+    if (current.page_type === 'resource') track('resource_open', current);
   }
   window.DEVPT_ANALYTICS = Object.freeze({ page, track });
   document.addEventListener('click', event => {
     const link = event.target.closest?.('a[href]');
     if (!link || !current) return;
     const url = new URL(link.href, location.href);
-    const product = url.origin === location.origin ? productPaths[url.pathname] : productHosts[url.hostname];
+    const publicEntry = url.protocol === 'https:' && !url.port && !url.username && !url.password && ['/', '/showcase/'].includes(url.pathname);
+    const product = url.origin === location.origin ? productPaths[url.pathname] : publicEntry && productHosts[url.hostname];
     if (product) track('product_link_click', { product_id: product, placement:
       link.closest('.product-strip') ? 'home_product_strip' : link.closest('.footer') ? 'footer' : link.closest('.topbar,.nav') ? 'navigation' : 'product_overview' });
+    if (link.hasAttribute('data-player-direct') && current.page_type === 'resource' && identifier(current.resource_id)
+        && url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/') {
+      track('resource_full_view', {resource_id:current.resource_id,region_id:current.region_id,topic_id:current.topic_id});
+    }
     if (url.protocol === 'mailto:' && (!url.search || link.hasAttribute('data-inquiry'))) track('inquiry_click');
   });
   function staticPage() {
@@ -87,13 +128,14 @@
       // slow or unavailable. Legacy fragment links wait for route resolution.
       const data = document.getElementById('library-page-data');
       if (data && !legacyEntry) {
-        try { const info = JSON.parse(data.textContent); if (new URL(info.canonical).pathname === location.pathname) page(info); } catch {}
+        try { const info = JSON.parse(data.textContent); if (new URL(info.canonical).pathname === location.pathname) page(info); else page(null); } catch { page(null); }
       }
       return;
     }
     const path = location.pathname;
+    if (!Object.hasOwn(staticPageTypes, path)) { page(null); return; }
     page({ title: document.title, canonical: 'https://devpt.app' + path,
-      content_group: productPaths[path] ? 'products' : 'information', page_type: productPaths[path] ? 'product_overview' : 'information' });
+      content_group: pageGroups[staticPageTypes[path]], page_type: staticPageTypes[path] });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', staticPage, { once: true });
   else staticPage();

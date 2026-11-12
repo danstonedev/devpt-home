@@ -6,6 +6,24 @@ const catalog = JSON.parse(readFileSync(new URL('./fixtures/public-catalog.json'
 const output = resolve('.cache/public-test');
 const catalogUrl = 'https://lab.devpt.app/teaching/catalog.json';
 
+async function isolatedPublicSite(browser, value, projectUse) {
+  const context = await browser.newContext({ viewport: projectUse.viewport, isMobile: projectUse.isMobile, hasTouch: projectUse.hasTouch });
+  const tags = [];
+  const mime = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.css': 'text/css', '.woff2': 'font/woff2', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml' };
+  await context.route('**/*', route => {
+    const url = new URL(route.request().url());
+    if (url.href === catalogUrl) return route.fulfill({ json: value });
+    if (url.hostname === 'www.googletagmanager.com') { tags.push(url.href); return route.fulfill({ contentType: 'text/javascript', body: '' }); }
+    if (url.origin !== 'https://devpt.app') return route.abort();
+    let file = resolve(output, '.' + url.pathname);
+    if (!file.startsWith(output + '/') && file !== output) return route.abort();
+    if (existsSync(file) && statSync(file).isDirectory()) file += '/index.html';
+    if (!existsSync(file)) return route.fulfill({ status: 404, body: 'Missing' });
+    return route.fulfill({ contentType: mime[extname(file)] || 'application/octet-stream', body: readFileSync(file) });
+  });
+  return { context, tags };
+}
+
 test('resource and region pages are readable without JavaScript; missing resources return 404', async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   try {
@@ -115,6 +133,8 @@ test('public analytics measures homepage, resource use and product interest with
     expect(data.filter(event=>event[1]==='resource_ready')).toHaveLength(1);
     expect(data.filter(event=>event[1]==='resource_save')).toHaveLength(1);
     expect(data.filter(event=>event[1]==='resource_remove')).toHaveLength(1);
+    expect(data.find(event=>event[1]==='page_view'&&event[2].page_type==='region')[2]).toMatchObject({ region_id:'knee' });
+    expect(data.find(event=>event[1]==='page_view'&&event[2].page_type==='resource')[2]).toMatchObject({ resource_id:'exam-special-lachman', region_id:'knee', topic_id:'special-tests' });
     expect(JSON.stringify(data)).not.toContain('private@example.com');
     expect(attemptedTags).toEqual(['https://www.googletagmanager.com/gtag/js?id=G-61473CPT29']);
     expect(data.every(event=>event[2].send_to==='G-61473CPT29')).toBe(true);
@@ -122,5 +142,66 @@ test('public analytics measures homepage, resource use and product interest with
     await page.locator('footer a[href="/emrs/"]').evaluate(link=>link.addEventListener('click',event=>event.preventDefault()));
     await page.locator('footer a[href="/emrs/"]').click();
     await expect.poll(async () => (await events()).filter(event=>event[1]==='product_link_click').length).toBe(1);
+  } finally { await context.close(); }
+});
+
+test('unknown legacy routes and sensitive static paths never initialize analytics', async ({ browser }, testInfo) => {
+  const { context, tags } = await isolatedPublicSite(browser, catalog, testInfo.project.use);
+  try {
+    const page = await context.newPage();
+    const sentinel = 'private-test-patient-do-not-collect';
+    await page.goto('https://devpt.app/#/' + sentinel);
+    await expect(page.getByRole('heading', { name: 'Page not found' })).toBeVisible();
+    const metadata = await page.evaluate(() => window.DEVPT_PAGE);
+    expect(metadata).toMatchObject({ canonical: 'https://devpt.app/404.html', page_type: 'unavailable', noindex: true });
+    expect(JSON.stringify(metadata)).not.toContain(sentinel);
+    expect(await page.evaluate(() => [...(window.dataLayer || [])])).toEqual([]);
+    expect(tags).toEqual([]);
+
+    // Exercise the static-page guard even if a future host accidentally serves
+    // this shared tag on a private document. This is a synthetic sentinel only.
+    await context.route('https://devpt.app/patients/**', route => route.fulfill({ contentType: 'text/html', body: '<!doctype html><title>' + sentinel + '</title><script src="/site-analytics.js"></script>' }));
+    await page.goto('https://devpt.app/patients/' + sentinel);
+    expect(await page.evaluate(() => typeof window.DEVPT_ANALYTICS?.page)).toBe('function');
+    expect(await page.evaluate(() => [...(window.dataLayer || [])])).toEqual([]);
+    expect(tags).toEqual([]);
+  } finally { await context.close(); }
+});
+
+test('a parked source becomes ready silently and reports readiness once when resumed', async ({ browser }, testInfo) => {
+  const id = 'posture-assessment-standing';
+  const source = { ...catalog.activities.find(item => !item.aliasOf), id, nativeId: id, title: 'Standing posture', regionId: 'whole-body', region: 'Whole body', topicId: 'gait-balance', topic: 'Gait & balance', url: 'https://lab.devpt.app/teaching/?activity=' + id, launch: { kind: 'posture', example: 'standing-reference' } };
+  const { context } = await isolatedPublicSite(browser, { ...catalog, activities: [...catalog.activities, source] }, testInfo.project.use);
+  let loads = 0;
+  await context.route('https://lab.devpt.app/teaching/?**', route => {
+    loads++;
+    return route.fulfill({ contentType: 'text/html', body: `<title>Readiness protocol fixture</title><script>
+      const activity=new URLSearchParams(location.search).get('activity'),origin=new URL(document.referrer).origin;
+      window.finish=()=>parent.postMessage({type:'devpt-teaching-ready',activity,patientId:'private-test-patient',notes:'private-test-note'},origin);
+      </script>` });
+  });
+  try {
+    const page = await context.newPage();
+    const events = () => page.evaluate(() => [...(window.dataLayer || [])].map(args => [...args]).filter(args => args[0] === 'event'));
+    await page.goto('https://devpt.app/#/activity/' + id);
+    const player = page.locator('.native-player'), frame = page.locator('.native-frame');
+    await expect(frame).toBeAttached();
+    const retained = await frame.elementHandle();
+    const native = page.frames().find(value => value.url().startsWith('https://lab.devpt.app/teaching/'));
+    await page.evaluate(() => { location.hash = '#/library'; });
+    await expect(page.getByRole('heading', { name: 'Search the library', exact: true })).toBeVisible();
+    await native.evaluate(() => window.finish());
+    await expect(player).toHaveAttribute('data-ready', 'true');
+    expect((await events()).filter(event => event[1] === 'resource_ready')).toHaveLength(0);
+
+    await page.locator('.ref-result a[href="/resources/' + id + '/"]').click();
+    await expect(player).toBeVisible();
+    await expect.poll(async () => (await events()).filter(event => event[1] === 'resource_ready').length).toBe(1);
+    await native.evaluate(() => window.finish());
+    expect((await events()).filter(event => event[1] === 'resource_ready')).toHaveLength(1);
+    expect((await events()).filter(event => event[1] === 'resource_open' && event[2].resource_id === id)).toHaveLength(2);
+    expect(JSON.stringify(await events())).not.toMatch(/private-test-(patient|note)/);
+    expect(await retained.evaluate(element => element.isConnected && element === document.querySelector('.native-frame'))).toBe(true);
+    expect(loads).toBe(1);
   } finally { await context.close(); }
 });

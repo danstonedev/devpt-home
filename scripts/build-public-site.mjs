@@ -25,11 +25,13 @@ export function buildPublicSite({ catalog, output = resolve(root, '.cache/public
   const pages = ['/', '/regions/', '/topics/', '/products/', '/contact/', '/faculty/', '/search/', '/saved/',
     ...renderer.regions.map(item => routes.href('region/' + item.id)),
     ...renderer.topics.map(item => routes.href('topic/' + item.id)),
+    ...renderer.sections.map(item => routes.href('section/' + item.id)),
     ...renderer.activities.map(item => routes.href('activity/' + item.id))];
   const indexed = [];
   for (const path of pages) {
     const { html, metadata } = renderer.render(path);
     if (metadata.page_type === 'unavailable') throw new Error('Cannot export an unavailable page: ' + path);
+    if (metadata.canonical !== 'https://devpt.app' + path) throw new Error('Public page canonical does not match its exported path: ' + path);
     let page = template.replace('<div id="app"></div>', () => '<div id="app">' + html + '</div>')
       .replace(/<title>[\s\S]*?<\/title>/, () => '<title>' + escape(metadata.title) + '</title>')
       .replace(/(<meta name="description" content=")[^"]*/, (_match, prefix) => prefix + escape(metadata.description))

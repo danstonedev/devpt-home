@@ -12,6 +12,19 @@ The homepage is a quick **reference library organized by region and topic**, car
 
 simLAB generates the reference from its labs' own definitions and publishes it in the same `/teaching/catalog.json` (schema version 1, with ordered `regions` and `topics`). DevPT renders it: region and topic index pages, a region page listing its topics (and a topic page its regions) with headings where they tell resources apart, a page filter, search across titles, headings and common terms, and the resource page with the source player. Saves and share links continue. The sections below record the earlier bounded release and are kept as history; where they describe ready-made collections or locked presentations, this direction supersedes them.
 
+## Owner direction, 11 November 2026: five sections
+
+The topics are shelved under five sections that simLAB defines and publishes in the same catalog: Structure & function, Examination, Clinical reasoning, Intervention, and Documentation & practice. simLAB owns the sections, their order and which topic sits under which (`sections`, and a `sectionId` on each topic). DevPT renders them and keeps no list of its own:
+
+- **Home** lists the sections in order, each as a row of its topics.
+- **Topics** shows the same sections as headings over their topic cards, and each section has its own page at `#/section/<id>`.
+- **A region page** reads as a chapter: its topics sit under the section headings, in the same order on every region.
+- **Search** groups its topic filter by section, and a topic page names its section in the breadcrumb.
+
+A topic the catalog files under no section (the native motion previews) stays listed, linked and searchable, under "Also in the library". A section with no listed topic is left out. A catalog without `sections` renders as before, with its topics in one flat list, so either site can deploy first.
+
+The sections follow the order of CAPTE's Standard 7, but that mapping stays inside simLAB for faculty. The public pages name no CAPTE element and make no accreditation or coverage claim. Topic, region and resource addresses are unchanged.
+
 ## Publication scope for this release
 
 The owner’s live-release request authorizes publishing selected resource experiences, independently of the clinical review records that remain pending. SimLab owns the explicit `publication-policy.json` and derives `/teaching/catalog.json` from the same canonical catalog. Public entry lookup enforces that policy, not just the website cards. The bounded entry locks the selected hip presets, suppresses neighboring unreviewed laboratory controls, and preserves supported viewing, layers, native playback and reference guidance. Public Gait Lab excludes ROM mutation, Practice and physics; it does not claim validated pathological gait or predicted compensation. Live Vitals and Neuro remain outside the public selection.

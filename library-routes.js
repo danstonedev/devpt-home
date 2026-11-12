@@ -2,10 +2,11 @@
 (function () {
   'use strict';
   const sections = { home: '', regions: 'regions', topics: 'topics', library: 'search', saved: 'saved', products: 'products', contact: 'contact', faculty: 'faculty', about: 'faculty' };
-  const families = { region: 'regions', topic: 'topics', activity: 'resources' };
+  const families = { region: 'regions', topic: 'topics', section: 'sections', activity: 'resources' };
   function href(route) {
     const [name, query = ''] = String(route).replace(/^#?\/?/, '').split('?');
-    const [kind, id] = name.split('/');
+    const parts = name.split('/'), [kind, id] = parts;
+    if (parts.length !== (families[kind] ? 2 : 1)) return null;
     const path = families[kind] && /^[a-z0-9][a-z0-9-]*$/.test(id || '')
       ? '/' + families[kind] + '/' + id + '/'
       : Object.hasOwn(sections, kind) ? '/' + (sections[kind] ? sections[kind] + '/' : '') : null;

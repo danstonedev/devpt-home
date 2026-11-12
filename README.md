@@ -15,7 +15,7 @@ The homepage leads with the reference library. Each product has a dedicated walk
 ## Static site and ownership
 
 - `index.html` — public library shell; the release build adds source-rendered content and metadata.
-- `library-routes.js` — shared browser/build mapping for real resource, region and topic URLs.
+- `library-routes.js` — shared browser/build mapping for real resource, region, topic and section URLs.
 - `site-analytics.js` — public website measurement, separate from product application instrumentation.
 - `simlab/index.html` — James Morgan's guided simLAB visit, live study tools and student/faculty introduction.
 - `emrs/index.html` and `3dpain/index.html` — dedicated product walkthroughs.
@@ -122,8 +122,8 @@ cleans up existing Azure preview environments; it does not build a preview.
 `npm run build:public` requires curl and fetches the revisioned public catalogue from
 `https://lab.devpt.app/teaching/catalog.json`. The actual website renderer generates
 readable HTML, canonical URLs, descriptions, Open Graph metadata and structured
-data for `/`, `/regions/`, `/regions/<id>/`, `/topics/`, `/topics/<id>/`, and
-`/resources/<id>/`. The same export includes `/products/`, `/faculty/`, `/contact/`,
+data for `/`, `/regions/`, `/regions/<id>/`, `/topics/`, `/topics/<id>/`,
+`/sections/<id>/`, and `/resources/<id>/`. The same export includes `/products/`, `/faculty/`, `/contact/`,
 `robots.txt`, an XML sitemap and a catalogue-derived HTML sitemap. Search results
 and saved collections are `noindex, follow` and excluded from the XML sitemap.
 Unknown paths retain real 404 responses; there is no blanket application fallback.
@@ -153,15 +153,26 @@ property, use the public-site labels or stream filters in reports.
 
 The wrapper owns initial and virtual `page_view` events and deduplicates catalogue
 refreshes and UI re-renders of the same page. Resource visits emit `resource_open`;
-`resource_ready` requires the existing trusted player handshake. Saving, removing,
-completed share-link copying and submitted library searches have distinct events.
-`product_link_click` records a product ID and placement, and `inquiry_click`
-records an email inquiry link click. These actions are not purchase conversions.
+`resource_ready` requires the existing trusted player handshake or a previously
+ready retained player returning to its resource page. A parked player finishing
+in the background does not emit resource demand for the page being browsed.
+Saving, removing, completed share-link copying and submitted library searches
+have distinct events. Source-owned sections have crawlable `/sections/<id>/`
+pages and bounded `section_id` labels alongside resource, region and topic IDs.
+`resource_full_view` records an explicit native resource link separately from
+`product_link_click`, which counts product overview and public product-entry
+links. `inquiry_click` records a plain email link or a marked inquiry CTA; report
+forms are excluded. These actions are not purchase conversions.
 The tag disables Google signals and ad personalization. Custom payloads contain
 canonical public paths and bounded identifiers/counts, without search text,
 issue-report content, saved collection IDs/URLs or email addresses. Entry campaign
 source, medium, name and ID are retained only when they match a bounded character
-allowlist. Free-text campaign term/content are not copied.
+allowlist. Free-text campaign term/content are not copied. Only finite public
+route families, information pages and metadata types are accepted. Unknown or
+sensitive paths clear the measurement context rather than sending their path,
+title or fragment as an event field. Search and saved-list pages stay outside
+the sitemap and carry `noindex`; their query and shared-list contents are never
+used as analytics dimensions.
 
 ### Google and hosting setup
 
@@ -176,11 +187,12 @@ releasing the manual page-view integration:
    automatic collection of free text. Apply these settings to the new public-site
    web stream; changing the previous stream is not required for this rollout.
 2. Register event-scoped custom dimensions `site_area`, `page_type`, `resource_id`,
-   `region_id`, `topic_id`, `product_id` and `placement` for report use.
+   `region_id`, `topic_id`, `section_id`, `product_id` and `placement` for report use.
    `content_group` is built in. These definitions apply to future reporting.
 3. Validate in GA4 DebugView/Realtime after release: one homepage view; one new
-   view per resource/region/topic navigation; separate `resource_ready` and
-   `product_link_click` events; no duplicate view on saving or catalogue refresh.
+   view per resource/region/topic/section navigation; separate `resource_ready`,
+   `resource_full_view` and `product_link_click` events; no duplicate view on
+   saving, retained-player readiness or catalogue refresh.
    Browser tests inspect queued payloads without contacting Google; they cannot
    verify remote stream settings or account-side processing.
 4. Verify the Search Console domain property for `devpt.app` (DNS ownership may
