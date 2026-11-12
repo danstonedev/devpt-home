@@ -729,6 +729,17 @@ test('browsing away pauses one clinical session and returning or changing clinic
   expect(await source.evaluate(()=>window.receivedSelections)).toEqual(['evidence-correlation']);
   expect(await retained.evaluate(node=>node.isConnected&&node===document.querySelector('.native-frame'))).toBe(true);
   expect(loads).toBe(1);
+  // Use the actual home link: a document navigation would destroy the session.
+  if((await player.getAttribute('class')).split(/\s+/).includes('fullscreen'))await player.locator('[data-player-screen]').click();
+  await page.locator('.topbar .brand').click();
+  await expect(page).toHaveURL(/#\/home$/);
+  await expect(page.getByRole('heading',{name:'Reference library',exact:true})).toBeVisible();
+  await expect(frame).not.toBeVisible();
+  await nav(page,'#/library');
+  await page.locator('.ref-result a[href="#/activity/evidence-correlation"]').click();
+  await expect(player).toHaveAttribute('data-ready','true');
+  expect(await retained.evaluate(node=>node.isConnected&&node===document.querySelector('.native-frame'))).toBe(true);
+  expect(loads).toBe(1);
   // A different native environment retires the retained patient workbench.
   await page.evaluate(()=>{location.hash='#/activity/exam-special-lachman';});
   await expect(player).toHaveAttribute('data-player-asset','exam-special-lachman');
