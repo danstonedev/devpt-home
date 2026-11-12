@@ -41,8 +41,8 @@ addEventListener('message', event => {
 parent.postMessage({type:'devpt-teaching-ready',activity:new URLSearchParams(location.search).get('activity')},parentOrigin);
 </script>`;
 
-async function setup(page) {
-  await page.route(sourceOrigin + '/teaching/catalog.json', route => route.fulfill({ json: catalog }));
+async function setup(page, retained = false) {
+  await page.route(sourceOrigin + '/teaching/catalog.json', route => route.fulfill({ json: retained ? {...catalog,activities:catalog.activities.map(asset=>({...asset,playerSession:'devpt-3d-workbench'}))} : catalog }));
   await page.route(url => url.origin === sourceOrigin && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: fixture }));
   await page.addInitScript(() => {
     window.anatomyViewReceipts = 0;
@@ -94,6 +94,24 @@ test('search and saved anatomy entries return to the common player with the reso
   await page.goto('/#/saved');
   await page.locator('.ref-result a').filter({ hasText: 'Shoulder flexion' }).click();
   await expect(page).toHaveURL(/\/resources\/anatomy-explorer\/\?view=joint-shoulder-flexion/);
+});
+
+for (const cold of [false, true]) test(`returning to a retained anatomy bookmark preserves its exact view${cold ? ' during initial loading' : ''}`, async ({page}) => {
+  await setup(page,true);
+  if(cold)await page.route(url=>url.origin===sourceOrigin&&url.pathname==='/teaching/',route=>route.fulfill({contentType:'text/html',body:fixture.replace("parent.postMessage({type:'devpt-teaching-ready',activity:new URLSearchParams(location.search).get('activity')},parentOrigin);","setTimeout(()=>parent.postMessage({type:'devpt-teaching-ready',activity:new URLSearchParams(location.search).get('activity')},parentOrigin),1200);")}));
+  await page.goto('/#/activity/anatomy-explorer?view=anatomy-hip');
+  const shell=page.locator('.native-player'),frame=page.locator('.native-frame');
+  await expect(frame).toHaveCount(1);
+  if(!cold)await expect(shell).toHaveAttribute('data-ready','true');
+  const original=await frame.elementHandle();
+  await page.evaluate(()=>{location.hash='#/library';});
+  await expect(frame).not.toBeVisible();
+  await page.evaluate(()=>{location.hash='#/activity/anatomy-explorer?view=joint-shoulder-flexion&side=L&cohort=female&practice=match';});
+  await expect(shell).toHaveAttribute('data-ready','true');
+  const source=page.frames().find(frame=>frame.url().startsWith(sourceOrigin+'/teaching/'));
+  await expect.poll(()=>source.evaluate(()=>window.receivedSelections.at(-1)?.view)).toEqual({resource:'joint-shoulder-flexion',side:'L',cohort:'female',practice:'match'});
+  expect(await original.evaluate(node=>node.isConnected&&node===document.querySelector('.native-frame'))).toBe(true);
+  await expect(frame).toHaveCount(1);
 });
 
 test('a legacy anatomy link changes the exact view in place without replacing the workspace iframe', async ({ page }, testInfo) => {

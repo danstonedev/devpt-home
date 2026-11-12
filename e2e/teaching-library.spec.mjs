@@ -756,6 +756,33 @@ test('browsing away pauses one clinical session and returning or changing clinic
 });
 
 
+test('one source-owned 3D workbench crosses topics and adapters, and evicts for unsupported content', async ({page}) => {
+  const supported = activities.map(asset => ({...asset, playerSession:'devpt-3d-workbench'}));
+  const rejected = item('invalid-session','Unsupported session','hip','anatomy',{playerSession:'bad key'});
+  await routeCatalog(page,{...catalog,activities:[...supported,rejected]});
+  let loads=0;
+  await page.route('https://lab.devpt.app/teaching/?**',route=>{loads++;return route.fulfill({contentType:'text/html',body:postureProtocolFixture});});
+  await page.goto('/#/activity/anatomy-hip');
+  const shell=page.locator('.native-player'),frame=page.locator('.native-frame');
+  await expect(shell).toHaveAttribute('data-ready','true');
+  const original=await frame.elementHandle();
+  for(const id of ['gait','exam-special-lachman','anatomy-hip']) {
+    await page.evaluate(id=>{location.hash='#/activity/'+id;},id);
+    await expect(shell).toHaveAttribute('data-player-asset',id);
+    await expect(shell).toHaveAttribute('data-ready','true');
+    await expect(frame).toHaveCount(1);
+    expect(await original.evaluate(node=>node.isConnected&&node===document.querySelector('.native-frame'))).toBe(true);
+    await page.evaluate(()=>{location.hash='#/library';});
+    await expect(frame).not.toBeVisible();
+  }
+  expect(loads).toBe(1);
+  await page.evaluate(()=>{location.hash='#/activity/invalid-session';});
+  await expect(shell).toHaveAttribute('data-player-asset','invalid-session');
+  expect(await original.evaluate(node=>node.isConnected)).toBe(false);
+  await expect(frame).toHaveCount(1);
+  expect(loads).toBe(2);
+});
+
 test('leaving during initial preparation queues the next clinical resource without replacing the source frame', async ({page}) => {
   const standing=item('posture-assessment-standing','Standing posture','whole-body','gait-balance',{launch:{kind:'posture',example:'standing-reference'}});
   const evidence=item('evidence-correlation','Correlation','whole-body','special-tests',{launch:{kind:'evidence',mode:'correlation'}});
