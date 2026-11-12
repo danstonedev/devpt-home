@@ -694,3 +694,33 @@ for (const exit of ['host Back', 'browser Back', 'native Exit']) {
   await expect(page.getByRole('heading',{name:'Search the library',exact:true})).toBeVisible();
  });
 }
+
+
+test('native study chrome takes over only for the current trusted frame and preserves fullscreen state', async ({ page }) => {
+  await routeCatalog(page);
+  // Protocol fixture only; the source repository tests the real 3D players.
+  await page.route('https://lab.devpt.app/teaching/?**', route => route.fulfill({contentType:'text/html',body:`<!doctype html><title>Study header protocol</title>
+    <button id="expand">Expand</button><button id="exit">Exit full view</button><script>
+    const origin=new URL(document.referrer).origin, activity=new URLSearchParams(location.search).get('activity');
+    window.chrome=(message={})=>parent.postMessage({type:'devpt-teaching-chrome',activity,version:1,...message},origin);
+    document.querySelector('#expand').onclick=()=>parent.postMessage({type:'devpt-teaching-fullscreen',on:true},origin);
+    document.querySelector('#exit').onclick=()=>parent.postMessage({type:'devpt-teaching-fullscreen',on:false},origin);
+    parent.postMessage({type:'devpt-teaching-ready',activity},origin);
+    </script>`}));
+  await page.goto('/#/activity/exam-special-lachman');
+  const player=page.locator('.native-player'), frame=page.locator('.native-frame');
+  await expect(player).toHaveAttribute('data-ready','true');
+  await frame.evaluate(e=>e.dataset.retainedStudy='yes');
+  const source=page.frames().find(frame=>frame.url().startsWith('https://lab.devpt.app/teaching/'));
+  const tools=player.locator('.native-view-tools'); await expect(tools).toBeVisible();
+  await source.evaluate(()=>window.chrome({activity:'exam-special-mcmurray'})); await expect(tools).toBeVisible();
+  await source.evaluate(()=>window.chrome({version:true})); await expect(tools).toBeVisible();
+  await source.evaluate(()=>window.chrome({extra:'not allowed'})); await expect(tools).toBeVisible();
+  await page.evaluate(()=>window.postMessage({type:'devpt-teaching-chrome',activity:'exam-special-lachman',version:1},location.origin)); await expect(tools).toBeVisible();
+  await source.evaluate(()=>window.chrome()); await expect(player).toHaveAttribute('data-native-chrome','study-v1'); await expect(tools).toBeHidden();
+  await source.locator('#expand').click(); await expect(player).toHaveClass(/fullscreen/);
+  await expect(page.locator('.native-frame[data-retained-study="yes"]')).toHaveCount(1);
+  await source.locator('#exit').click(); await expect(player).not.toHaveClass(/fullscreen/);
+  await expect(page.locator('.native-frame[data-retained-study="yes"]')).toHaveCount(1);
+  await source.evaluate(()=>window.chrome({version:0})); await expect(tools).toBeVisible(); await expect(player).toHaveAttribute('data-ready','true');
+});
