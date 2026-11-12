@@ -637,12 +637,14 @@ const postureProtocolFixture = `<!doctype html><title>Posture protocol fixture</
 <script>
 const parentOrigin = new URL(document.referrer).origin;
 window.receivedSelections = [];
+window.receivedFullscreen = [];
 let activity = new URLSearchParams(location.search).get('activity');
 const ready = () => parent.postMessage({type:'devpt-teaching-ready',activity}, parentOrigin);
 const select = next => { activity=next; document.querySelector('#position').textContent=next.endsWith('sitting')?'Sitting':'Standing'; };
 addEventListener('message',event=>{
  if(event.origin!==parentOrigin||event.source!==parent)return;
  if(event.data?.type==='devpt-teaching-select'){window.receivedSelections.push(event.data.activity);select(event.data.activity);ready();}
+ if(event.data?.type==='devpt-teaching-fullscreen')window.receivedFullscreen.push(event.data.on);
 });
 document.querySelector('#sitting').onclick=()=>{select('posture-assessment-sitting');parent.postMessage({type:'devpt-teaching-selected',activity},parentOrigin);ready();};
 document.querySelector('#basic').onclick=()=>{document.querySelector('#model').textContent='Basic male';};
@@ -719,6 +721,7 @@ test('browsing away pauses one clinical session and returning or changing clinic
   await page.locator('.ref-result a[href="#/activity/posture-assessment-standing"]').click();
   await expect(player).toHaveAttribute('data-ready','true');
   await expect.poll(()=>source.evaluate(()=>window.visibility.at(-1))).toBe(true);
+  await expect.poll(()=>source.evaluate(()=>window.receivedFullscreen.at(-1))).toBe((await page.locator('html').getAttribute('class')??'').includes('player-fullscreen'));
   expect(await source.locator('#model').innerText()).toBe('Chosen patient');
   expect(await source.evaluate(()=>window.receivedSelections)).toEqual([]);
   await page.evaluate(()=>{location.hash='#/library';});
