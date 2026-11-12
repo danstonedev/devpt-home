@@ -28,6 +28,16 @@
     {
       "id": "gait-balance",
       "label": "Gait & balance"
+    },
+    {
+      "id": "measurement-evidence",
+      "label": "Measurement & evidence",
+      "sectionId": "clinical-reasoning"
+    },
+    {
+      "id": "movement-screens",
+      "label": "Movement screens",
+      "sectionId": "examination"
     }
   ],
   "activities": [
@@ -166,6 +176,116 @@
         "preset": "mcmurray-medial"
       },
       "url": "https://lab.devpt.app/teaching/?activity=demo-mcmurray-medial"
+    },
+    {
+      "id": "evidence-diagnostic-results",
+      "title": "Evidence Lab · Diagnostic results",
+      "context": "Evidence Lab",
+      "regionId": "whole-body",
+      "topicId": "measurement-evidence",
+      "type": "Movement measurement explorer",
+      "source": "simLAB · existing synthetic screening cases · illustrative native gait",
+      "keywords": [
+        "evidence",
+        "measurement",
+        "Sankey",
+        "animated patient flow",
+        "screening",
+        "diagnostic results",
+        "true positives",
+        "false positives",
+        "false negatives",
+        "sensitivity",
+        "specificity"
+      ],
+      "launch": {
+        "kind": "evidence",
+        "mode": "diagnostic-results"
+      },
+      "region": "Whole body",
+      "topic": "Measurement & evidence",
+      "level": "BETA · measurement practice",
+      "minutes": 0,
+      "media": "examination",
+      "symbol": "analytics",
+      "desc": "Follow the same 200 cases from a speed flag to their assigned follow-up.",
+      "outcome": "Distinguish true and false screening results using conserved case flows.",
+      "nativeId": "evidence-diagnostic-results",
+      "url": "https://lab.devpt.app/teaching/?activity=evidence-diagnostic-results",
+      "playerSession": "devpt-3d-workbench"
+    },
+    {
+      "id": "evidence-test-clusters",
+      "title": "Evidence Lab · Test clusters",
+      "context": "Evidence Lab",
+      "regionId": "whole-body",
+      "topicId": "measurement-evidence",
+      "type": "Movement measurement explorer",
+      "source": "simLAB · existing linked synthetic A/B results · illustrative native gait",
+      "keywords": [
+        "evidence",
+        "measurement",
+        "Sankey",
+        "animated patient flow",
+        "test clusters",
+        "joint results",
+        "conditional dependence",
+        "AND",
+        "OR",
+        "sensitivity",
+        "specificity"
+      ],
+      "launch": {
+        "kind": "evidence",
+        "mode": "test-clusters"
+      },
+      "region": "Whole body",
+      "topic": "Measurement & evidence",
+      "level": "BETA · measurement practice",
+      "minutes": 0,
+      "media": "examination",
+      "symbol": "analytics",
+      "desc": "Add a second test. Follow which cases change the combined result.",
+      "outcome": "Compare both-positive and either-positive rules using the stored joint results of the same 200 cases.",
+      "nativeId": "evidence-test-clusters",
+      "url": "https://lab.devpt.app/teaching/?activity=evidence-test-clusters",
+      "playerSession": "devpt-3d-workbench"
+    },
+    {
+      "id": "posture-assessment-standing",
+      "title": "Posture Assessment Lab",
+      "context": "Posture Assessment Lab",
+      "regionId": "whole-body",
+      "topicId": "movement-screens",
+      "group": "Static posture",
+      "type": "Posture assessment explorer",
+      "source": "simLAB · existing Basic and native patient models · manual observation",
+      "keywords": [
+        "posture",
+        "postural assessment",
+        "posture assessment lab",
+        "static assessment",
+        "MSK",
+        "landmarks",
+        "asymmetry",
+        "Reedco",
+        "standing"
+      ],
+      "launch": {
+        "kind": "posture",
+        "example": "standing-reference"
+      },
+      "region": "Whole body",
+      "topic": "Movement screens",
+      "level": "BETA · educational illustration",
+      "minutes": 0,
+      "media": "examination",
+      "symbol": "accessibility",
+      "desc": "Explore the existing patient standing setup as a comparison position. Guided observation and local documentation; rig references are approximate and faculty review is pending.",
+      "outcome": "Record the position, view, support, and one visible segment relationship. This reference is not a universal ideal.",
+      "nativeId": "posture-assessment-standing",
+      "url": "https://lab.devpt.app/teaching/?activity=posture-assessment-standing",
+      "playerSession": "devpt-3d-workbench"
     }
   ],
   "build": "0000000000000000000000000000000000000000"
