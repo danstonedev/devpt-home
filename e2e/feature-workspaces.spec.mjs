@@ -998,7 +998,7 @@ test.describe("without JavaScript", () => {
   test("all nine features link straight to their public native workspaces", async ({
     page,
   }) => {
-    await page.goto("/#/products");
+    await page.goto("/products/");
     await expect(
       page.locator("[data-workspace-expand]:visible, iframe, video"),
     ).toHaveCount(0);

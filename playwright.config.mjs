@@ -28,7 +28,7 @@ export default defineConfig({
   ],
   webServer: {
     command:
-      "node node_modules/http-server/bin/http-server -c-1 -p 8109 -a 127.0.0.1",
+      "node scripts/build-public-site.mjs --catalog e2e/fixtures/public-catalog.json --output .cache/public-test && node node_modules/http-server/bin/http-server .cache/public-test -c-1 -p 8109 -a 127.0.0.1",
     url: "http://127.0.0.1:8109",
     reuseExistingServer: !process.env.CI,
   },

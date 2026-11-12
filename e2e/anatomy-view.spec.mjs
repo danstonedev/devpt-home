@@ -1,3 +1,4 @@
+const publicLocation=value=>{const url=new URL(value);return url.pathname+url.search;};
 import { expect, test } from '@playwright/test';
 
 // Protocol fixtures only: the source repository verifies actual scenes, layers and motion.
@@ -74,10 +75,12 @@ const validView = { resource: 'joint-ankle-posterior-glide', side: 'L', cohort: 
 test('individual anatomy bookmarks open their exact selection in the common workspace', async ({ page }, testInfo) => {
   await setup(page);
   await open(page, testInfo, '?side=L&cohort=female', 'joint-shoulder-flexion');
-  await expect(page).toHaveURL(/#\/activity\/anatomy-explorer\?view=joint-shoulder-flexion&side=L&cohort=female$/);
+  await expect(page).toHaveURL(/\/resources\/anatomy-explorer\/\?view=joint-shoulder-flexion&side=L&cohort=female$/);
   await expect(page.locator('.native-frame')).toHaveAttribute('src', sourceOrigin + '/teaching/?activity=anatomy-explorer&embedded=1&view=joint-shoulder-flexion&side=L&cohort=female');
   await expect(page.locator('.anatomy-workspace-band')).toHaveCount(1);
   await expect(page.locator('.page-band [data-add="joint-shoulder-flexion"]')).toHaveCount(1);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href','https://devpt.app/resources/joint-shoulder-flexion/');
+  expect(await page.evaluate(()=>window.DEVPT_PAGE.resource_id)).toBe('joint-shoulder-flexion');
 });
 
 test('search and saved anatomy entries return to the common player with the resource identity intact', async ({ page }, testInfo) => {
@@ -86,11 +89,11 @@ test('search and saved anatomy entries return to the common player with the reso
   await page.locator('.ref-result a').filter({ hasText: 'Shoulder flexion' }).click();
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
   if (testInfo.project.name === 'phone' && await page.locator('.native-player').evaluate(el => el.classList.contains('fullscreen'))) await page.goBack();
-  await expect(page).toHaveURL(/#\/activity\/anatomy-explorer\?view=joint-shoulder-flexion/);
+  await expect(page).toHaveURL(/\/resources\/anatomy-explorer\/\?view=joint-shoulder-flexion/);
   await page.locator('.page-band [data-add="joint-shoulder-flexion"]').click();
   await page.goto('/#/saved');
   await page.locator('.ref-result a').filter({ hasText: 'Shoulder flexion' }).click();
-  await expect(page).toHaveURL(/#\/activity\/anatomy-explorer\?view=joint-shoulder-flexion/);
+  await expect(page).toHaveURL(/\/resources\/anatomy-explorer\/\?view=joint-shoulder-flexion/);
 });
 
 for (const cold of [false, true]) test(`returning to a retained anatomy bookmark preserves its exact view${cold ? ' during initial loading' : ''}`, async ({page}) => {
@@ -116,7 +119,7 @@ test('a legacy anatomy link changes the exact view in place without replacing th
   const source = await open(page, testInfo, '?view=joint-shoulder-flexion', 'anatomy-explorer');
   await page.locator('.native-frame').evaluate(el => { el.dataset.routeRetention = 'keep'; });
   await page.evaluate(() => { location.hash = '#/activity/anatomy-hip?side=L&cohort=female'; });
-  await expect(page).toHaveURL(/#\/activity\/anatomy-explorer\?view=anatomy-hip&side=L&cohort=female$/);
+  await expect(page).toHaveURL(/\/resources\/anatomy-explorer\/\?view=anatomy-hip&side=L&cohort=female$/);
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
   await expect(page.locator('.native-frame')).toHaveAttribute('data-route-retention', 'keep');
   await expect.poll(() => source.evaluate(() => window.receivedSelections.at(-1)?.view)).toEqual({ resource: 'anatomy-hip', side: 'L', cohort: 'female' });
@@ -134,7 +137,7 @@ for (const type of ['devpt-teaching-view', 'devpt-teaching-selected']) test(`a q
       ? { type, activity: 'anatomy-explorer', view: { resource: 'anatomy-hip', side: 'R', cohort: 'male' } }
       : { type, activity: 'anatomy-hip' } }));
   }, { origin: sourceOrigin, type });
-  await expect(page).toHaveURL(/#\/saved$/);
+  await expect(page).toHaveURL(/\/saved\/$/);
   await expect(page.getByRole('heading', { name: 'Saved resources', exact: true })).toBeVisible();
   await expect(page.locator('.native-frame')).toHaveCount(0);
 });
@@ -143,7 +146,7 @@ test('independent historical source studies keep their own qualified launch', as
   await setup(page);
   for (const id of ['archived-ankle-muscle', 'ankle-source-preview']) {
     await open(page, testInfo, '', id);
-    await expect(page).toHaveURL(new RegExp('#/activity/' + id + '$'));
+    await expect(page).toHaveURL(new RegExp('/resources/' + id + '/$'));
     await expect(page.locator('.native-frame')).toHaveAttribute('src', sourceOrigin + '/teaching/?activity=' + id + '&embedded=1');
   }
 });
@@ -153,7 +156,7 @@ test('a retained alias owns its canonical native player and receives readiness',
   await page.goto('/#/activity/archived-source-alias');
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
   await expect(page.locator('.native-frame')).toHaveAttribute('src', sourceOrigin + '/teaching/?activity=archived-ankle-muscle&embedded=1');
-  await expect(page).toHaveURL(/#\/activity\/archived-source-alias$/);
+  await expect(page).toHaveURL(/\/resources\/archived-ankle-muscle\/$/);
 });
 
 test('the whole-body workspace uses the source scope for upper-limb views and retains the trusted player while sharing', async ({ page }, testInfo) => {
@@ -170,10 +173,10 @@ test('the whole-body workspace uses the source scope for upper-limb views and re
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await frame.evaluate(element => { element.dataset.retentionProbe = 'whole-body'; });
   await tell(page, source, { type: 'devpt-teaching-view', activity: id, view: { resource: 'anatomy-hip', side: 'R', cohort: 'male' } });
-  await expect(page).toHaveURL(/#\/activity\/anatomy-explorer\?view=anatomy-hip&side=R&cohort=male$/);
+  await expect(page).toHaveURL(/\/resources\/anatomy-explorer\/\?view=anatomy-hip&side=R&cohort=male$/);
   await expect(frame).toHaveAttribute('data-retention-probe', 'whole-body');
   await page.getByRole('button', { name: 'Share current view', exact: true }).click();
-  expect(new URL(await page.getByRole('textbox', { name: 'Resource share link', exact: true }).inputValue()).hash).toBe('#/activity/' + id + '?view=anatomy-hip&side=R&cohort=male');
+  expect(publicLocation(new URL(await page.getByRole('textbox', { name: 'Resource share link', exact: true }).inputValue()))).toBe('/resources/' + id + '/?view=anatomy-hip&side=R&cohort=male');
   const before = page.url();
   for (const resource of ['archived-ankle-muscle', 'ankle-source-preview', workspace, id]) {
     await tell(page, source, { type: 'devpt-teaching-view', activity: id, view: { resource, side: 'R', cohort: 'male' } });
@@ -202,16 +205,18 @@ test('only the loaded trusted source can update the current view and Share prese
   await source.evaluate(() => { window.retentionProbe = 'same-window'; });
   const originalSrc = await page.locator('.native-frame').getAttribute('src');
   await tell(page, source, message(validView));
-  await expect(page).toHaveURL(/#\/activity\/lower-extremity-explorer\?view=joint-ankle-posterior-glide&side=L&cohort=female$/);
+  await expect(page).toHaveURL(/\/resources\/lower-extremity-explorer\/\?view=joint-ankle-posterior-glide&side=L&cohort=female$/);
   await expect(page.locator('[data-current-view]')).toHaveText('Left · Posterior talar glide');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href','https://devpt.app/resources/joint-ankle-posterior-glide/');
+  expect(await page.evaluate(()=>window.DEVPT_PAGE.resource_id)).toBe('joint-ankle-posterior-glide');
   await expect(page.locator('.native-frame')).toHaveAttribute('src', originalSrc);
   await expect(page.locator('.native-frame')).toHaveAttribute('data-retention-probe', 'same-frame');
   expect(await source.evaluate(() => window.retentionProbe)).toBe('same-window');
   await page.getByRole('button', { name: 'Share current view', exact: true }).click();
   const share = page.getByRole('textbox', { name: 'Resource share link', exact: true });
-  expect(new URL(await share.inputValue()).hash).toBe('#/activity/' + workspace + '?view=joint-ankle-posterior-glide&side=L&cohort=female');
+  expect(publicLocation(new URL(await share.inputValue()))).toBe('/resources/' + workspace + '/?view=joint-ankle-posterior-glide&side=L&cohort=female');
   await page.getByRole('button', { name: 'Use explorer start link instead', exact: true }).click();
-  expect(new URL(await share.inputValue()).hash).toBe('#/activity/' + workspace);
+  expect(publicLocation(new URL(await share.inputValue()))).toBe('/resources/' + workspace + '/');
   await expect(page.locator('.native-frame')).toHaveAttribute('data-retention-probe', 'same-frame');
   expect(await source.evaluate(() => window.retentionProbe)).toBe('same-window');
 });
@@ -288,8 +293,8 @@ for (const exit of ['browser Back', 'native Exit']) test(`${exit} leaves fullscr
   const originalSrc = await frame.getAttribute('src');
   const current = { resource: 'combined-ankle-dorsiflexion', side: 'L', cohort: 'female', practice: 'match' };
   await tell(page, source, message(current));
-  const currentHash = '#/activity/' + workspace + '?view=combined-ankle-dorsiflexion&side=L&cohort=female&practice=match';
-  expect(new URL(page.url()).hash).toBe(currentHash);
+  const currentPath = '/resources/' + workspace + '/?view=combined-ankle-dorsiflexion&side=L&cohort=female&practice=match';
+  expect(publicLocation(new URL(page.url()))).toBe(currentPath);
   expect(await source.evaluate(() => window.receivedSelections)).toEqual([]);
   const pops = await page.evaluate(() => window.anatomyViewPops);
   if (exit === 'browser Back') await page.goBack();
@@ -298,14 +303,14 @@ for (const exit of ['browser Back', 'native Exit']) test(`${exit} leaves fullscr
   await expect(player).not.toHaveClass(/\bfullscreen\b/);
   // Wait through the message turn: an accidental source reselect must not hide behind a URL-only assertion.
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-  expect(new URL(page.url()).hash).toBe(currentHash);
+  expect(publicLocation(new URL(page.url()))).toBe(currentPath);
   await expect(page.locator('[data-current-view]')).toHaveText('Left · Combined ankle dorsiflexion · Match anatomy');
   await expect(frame).toHaveAttribute('src', originalSrc);
   await expect(frame).toHaveAttribute('data-retention-probe', 'fullscreen-frame');
   expect(await source.evaluate(() => window.retentionProbe)).toBe('fullscreen-window');
   expect(await source.evaluate(() => window.receivedMessages.filter(message => message.type === 'devpt-teaching-select'))).toEqual([]);
   await page.getByRole('button', { name: 'Share current view', exact: true }).click();
-  expect(new URL(await page.getByRole('textbox', { name: 'Resource share link', exact: true }).inputValue()).hash).toBe(currentHash);
+  expect(publicLocation(new URL(await page.getByRole('textbox', { name: 'Resource share link', exact: true }).inputValue()))).toBe(currentPath);
 });
 
 test('a published guided lesson roundtrips through launch, trusted current-view state and Share without answers or progress', async ({ page }, testInfo) => {
@@ -320,7 +325,7 @@ test('a published guided lesson roundtrips through launch, trusted current-view 
   await expect(frame).toHaveAttribute('data-retention-probe', 'guided-frame');
   await page.getByRole('button', { name: 'Share current view', exact: true }).click();
   const shared = new URL(await page.getByRole('textbox', { name: 'Resource share link', exact: true }).inputValue());
-  const params = new URLSearchParams(shared.hash.split('?')[1]);
+  const params = shared.searchParams;
   expect(Object.fromEntries(params)).toEqual({ view: 'combined-ankle-dorsiflexion', side: 'R', cohort: 'female', practice: 'ankle-mortise' });
   expect([...params.keys()]).toEqual(['view', 'side', 'cohort', 'practice']);
 });
@@ -350,5 +355,5 @@ for (const [region, lesson] of [['hip', 'hip-gluteal-layers'], ['knee', 'knee-qu
     await tell(page, source, message({ resource, side: 'R', cohort: 'female', practice: lesson }));
     await expect(page).toHaveURL(new RegExp(`practice=${lesson}$`));
     await page.getByRole('button', { name: 'Share current view', exact: true }).click();
-    expect(new URL(await page.getByRole('textbox', { name: 'Resource share link', exact: true }).inputValue()).hash).toContain(`practice=${lesson}`);
+    expect(publicLocation(new URL(await page.getByRole('textbox', { name: 'Resource share link', exact: true }).inputValue()))).toContain(`practice=${lesson}`);
 });

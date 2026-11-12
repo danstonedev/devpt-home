@@ -491,6 +491,8 @@ html.player-fullscreen,html.player-fullscreen body{overflow:hidden}
 .share-local-note{font-size:12px}
 @media(max-width:520px){.share-link{flex-direction:column;align-items:stretch}.share-qr{align-self:center}}
 
+/* Contain decorative full-bleed glows without expanding the phone viewport. */
+@media(max-width:520px){.devpt-hero:before{right:0}}
 /* The Library changes the existing player box, never its iframe or source-owned model cache. */
 .native-active .native-stage,.native-frame{background:#0b130e}
 .native-view-tools{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex:none;min-height:44px;box-sizing:border-box;padding:4px 10px;border-bottom:1px solid var(--line);background:var(--color-surface,#fff)}
