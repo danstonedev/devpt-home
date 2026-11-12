@@ -302,13 +302,47 @@ test('report an issue names the resource and builds a report with its page detai
   expect(report).toContain('#/activity/exam-special-lachman');
 });
 
-const playerFixture = answersSelect => `<!doctype html><title>Protocol-only player</title><script>
+const playerFixture = (answersSelect, selectDelay = 0) => `<!doctype html><title>Protocol-only player</title><script>
 const parentOrigin = new URL(document.referrer).origin;
 window.loads = (window.loads || 0) + 1;
 const tell = activity => parent.postMessage({ type: 'devpt-teaching-ready', activity }, parentOrigin);
-addEventListener('message', event => { if (${answersSelect} && event.data?.type === 'devpt-teaching-select') { window.switched = event.data.activity; tell(event.data.activity); } });
+addEventListener('message', event => { if (${answersSelect} && event.data?.type === 'devpt-teaching-select') { window.switched = event.data.activity; setTimeout(() => tell(event.data.activity), ${selectDelay}); } });
 tell(new URLSearchParams(location.search).get('activity'));
 </script>`;
+
+test('cold resource loading keeps a dark stage and a stable toolbar without recovery actions', async ({ page }, testInfo) => {
+  await routeCatalog(page);
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', async route => {
+    await gate;
+    await route.fulfill({ contentType: 'text/html', body: playerFixture(true) });
+  });
+  await page.goto('/#/activity/exam-special-lachman', { waitUntil: 'domcontentloaded' });
+  const player = page.locator('.native-player'), stage = player.locator('.native-stage');
+  let loadingBounds;
+  try {
+    await expect(player.locator('.native-loading')).toBeVisible();
+    await expect(player.locator('.native-loading')).toHaveAttribute('role', 'status');
+    await expect(player.locator('.native-recovery')).toBeHidden();
+    await expect(stage).toHaveAttribute('aria-busy', 'true');
+    await expect(stage).toHaveCSS('background-color', 'rgb(11, 19, 14)');
+    await expect(player.locator('.native-frame')).toHaveCSS('background-color', 'rgb(11, 19, 14)');
+    loadingBounds = await stage.boundingBox();
+    if (testInfo.project.name === 'phone') {
+      await expect(player).toHaveClass(/\bfullscreen\b/);
+      const bounds = await player.boundingBox();
+      expect(bounds.y).toBe(0); expect(bounds.height).toBe(page.viewportSize().height);
+    }
+    await page.screenshot({ path: testInfo.outputPath('cold-loading.png') });
+  } finally { release(); }
+  await expect(player).toHaveAttribute('data-ready', 'true');
+  await expect(player.locator('.native-loading')).toBeHidden();
+  await expect(player.locator('.native-recovery')).toBeHidden();
+  await expect(stage).toHaveAttribute('aria-busy', 'false');
+  const readyBounds = await stage.boundingBox();
+  expect(readyBounds.y).toBe(loadingBounds.y); expect(readyBounds.height).toBe(loadingBounds.height);
+});
 
 test('resources in the same region and topic switch inside the loaded player', async ({ page }, testInfo) => {
   await routeCatalog(page);
@@ -335,15 +369,50 @@ test('resources in the same region and topic switch inside the loaded player', a
   await expect(page.locator('.native-frame')).toHaveAttribute('data-probe', 'kept');
 });
 
-test('an older player that cannot switch in place loads the next resource normally', async ({ page }, testInfo) => {
+test('a legitimate source switch taking more than four seconds keeps its existing iframe', async ({ page }, testInfo) => {
+  await page.clock.install();
+  await routeCatalog(page);
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: playerFixture(true, 8000) }));
+  await page.goto('/#/activity/exam-special-lachman');
+  const player = page.locator('.native-player');
+  await expect(player).toHaveAttribute('data-ready', 'true');
+  await pageBack(page, testInfo);
+  const frame = await page.locator('.native-frame').elementHandle();
+  await page.locator('select[data-switch]').selectOption('exam-special-mcmurray');
+  await expect(player).toHaveAttribute('data-loading', 'loading');
+  await page.clock.fastForward(5000);
+  expect(await frame.evaluate(element => element.isConnected && element === document.querySelector('.native-frame'))).toBe(true);
+  await expect(player.locator('.native-recovery')).toBeHidden();
+  await expect(player.locator('.native-loading')).toBeVisible();
+  await page.clock.fastForward(4000);
+  await expect(player).toHaveAttribute('data-ready', 'true');
+  await expect(player.locator('.native-loading')).toBeHidden();
+  expect(await frame.evaluate(element => element.isConnected && element === document.querySelector('.native-frame'))).toBe(true);
+});
+
+test('an unresponsive source keeps its iframe and offers explicit recovery after timeout', async ({ page }, testInfo) => {
+  await page.clock.install();
   await routeCatalog(page);
   await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: playerFixture(false) }));
   await page.goto('/#/activity/exam-special-lachman');
-  await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
+  const player = page.locator('.native-player');
+  await expect(player).toHaveAttribute('data-ready', 'true');
   await pageBack(page, testInfo);
+  const frame = await page.locator('.native-frame').elementHandle();
   await page.locator('select[data-switch]').selectOption('exam-special-mcmurray');
+  await expect(player).toHaveAttribute('data-loading', 'loading');
+  await page.clock.fastForward(26000);
+  await expect(player).toHaveAttribute('data-loading', 'failed');
+  await expect(player.locator('.native-loading')).toBeHidden();
+  await expect(player.locator('.native-recovery')).toBeVisible();
+  await expect(player.getByRole('button', { name: 'Retry', exact: true })).toBeVisible();
+  await expect(player.getByRole('link', { name: 'Open full view', exact: true })).toHaveAttribute('href', 'https://lab.devpt.app/teaching/?activity=exam-special-mcmurray&embedded=1');
+  expect(await frame.evaluate(element => element.isConnected && element === document.querySelector('.native-frame'))).toBe(true);
+  await player.getByRole('button', { name: 'Retry', exact: true }).click();
   await expect(page.locator('.native-frame')).toHaveAttribute('src', 'https://lab.devpt.app/teaching/?activity=exam-special-mcmurray&embedded=1', { timeout: 8000 });
-  await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
+  await expect(player).toHaveAttribute('data-ready', 'true');
+  await expect(player.locator('.native-recovery')).toBeHidden();
+  expect(await frame.evaluate(element => element.isConnected)).toBe(false);
 });
 
 const gameFixture = `<!doctype html><title>Game player</title><button id="play">Play</button><button id="quit">Quit</button><script>
