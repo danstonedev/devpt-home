@@ -538,3 +538,10 @@ html.player-fullscreen,html.player-fullscreen body{overflow:hidden}
 .topic-chip{font-size:13.5px;padding-right:11px}
 .ref-chapter{margin-top:28px}
 }
+
+/* A source-owned study header already supplies Expand / Exit full screen.
+   Keep the same iframe and full-window session when that header takes over. */
+.native-player[data-native-chrome="study-v1"]>.native-view-tools{display:none}
+.native-view-tools{background:linear-gradient(180deg,var(--color-topbar-start,#000),var(--color-topbar-end,#1a1a1a));color:#fff;border-bottom-color:#454545}
+.native-view-tools .native-loading{color:#fff}
+.native-view-tools .button{background:transparent;color:#fff;border-color:#555}
