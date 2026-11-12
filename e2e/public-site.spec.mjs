@@ -7,7 +7,7 @@ const output = resolve('.cache/public-test');
 const catalogUrl = 'https://lab.devpt.app/teaching/catalog.json';
 
 test('Evidence flows and the named Posture Lab have independent direct pages and searchable entries', async ({browser,page,baseURL}) => {
-  const ids=['evidence-diagnostic-results','evidence-test-clusters','posture-assessment-standing'];
+  const ids=['evidence-diagnostic-results','evidence-test-clusters','posture-assessment-standing','evidence-test-decisions'];
   const staticContext=await browser.newContext({javaScriptEnabled:false});
   try{
     const direct=await staticContext.newPage();
@@ -27,7 +27,7 @@ test('Evidence flows and the named Posture Lab have independent direct pages and
     const source=new URL(await frame.getAttribute('src'));
     expect(source.origin).toBe('https://lab.devpt.app');expect(source.searchParams.get('activity')).toBe(id);
   }
-  for(const [query,expected] of [['Sankey',ids.slice(0,2)],['postural assessment',['posture-assessment-standing']]]){
+  for(const [query,expected] of [['Sankey',[ids[0],ids[1],ids[3]]],['prevalence',['evidence-test-decisions']],['PPV NPV',['evidence-test-decisions']],['postural assessment',['posture-assessment-standing']]]){
     await page.goto('/search/?q='+encodeURIComponent(query),{waitUntil:'domcontentloaded'});
     await page.waitForFunction(()=>window.DEVPT_CATALOG_STATE==='ready');
     for(const id of expected)await expect(page.locator('a[href="/resources/'+id+'/"]').first()).toBeVisible();

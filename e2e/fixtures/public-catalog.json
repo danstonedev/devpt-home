@@ -286,6 +286,47 @@
       "nativeId": "posture-assessment-standing",
       "url": "https://lab.devpt.app/teaching/?activity=posture-assessment-standing",
       "playerSession": "devpt-3d-workbench"
+    },
+    {
+      "id": "evidence-test-decisions",
+      "title": "Evidence Lab · Prevalence, PPV & NPV",
+      "context": "Evidence Lab",
+      "regionId": "whole-body",
+      "topicId": "measurement-evidence",
+      "type": "Movement measurement explorer",
+      "source": "simLAB · synthetic joint test results linked to the screening cohort · illustrative native gait",
+      "keywords": [
+        "evidence",
+        "measurement",
+        "prevalence",
+        "Sankey",
+        "animated patient flow",
+        "positive predictive value",
+        "negative predictive value",
+        "PPV",
+        "NPV",
+        "likelihood ratios",
+        "test clusters",
+        "conditional dependence",
+        "Bayes",
+        "prior probability",
+        "screening"
+      ],
+      "launch": {
+        "kind": "evidence",
+        "mode": "test-decisions"
+      },
+      "region": "Whole body",
+      "topic": "Measurement & evidence",
+      "level": "BETA · measurement practice",
+      "minutes": 0,
+      "media": "examination",
+      "symbol": "analytics",
+      "desc": "Same screen, different clinic. Follow PPV and NPV as group risk changes.",
+      "outcome": "Explain predictive values and likelihood ratios using joint test results and an assumed prior.",
+      "nativeId": "evidence-test-decisions",
+      "url": "https://lab.devpt.app/teaching/?activity=evidence-test-decisions",
+      "playerSession": "devpt-3d-workbench"
     }
   ],
   "build": "0000000000000000000000000000000000000000"

@@ -26,7 +26,7 @@ test('the public export contains readable canonical pages and a catalog-derived 
   const output = mkdtempSync(join(tmpdir(), 'devpt-seo-test-'));
   try {
     const result = buildPublicSite({ catalog, output });
-    assert.equal(result.resources, 8);
+    assert.equal(result.resources, 9);
     const read = name => readFileSync(join(output, name), 'utf8');
     const resource = read('resources/exam-special-lachman/index.html');
     assert.match(resource, /<h1>Lachman test<\/h1>/);
@@ -39,7 +39,7 @@ test('the public export contains readable canonical pages and a catalog-derived 
     const sitemap = read('sitemap.xml');
     assert.match(sitemap, /\/regions\/hip\//);
     assert.match(sitemap, /\/resources\/anatomy-hip\//);
-    for(const id of ['evidence-diagnostic-results','evidence-test-clusters','posture-assessment-standing']){
+    for(const id of ['evidence-diagnostic-results','evidence-test-clusters','posture-assessment-standing','evidence-test-decisions']){
       assert.match(read('resources/'+id+'/index.html'),new RegExp('https://devpt.app/resources/'+id+'/'));
       assert.match(sitemap,new RegExp('/resources/'+id+'/'));
     }
