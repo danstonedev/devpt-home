@@ -492,8 +492,11 @@ html.player-fullscreen,html.player-fullscreen body{overflow:hidden}
 @media(max-width:520px){.share-link{flex-direction:column;align-items:stretch}.share-qr{align-self:center}}
 
 /* The Library changes the existing player box, never its iframe or source-owned model cache. */
-.native-view-tools{display:flex;align-items:center;justify-content:flex-end;flex:none;min-height:44px;box-sizing:border-box;padding:4px 10px;border-bottom:1px solid var(--line);background:var(--color-surface,#fff)}
-.native-view-tools .button{min-height:36px;gap:7px}
+.native-active .native-stage,.native-frame{background:#0b130e}
+.native-view-tools{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex:none;min-height:44px;box-sizing:border-box;padding:4px 10px;border-bottom:1px solid var(--line);background:var(--color-surface,#fff)}
+.native-view-tools .button{min-height:36px;gap:7px;flex-shrink:0}
+.native-loading{margin:0 auto 0 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--muted)}
+.native-loading[hidden]{display:none}
 .native-view-tools .button:focus-visible{outline:3px solid var(--color-brand-green-light,#00b44f);outline-offset:2px}
 .native-player.fullscreen .native-view-tools{padding-top:max(4px,env(safe-area-inset-top));padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))}
 @media(pointer:coarse){.native-view-tools .button{min-height:44px}.native-view-tools{min-height:52px}}
