@@ -108,7 +108,11 @@ Custom domains and DNS live in Azure. Prefer Azure DNS ALIAS for apex changes an
 
 ## Reference library
 
-The root site is a reference library: every resource simLAB publishes, filed by body region and topic (a region page lists its topics, a topic page its regions), with search across titles, headings and common terms, browser-local saves and account-free sharing. Each resource opens its own selection in simLAB's public player (`https://lab.devpt.app/teaching/?activity=<id>`). The site consumes SimLab’s source-owned published catalog at `https://lab.devpt.app/teaching/catalog.json`, including its ordered regions and topics; models, players and the resource list are never copied into this repository. A curated activity that names a reference item in `aliasOf` is listed once, as that item, and its own links keep opening it; earlier `#/collection/<id>` links open the matching region or topic. Public entry controls and publication live in SimLab ([public teaching resources](https://github.com/danstonedev/simlab/blob/main/docs/public-teaching-resources.md)). Gait physics remains an experimental local tool.
+The root site consumes simLAB’s source-owned public catalog at `https://lab.devpt.app/teaching/catalog.json`. Each export ships those exact upstream bytes as `/library-catalog.json`; production discovery reads this release snapshot so live menus and static direct routes advance together. Raw localhost development retains the live upstream catalog. Browse subjects under the five workflow shelves, anatomical body regions, or formats such as games and practice tools. Subject and region memberships may overlap; section totals count each canonical resource once rather than summing topic counts. Nonregional methods and tools have their own visible entry instead of being filed as whole-body anatomy. Source entries without a reviewed regional assignment stay in a separate Region not assigned scope. Games also appear under their reviewed Anatomy or Imaging subject. The earlier Games topic URL and query remain compatible.
+
+`library-model.js` is the shared model for the browser and static renderer: it validates the same catalog, applies reviewed `topicIds` / `regionIds`, and intersects selected topic, region, format and scope filters. Explicit `studyFamily` metadata groups related source variants behind a “Choose a variant” disclosure. Counts distinguish canonical resources from study groups (one reviewed family, or one standalone resource). Every variant keeps its own canonical resource link, save action and native launch. Grouping never guesses from similar titles. Missing additive metadata retains the earlier scalar memberships and singleton studies.
+
+Each resource opens its source selection in simLAB’s public player (`https://lab.devpt.app/teaching/?activity=<id>`); models, players and the resource list are never copied into this repository. An `aliasOf` item is listed once as its canonical target, while existing alias URLs and earlier collection links keep working. Search includes source keywords, reviewed membership labels and variant labels; filtered browse and expanded variant choices survive Back navigation. Publication lives in simLAB ([public teaching resources](https://github.com/danstonedev/simlab/blob/main/docs/public-teaching-resources.md)). Gait physics remains an experimental local tool.
 
 `npm run build:public` exports only public website files to `.cache/public-site`, which is the Azure deployment input. The workflow waits for compatible source-owned walkthroughs and the published teaching entry before upload. `npm run build:local` and `npm run preview:local` retain the complete local source review; see `docs/local-site-preview.md`.
 
@@ -137,11 +141,39 @@ Unknown paths retain real 404 responses; there is no blanket application fallbac
 
 Only the source-owned public projection may produce a release. Development
 catalogues, invalid IDs, duplicate IDs and non-source player URLs fail the build.
-No catalogue or model copy is maintained in this repository. A website export
-must be rebuilt when new resources are published so the corresponding HTML and
-sitemap exist. Publish a normal website change when the catalogue changes without a website
-commit so the existing main-branch deployment rebuilds these pages. `release.json` identifies
-both the website revision and the catalogue build used for the export.
+No hand-maintained catalogue or model copy is kept in this repository. After a successful
+simLAB production upload, its release workflow waits for the exact public catalog
+SHA, then uses the existing GitHub App to dispatch this repository's **Azure
+Static Web Apps CI/CD** workflow. No empty website commit or manual rebuild is
+needed. `release.json` identifies both the actual checked-out website revision
+and the catalog build used for the export.
+
+Pushes, release notifications and retries share one serialized deployment queue.
+Each run checks out current `main`, validates and saves the current public catalog
+once, then generates all menus, counts, pages and the sitemap from those same
+bytes. The export publishes those bytes at `/library-catalog.json`; production
+browser navigation reads that snapshot so it cannot advance ahead of the matching
+static direct routes. A notification's `source_build` and `source_run_id` are provenance hints,
+not checkout targets; duplicates and delayed notifications cannot select an old
+catalog. Immediately before upload, the workflow checks that the website revision
+and catalog bytes are still current. A superseded run skips upload and queues a
+fresh reconciliation. A source update during upload is detected after verification
+and also queues a refresh.
+
+Publication verifies the live `release.json` identity and counts, the catalog
+snapshot's SHA256, the exact HTML
+of every exported Library page (including menus and direct resource URLs), and
+canonical alias redirects. CDN convergence is retried; transient workflow failures
+automatically retry at most three times. The selected catalog, page hashes and
+release record are retained as a seven-day Actions artifact. Exhausted retries or
+an App permission error remain visible failures rather than a release success.
+
+For manual recovery, run **Azure Static Web Apps CI/CD** on `main` with its default
+inputs. It reconciles the current public source. The simLAB App must already be
+installed on `devpt-home` with Contents: read and Actions: write; its existing
+`SUBMODULE_APP_CLIENT_ID` / `SUBMODULE_APP_PRIVATE_KEY` secrets stay in simLAB.
+The consumer uses its own scoped Actions token to requeue, and keeps the native
+walkthrough readiness, framing and private-preview guards unchanged.
 
 Old `#/activity/…`, `#/region/…`, `#/topic/…`, collection and saved-list links
 continue to open their canonical real paths. Resource aliases redirect to their

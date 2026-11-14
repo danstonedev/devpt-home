@@ -1,7 +1,7 @@
 name: Azure Static Web Apps CI/CD
 
-# Owner direction, 26 October 2026 (all repositories): hosted runs are
-# requested deliberately, so pull requests no longer build preview sites.
+# Product releases wake a static Library refresh; this is publication, not an
+# automatic simulator test suite. Pull requests still do not build previews.
 on:
   push:
     branches:
@@ -10,25 +10,74 @@ on:
     types: [closed]
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      source_build:
+        description: Published source SHA (notification hint; always reconcile current source)
+        type: string
+        default: ''
+      source_run_id:
+        description: Source publication run for the release record
+        type: string
+        default: ''
+      retry:
+        description: Automatic retry depth (0–3)
+        type: string
+        default: '0'
+
+# Every push, notification and retry shares one upload queue. A delayed wake-up
+# checks out main and reads the current source, so it cannot roll back a release.
+concurrency:
+  group: devpt-publication
+  cancel-in-progress: false
+
+permissions:
+  contents: read
 
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push'
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     name: Build and Deploy Job
+    permissions:
+      contents: read
+      actions: write # bounded self-requeue when superseded or publication is transiently unavailable
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      SOURCE_BUILD: ${{ inputs.source_build || '' }}
+      SOURCE_RUN_ID: ${{ inputs.source_run_id || '' }}
+      REFRESH_RETRY: ${{ inputs.retry || '0' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
+          ref: main
           submodules: true
           lfs: false
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Record the actual checked-out website revision
+        id: revision
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Check automatic refresh safety
+        run: node --test scripts/wait-for-teaching-catalog.test.mjs scripts/library-refresh.test.mjs
       - name: Wait for source-owned walkthrough deployments
         run: node scripts/wait-for-showcases.mjs --timeout-seconds 1800
       - name: Wait for the source-owned published resource catalog
-        run: node scripts/wait-for-teaching-catalog.mjs --timeout-seconds 1800
-      - name: Export only public website files
-        run: node scripts/build-public-site.mjs
+        run: node scripts/wait-for-teaching-catalog.mjs --timeout-seconds 1800 --output .cache/teaching-catalog.json
+      - name: Export menus, counts and direct routes from the same catalog bytes
+        env:
+          HOME_REVISION: ${{ steps.revision.outputs.sha }}
+        run: node scripts/library-refresh.mjs prepare
+      - name: Recheck source and website freshness immediately before upload
+        id: freshness
+        run: node scripts/library-refresh.mjs check-current
       - name: Build And Deploy
+        if: steps.freshness.outputs.current == 'true'
         id: builddeploy
+        timeout-minutes: 15
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_BLACK_TREE_0E898330F }}
@@ -41,6 +90,29 @@ jobs:
           output_location: "" # Built app content directory - optional
           skip_app_build: true # Pure static HTML/CSS/JS — no build step
           ###### End of Repository/Build Configurations ######
+      - name: Verify the live release, menus, counts, every direct route and aliases
+        if: steps.freshness.outputs.current == 'true'
+        id: publication
+        timeout-minutes: 12
+        run: node scripts/library-refresh.mjs verify
+      - name: Reconcile a source or website update that superseded this export
+        if: success() && (steps.freshness.outputs.current == 'false' || steps.publication.outputs.current == 'false')
+        run: node scripts/library-refresh.mjs queue superseded
+      - name: Retry a transient release failure without losing the refresh
+        if: failure()
+        run: node scripts/library-refresh.mjs queue retry
+      - name: Preserve the selected catalog and publication evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: library-refresh-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .cache/teaching-catalog.json
+            .cache/library-refresh.json
+            .cache/library-publication-verification.json
+            .cache/public-site/release.json
+          if-no-files-found: ignore
+          retention-days: 7
 
   # Retain cleanup for preview environments created before PR builds were disabled.
   close_pull_request_job:

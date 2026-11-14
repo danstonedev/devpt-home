@@ -1,5 +1,5 @@
-/* Discovery consumes the owning product's published catalog. No copied model,
- * clinical metadata catalog, simulator or local service is deployed here. */
+/* Discovery uses the exact source-owned catalog snapshot that generated this
+ * release's static pages. Native players remain in the owning product. */
 (function () {
   'use strict';
   const loopback = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
@@ -21,9 +21,10 @@
     document.dispatchEvent(new Event('devpt:catalog-ready'));
   }
   function loadPublishedCatalog() {
-    return fetch('https://lab.devpt.app/teaching/catalog.json', {
+    return fetch(loopback ? 'https://lab.devpt.app/teaching/catalog.json' : '/library-catalog.json', {
       // Matches the <link rel="preload"> in index.html so the early request is reused.
-      // The catalog is served with Cache-Control: no-cache, so it is still revalidated.
+      // The release snapshot is revalidated with its static pages. Raw local
+      // development keeps the live source fixture; production never falls back.
       mode: 'cors', credentials: 'same-origin',
       signal: AbortSignal.timeout(10000),
     }).then(response => {
@@ -66,6 +67,7 @@
       // request. The renderer refreshes resource views when it completes.
       void loadPublishedCatalog();
     }
+    await script('/library-model.js');
     await script('/teaching-library.js');
     await script('/feature-workspaces.js');
   }

@@ -126,12 +126,12 @@ test('sections shelve the topics in course order on every page, and an unshelved
   await expect(page).toHaveURL(/\/sections\/examination\/$/);
   await expect(page.getByRole('heading', { name: 'Examination', level: 1 })).toBeVisible();
   await expect(page).toHaveTitle('Examination physical therapy resources · DevPT');
-  await expect(page.locator('main').getByRole('link', { name: /, \d+ resources$/ })).toHaveText([/^Special tests/, /^Gait & balance/]);
+  await expect(page.locator('main .ref-grid.topics').getByRole('link')).toHaveText([/^Special tests/, /^Gait & balance/]);
   await page.goto('/#/section/clinical-reasoning');
   await expect(page.getByRole('heading', { name: 'Section unavailable' })).toBeVisible();
   // Topics: the same sections as headings over their topic cards.
   await page.goto('/#/topics');
-  await expect(page.locator('main').getByRole('heading', { level: 2 })).toHaveText([/^Structure & function/, /^Examination/, /^Intervention/, 'Also in the library']);
+  await expect(page.locator('main').getByRole('heading', { level: 2 })).toHaveText([/^Structure & function/, /^Examination/, /^Intervention/, 'Also in the library', 'By format']);
   await expect(page.getByRole('region', { name: 'Also in the library' }).getByRole('link')).toHaveText([/^Native motion previews/]);
   // A region reads as a chapter: sections, then topics, then a topic's own headings, each one level down.
   await page.goto('/#/region/knee');

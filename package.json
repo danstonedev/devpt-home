@@ -8,7 +8,7 @@
     "start": "npm run build:public && http-server .cache/public-site -c-1 -p 8099",
     "prepreview": "node scripts/ensure-fresh-main.mjs --preview",
     "preview": "npm run build:public && http-server .cache/public-site -c-1 -p 8109 -a 127.0.0.1",
-    "test": "node scripts/check-live-showcase.mjs && node scripts/check-apps.mjs --no-ping && npm run check:brand && node --test scripts/wait-for-showcases.test.mjs && node --test scripts/wait-for-teaching-catalog.test.mjs && node --test scripts/public-site.test.mjs",
+    "test": "node scripts/check-live-showcase.mjs && node scripts/check-apps.mjs --no-ping && npm run check:brand && node --test scripts/wait-for-showcases.test.mjs && node --test scripts/wait-for-teaching-catalog.test.mjs && node --test scripts/library-model.test.mjs && node --test scripts/library-refresh.test.mjs && node --test scripts/public-site.test.mjs",
     "build:demos": "node scripts/build-demos.mjs",
     "preview:teaching": "node scripts/serve-local-site.mjs --open",
     "build:teaching-preview": "node scripts/build-local-site.mjs",
