@@ -2,6 +2,7 @@ import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } fr
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { isDeepStrictEqual } from 'node:util';
 import routes from '../library-routes.js';
 import { libraryRenderer } from './library-renderer.mjs';
 
@@ -10,15 +11,18 @@ const catalogUrl = 'https://lab.devpt.app/teaching/catalog.json';
 const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const json = value => JSON.stringify(value).replace(/</g, '\\u003c');
 
-export function buildPublicSite({ catalog, output = resolve(root, '.cache/public-site') }) {
+export function buildPublicSite({ catalog, catalogBody, output = resolve(root, '.cache/public-site') }) {
+  if (catalogBody !== undefined && (typeof catalogBody !== 'string' || !isDeepStrictEqual(JSON.parse(catalogBody), catalog))) throw new Error('Catalog snapshot bytes do not describe the catalog used for rendering.');
+  const snapshot = catalogBody === undefined ? JSON.stringify(catalog, null, 2) + '\n' : catalogBody;
   const renderer = libraryRenderer(root, catalog);
-  const files = ['index.html','privacy.html','terms.html','accessibility.html','sitemap.html','resource-credits.html','apps.json','styles.css','emr-foundation.css','portfolio.css','native-showcase.css','product-walkthrough.css','app.js','walkthrough.js','product-walkthrough.js','portfolio.js','feature-workspaces.js','teaching-library.js','teaching-library.css','library-routes.js','site-analytics.js','site-bootstrap.js','site-media.js','site-fonts.css','staticwebapp.config.json','favicon.ico','robots.txt'];
+  const files = ['index.html','privacy.html','terms.html','accessibility.html','sitemap.html','resource-credits.html','apps.json','styles.css','emr-foundation.css','portfolio.css','native-showcase.css','product-walkthrough.css','app.js','walkthrough.js','product-walkthrough.js','portfolio.js','feature-workspaces.js','library-model.js','teaching-library.js','teaching-library.css','library-routes.js','site-analytics.js','site-bootstrap.js','site-media.js','site-fonts.css','staticwebapp.config.json','favicon.ico','robots.txt'];
   rmSync(output, { recursive: true, force: true });
   mkdirSync(output, { recursive: true });
+  writeFileSync(join(output, 'library-catalog.json'), snapshot);
   for (const file of files) if (existsSync(join(root, file))) cpSync(join(root, file), join(output, file));
   for (const dir of ['assets','simlab','emrs','3dpain','showcase','platform-terms']) if (existsSync(join(root, dir))) cpSync(join(root, dir), join(output, dir), { recursive: true });
   const template = readFileSync(join(root, 'index.html'), 'utf8');
-  for (const required of ['/site-bootstrap.js','/site-media.js','/site-fonts.css','/teaching-library.css','/library-routes.js','/site-analytics.js','/assets/navigation-state.js']) {
+  for (const required of ['/site-bootstrap.js','/site-media.js','/site-fonts.css','/library-model.js','/teaching-library.css','/library-routes.js','/site-analytics.js','/assets/navigation-state.js']) {
     if (!template.includes(required) || !existsSync(join(output, required.slice(1)))) throw new Error('Missing public entry dependency: ' + required);
   }
   if (/local-site-config\.js|local-site-fonts\.css/.test(template)) throw new Error('The public entry must not depend on local-only artifacts.');
@@ -64,5 +68,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const catalogFile = argument('--catalog');
   // curl honors managed proxy/CA trust and ordinary GitHub Actions egress.
   const source = catalogFile ? readFileSync(resolve(catalogFile), 'utf8') : execFileSync('curl', ['--fail','--silent','--show-error','--max-time','30','--proto','=https',catalogUrl], { encoding: 'utf8', maxBuffer: 5 * 1024 * 1024 });
-  console.log(buildPublicSite({ catalog: JSON.parse(source), output: argument('--output') ? resolve(argument('--output')) : undefined }));
+  console.log(buildPublicSite({ catalog: JSON.parse(source), catalogBody: source, output: argument('--output') ? resolve(argument('--output')) : undefined }));
 }

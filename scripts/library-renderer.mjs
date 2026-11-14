@@ -21,13 +21,13 @@ export function libraryRenderer(root, catalog) {
     cancelAnimationFrame() {},
     localStorage: { getItem: () => null }, URL, URLSearchParams, Event, clearTimeout, setTimeout,
   });
-  for (const file of ['assets/navigation-state.js', 'library-routes.js', 'site-media.js', 'teaching-library.js']) new Script(readFileSync(join(root, file), 'utf8'), { filename: file }).runInContext(context, { timeout: 3000 });
+  for (const file of ['assets/navigation-state.js', 'library-routes.js', 'library-model.js', 'site-media.js', 'teaching-library.js']) new Script(readFileSync(join(root, file), 'utf8'), { filename: file }).runInContext(context, { timeout: 3000 });
   if (!new Script('catalogValid').runInContext(context)) throw new Error('Published resource metadata failed website validation.');
   for (const item of catalog.activities) {
     const url = new URL(item.url);
     if (url.origin !== 'https://lab.devpt.app' || url.pathname !== '/teaching/' || url.searchParams.get('activity') !== (item.nativeId || item.id)) throw new Error('Resource escaped its source-owned public player: ' + item.id);
   }
-  const summary = new Script('({activities:LISTED,regions:REGIONS,topics:TOPICS,sections:typeof SECTIONS === "undefined" ? [] : SECTIONS})').runInContext(context);
+  const summary = new Script('({activities:LISTED,regions:REGIONS,topics:TOPICS,subjectTopics:SUBJECT_TOPICS,formats:FORMATS,counts:LIBRARY.counts(LISTED),sections:typeof SECTIONS === "undefined" ? [] : SECTIONS})').runInContext(context);
   const render = new Script('render(); window.DEVPT_PAGE', { filename: 'render-public-page' });
   return { ...JSON.parse(JSON.stringify(summary)), render(path) {
     context.location = new URL(path, 'https://devpt.app');

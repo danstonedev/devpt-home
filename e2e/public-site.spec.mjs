@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { readFileSync, existsSync, statSync } from 'node:fs';
-import { resolve, extname } from 'node:path';
+import { resolve, extname, sep } from 'node:path';
 
 const catalog = JSON.parse(readFileSync(new URL('./fixtures/public-catalog.json', import.meta.url), 'utf8'));
 const output = resolve('.cache/public-test');
@@ -40,17 +40,47 @@ async function isolatedPublicSite(browser, value, projectUse) {
   const mime = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.css': 'text/css', '.woff2': 'font/woff2', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml' };
   await context.route('**/*', route => {
     const url = new URL(route.request().url());
-    if (url.href === catalogUrl) return route.fulfill({ json: value });
+    if (url.href === catalogUrl || url.href === 'https://devpt.app/library-catalog.json') return route.fulfill({ json: value });
     if (url.hostname === 'www.googletagmanager.com') { tags.push(url.href); return route.fulfill({ contentType: 'text/javascript', body: '' }); }
     if (url.origin !== 'https://devpt.app') return route.abort();
     let file = resolve(output, '.' + url.pathname);
-    if (!file.startsWith(output + '/') && file !== output) return route.abort();
+    if (!file.startsWith(output + sep) && file !== output) return route.abort();
     if (existsSync(file) && statSync(file).isDirectory()) file += '/index.html';
     if (!existsSync(file)) return route.fulfill({ status: 404, body: 'Missing' });
     return route.fulfill({ contentType: mime[extname(file)] || 'application/octet-stream', body: readFileSync(file) });
   });
   return { context, tags };
 }
+
+test('production discovery stays on its published static snapshot when Lab advances',async({browser},testInfo)=>{
+  const {context}=await isolatedPublicSite(browser,catalog,testInfo.project.use);
+  let liveCatalogRequests=0;
+  const future={...catalog.activities.find(item=>!item.aliasOf),id:'future-resource',nativeId:'future-resource',title:'A newly published Lab resource',url:'https://lab.devpt.app/teaching/?activity=future-resource'};
+  const advanced={...catalog,build:'b'.repeat(40),activities:[...catalog.activities,future]};
+  await context.route(catalogUrl,route=>{liveCatalogRequests++;return route.fulfill({json:advanced});});
+  try{
+    const page=await context.newPage();await page.goto('https://devpt.app/');
+    await page.waitForFunction(()=>window.DEVPT_CATALOG_STATE==='ready');
+    expect(await page.evaluate(()=>window.DEVPT_TEACHING_CATALOG.build)).toBe(catalog.build);
+    expect(await page.evaluate(()=>window.DEVPT_TEACHING_CATALOG.activities.some(item=>item.id==='future-resource'))).toBe(false);
+    expect(liveCatalogRequests).toBe(0);
+    await expect(page.locator('a[href="/resources/future-resource/"]')).toHaveCount(0);
+    await page.getByRole('link',{name:'Knee, 3 resources',exact:true}).click();
+    await expect(page).toHaveURL('https://devpt.app/regions/knee/');
+    await expect(page.getByRole('link',{name:'Lachman test',exact:true})).toBeVisible();
+  }finally{await context.close();}
+});
+
+test('production snapshot failure cannot introduce newer unbuilt Lab routes through a fallback',async({browser},testInfo)=>{
+  const {context}=await isolatedPublicSite(browser,catalog,testInfo.project.use);let remote=0;
+  await context.route('https://devpt.app/library-catalog.json',route=>route.fulfill({status:503,body:'Unavailable'}));
+  await context.route(catalogUrl,route=>{remote++;return route.fulfill({json:catalog});});
+  try{
+    const page=await context.newPage();await page.goto('https://devpt.app/');
+    await expect(page.getByRole('heading',{name:'Library unavailable'})).toBeVisible();
+    expect(remote).toBe(0);
+  }finally{await context.close();}
+});
 
 test('resource and region pages are readable without JavaScript; missing resources return 404', async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
@@ -83,7 +113,7 @@ test('single-resource category URLs stay canonical while cards and legacy links 
   }
   await page.goto('/regions/');
   await page.waitForFunction(()=>window.DEVPT_CATALOG_STATE==='ready');
-  await expect(page.getByRole('link',{name:'Hip, 1 resources',exact:true})).toHaveAttribute('href','/resources/anatomy-hip/');
+  await expect(page.getByRole('link',{name:'Hip, 1 resource',exact:true})).toHaveAttribute('href','/resources/anatomy-hip/');
   for(const path of ['/#/region/hip','/#/collection/all-hip']){
     let releaseCatalog;
     const gate=new Promise(resolve=>{releaseCatalog=resolve;});
@@ -126,12 +156,12 @@ test('public analytics measures homepage, resource use and product interest with
   const mime = {'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.woff2':'font/woff2','.webp':'image/webp','.png':'image/png','.svg':'image/svg+xml'};
   await context.route('**/*', async route => {
     const url = new URL(route.request().url());
-    if (url.href === catalogUrl) { await catalogGate; return route.fulfill({json:catalog}); }
+    if (url.href === catalogUrl || url.href === 'https://devpt.app/library-catalog.json') { await catalogGate; return route.fulfill({json:catalog}); }
     if (url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/') return route.fulfill({contentType:'text/html',body:`<title>Protocol fixture</title><script>parent.postMessage({type:'devpt-teaching-ready',activity:new URLSearchParams(location.search).get('activity')},'https://devpt.app')</script>`});
     if (url.hostname === 'www.googletagmanager.com') attemptedTags.push(url.href);
     if (url.origin !== 'https://devpt.app') return route.abort();
     let file = resolve(output, '.' + url.pathname);
-    if (!file.startsWith(output + '/') && file !== output) return route.abort();
+    if (!file.startsWith(output + sep) && file !== output) return route.abort();
     if (existsSync(file) && statSync(file).isDirectory()) file += '/index.html';
     if (!existsSync(file)) return route.fulfill({status:404,body:'Missing'});
     return route.fulfill({contentType:mime[extname(file)]||'application/octet-stream',body:readFileSync(file)});
@@ -199,7 +229,7 @@ test('unknown legacy routes and sensitive static paths never initialize analytic
 test('a parked source becomes ready silently and reports readiness once when resumed', async ({ browser }, testInfo) => {
   const id = 'posture-assessment-standing';
   const source = { ...catalog.activities.find(item => !item.aliasOf), id, nativeId: id, title: 'Standing posture', regionId: 'whole-body', region: 'Whole body', topicId: 'gait-balance', topic: 'Gait & balance', url: 'https://lab.devpt.app/teaching/?activity=' + id, launch: { kind: 'posture', example: 'standing-reference' } };
-  const { context } = await isolatedPublicSite(browser, { ...catalog, activities: [...catalog.activities, source] }, testInfo.project.use);
+  const { context } = await isolatedPublicSite(browser, { ...catalog, activities: [...catalog.activities.filter(item=>item.id!==id), source] }, testInfo.project.use);
   let loads = 0;
   await context.route('https://lab.devpt.app/teaching/?**', route => {
     loads++;

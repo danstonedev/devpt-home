@@ -28,6 +28,7 @@ test('the public export contains readable canonical pages and a catalog-derived 
     const result = buildPublicSite({ catalog, output });
     assert.equal(result.resources, 9);
     const read = name => readFileSync(join(output, name), 'utf8');
+    assert.deepEqual(JSON.parse(read('library-catalog.json')),catalog);
     const resource = read('resources/exam-special-lachman/index.html');
     assert.match(resource, /<h1>Lachman test<\/h1>/);
     assert.match(resource, /<link rel="canonical" href="https:\/\/devpt.app\/resources\/exam-special-lachman\/"/);
@@ -48,10 +49,22 @@ test('the public export contains readable canonical pages and a catalog-derived 
     assert.match(read('search/index.html'), /noindex, follow/);
     assert.match(read('sitemap.html'), /\/resources\/exam-special-lachman\//);
     const config = JSON.parse(read('staticwebapp.config.json'));
+    assert.equal(config.routes.find(rule=>rule.route==='/library-catalog.json').headers['Cache-Control'],'no-cache');
     assert.deepEqual(config.routes.find(rule => rule.route === '/resources/hip-anatomy/'), {route:'/resources/hip-anatomy/',redirect:'/resources/anatomy-hip/',statusCode:301});
     assert.equal(config.navigationFallback, undefined);
     for (const file of ['node_modules','docs','e2e','local-site-config.js','catalog.json','scripts']) assert.equal(existsSync(join(output,file)), false);
   } finally { rmSync(output, { recursive: true, force: true }); }
+});
+
+test('the export retains the exact source snapshot bytes and rejects a different rendering catalog',()=>{
+  const output=mkdtempSync(join(tmpdir(),'devpt-snapshot-test-'));
+  const catalogBody=JSON.stringify(catalog)+'\n\n';
+  try{
+    buildPublicSite({catalog,catalogBody,output});
+    assert.equal(readFileSync(join(output,'library-catalog.json'),'utf8'),catalogBody);
+    assert.throws(()=>buildPublicSite({catalog:{...catalog,build:'b'.repeat(40)},catalogBody,output}),/snapshot bytes/);
+    assert.equal(readFileSync(join(output,'library-catalog.json'),'utf8'),catalogBody);
+  }finally{rmSync(output,{recursive:true,force:true});}
 });
 
 test('nonempty source-owned sections export canonical pages in source order without indexing private routes', () => {

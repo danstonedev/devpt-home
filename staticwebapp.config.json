@@ -5,6 +5,12 @@
   },
   "routes": [
     {
+      "route": "/library-catalog.json",
+      "headers": {
+        "Cache-Control": "no-cache"
+      }
+    },
+    {
       "route": "/index.html",
       "redirect": "/",
       "statusCode": 301
