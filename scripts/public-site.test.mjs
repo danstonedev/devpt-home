@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { runInNewContext } from 'node:vm';
 import routes from '../library-routes.js';
 import { buildPublicSite } from './build-public-site.mjs';
+import { robotsAllows } from './robots-rules.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const catalog = JSON.parse(readFileSync(join(root, 'e2e/fixtures/public-catalog.json'), 'utf8'));
@@ -109,13 +110,26 @@ test('the unlisted R&D page is exported with noindex but is never linked, mapped
     }
     const placed = new Set([...registry.apps.map(app => app.id), ...(registry.unlisted || []).map(app => app.id), ...registry.productLines.flatMap(line => line.appIds)]);
     for (const project of registry.rnd) assert.equal(placed.has(project.id), false, project.id);
-    assert.match(read('robots.txt'), /^Disallow: \/rnd\/\r?$/m);
+    // Crawlers must be able to fetch the page, or they never see its noindex.
+    assert.equal(robotsAllows(read('robots.txt'), '/rnd/'), true);
     for (const sitemap of ['sitemap.xml', 'sitemap.html']) assert.doesNotMatch(read(sitemap), /\/rnd\b/);
     // Generated library pages, product pages and the scripts that draw navigation and footers never point to it.
     const files = dir => readdirSync(dir, { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? files(join(dir, entry.name)) : [join(dir, entry.name)]);
     const linking = files(output).filter(file => /\.(html|js|xml)$/.test(file) && file !== join(output, 'rnd', 'index.html') && /\/rnd\b/.test(readFileSync(file, 'utf8')));
     assert.deepEqual(linking, []);
   } finally { rmSync(output, { recursive: true, force: true }); }
+});
+
+test('robots.txt rules that would hide the R&D noindex are recognized', () => {
+  for (const [rules, allowed] of [
+    ['User-agent: *\nAllow: /\n', true],
+    ['User-agent: *\nAllow: /\nDisallow: /rnd/\n', false],
+    ['User-agent: *\nDisallow: /rnd\n', false],
+    ['User-agent: *\nDisallow: /\n', false],
+    ['User-agent: *\nDisallow: /*nd/ # wildcard\n', false],
+    ['User-agent: *\nDisallow: /rnd$\n', true],
+    ['User-agent: *\nDisallow: /rnd/\nAllow: /rnd/\n', true],
+  ]) assert.equal(robotsAllows(rules, '/rnd/'), allowed, rules);
 });
 
 test('unpublished and malformed source data cannot produce a release', () => {

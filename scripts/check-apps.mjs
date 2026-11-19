@@ -16,6 +16,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { renderProducts } from "./render-homepage.mjs";
+import { robotsAllows } from "./robots-rules.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const strict = process.argv.includes("--strict");
@@ -295,9 +296,10 @@ if (rndHtml) {
     errors.push("rnd/index.html must declare its canonical https://devpt.app/rnd/ URL");
   if (!/not for clinical use/i.test(rndHtml))
     errors.push('rnd/index.html must label its projects "not for clinical use"');
-  const robots = readFileSync(join(root, "robots.txt"), "utf8");
-  if (!/^Disallow:\s*\/rnd\/\s*$/m.test(robots))
-    errors.push("robots.txt must disallow /rnd/");
+  // Crawlers must be able to fetch the page to read its noindex; a robots.txt
+  // block would hide the tag and still let the bare URL be listed.
+  if (!robotsAllows(readFileSync(join(root, "robots.txt"), "utf8"), "/rnd/"))
+    errors.push("robots.txt must not disallow /rnd/, or crawlers cannot see its noindex");
 }
 
 async function ping(url) {

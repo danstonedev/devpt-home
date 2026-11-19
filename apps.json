@@ -172,8 +172,8 @@
       "repos": ["danstonedev/mash-webapp", "danstonedev/mash-firmware"],
       "status": "rnd",
       "statusLabel": "In development. A research prototype, not for clinical use. Live data needs a MASH gateway connected over USB.",
-      "blurb": "MASH (Motion Analysis Sensor Hub) is a separate research project: motion capture with wearable inertial (IMU) sensors. ESP32-S3 sensor nodes send their readings over ESP-NOW to a USB gateway, and a browser app (Web Serial, Chrome or Edge) shows the movement live in 3D, records sessions and exports the data.",
-      "note": "Separate research project, listed here for preview access only. The preview uses its raw Azure Static Web Apps host; there is no devpt.app subdomain."
+      "blurb": "MASH (Motion Analysis Sensor Hub) is a research project in motion capture with wearable inertial (IMU) sensors. ESP32-S3 sensor nodes send their readings over ESP-NOW to a USB gateway, and a browser app (Web Serial, Chrome or Edge) shows the movement live in 3D, records sessions and exports the data.",
+      "note": "Research prototype. The preview uses its raw Azure Static Web Apps host; there is no devpt.app subdomain yet."
     }
   ],
   "engines": [
