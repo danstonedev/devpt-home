@@ -659,6 +659,9 @@ body.workspace-expanded {
 .product-context .wrap > .tour-caption {
   margin-top: 16px;
 }
+.rnd-page .product-context {
+  padding-top: 24px;
+}
 .product-next {
   padding: 16px 0;
   background: white;

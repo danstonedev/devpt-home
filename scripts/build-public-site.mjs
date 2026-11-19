@@ -20,7 +20,7 @@ export function buildPublicSite({ catalog, catalogBody, output = resolve(root, '
   mkdirSync(output, { recursive: true });
   writeFileSync(join(output, 'library-catalog.json'), snapshot);
   for (const file of files) if (existsSync(join(root, file))) cpSync(join(root, file), join(output, file));
-  for (const dir of ['assets','simlab','emrs','3dpain','showcase','platform-terms']) if (existsSync(join(root, dir))) cpSync(join(root, dir), join(output, dir), { recursive: true });
+  for (const dir of ['assets','simlab','emrs','3dpain','showcase','platform-terms','rnd']) if (existsSync(join(root, dir))) cpSync(join(root, dir), join(output, dir), { recursive: true });
   const template = readFileSync(join(root, 'index.html'), 'utf8');
   for (const required of ['/site-bootstrap.js','/site-media.js','/site-fonts.css','/library-model.js','/teaching-library.css','/library-routes.js','/site-analytics.js','/assets/navigation-state.js']) {
     if (!template.includes(required) || !existsSync(join(output, required.slice(1)))) throw new Error('Missing public entry dependency: ' + required);

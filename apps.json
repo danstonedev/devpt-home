@@ -1,5 +1,5 @@
 {
-  "_comment": "Canonical DevPT app registry and three product-line destinations. Source-owned showcases supply their own live chapter catalogs and UI.",
+  "_comment": "Canonical DevPT app registry and three product-line destinations. Source-owned showcases supply their own live chapter catalogs and UI. \"rnd\" lists unreleased R&D previews; they appear only on the unlisted /rnd/ page, never in navigation, the footer, plates or product lines.",
   "domain": "https://devpt.app",
   "deploy": "Azure Static Web Apps (.github/workflows/azure-static-web-apps-black-tree-0e898330f.yml)",
   "apps": [
@@ -150,6 +150,30 @@
       "status": "internal",
       "url": "https://thankful-flower-0c1d6480f.4.azurestaticapps.net/",
       "note": "Onboarding into DevPT/Education (2026-07-01). Data-safety hazard RESOLVED: the deploy workflow now uses `prisma migrate deploy` (committed migration 20260126_init_postgresql; no --accept-data-loss; DB mutates only on push to the default branch, never on PRs). Remaining before public promotion: a stable devpt.app subdomain (currently only a raw Azure SWA host)."
+    }
+  ],
+  "rnd": [
+    {
+      "id": "under-pressure",
+      "name": "Under Pressure",
+      "category": "research",
+      "url": "https://pressure.devpt.app",
+      "repos": ["danstonedev/under-pressure"],
+      "status": "rnd",
+      "statusLabel": "In development. So far it has run only in simulation; it has not yet been tested on sensor hardware.",
+      "blurb": "A wireless sensor rig for cupping therapy. Each cup carries a small ESP32 board with pressure, temperature and humidity sensors. A gateway on the computer’s USB port collects the cups over ESP-NOW, and a browser app (Web Serial, Chrome or Edge) shows each cup live, records several cups on one clock and compares them.",
+      "note": "The owning repository builds the preview page. Move to \"apps\" only when the rig has been tested on hardware and is ready for release."
+    },
+    {
+      "id": "mash",
+      "name": "MASH",
+      "category": "motion",
+      "url": "https://gentle-grass-0cb90e410.6.azurestaticapps.net",
+      "repos": ["danstonedev/mash-webapp", "danstonedev/mash-firmware"],
+      "status": "rnd",
+      "statusLabel": "In development. A research prototype, not for clinical use. Live data needs a MASH gateway connected over USB.",
+      "blurb": "MASH (Motion Analysis Sensor Hub) is a research project in motion capture with wearable inertial (IMU) sensors. ESP32-S3 sensor nodes send their readings over ESP-NOW to a USB gateway, and a browser app (Web Serial, Chrome or Edge) shows the movement live in 3D, records sessions and exports the data.",
+      "note": "Research prototype. The preview uses its raw Azure Static Web Apps host; there is no devpt.app subdomain yet."
     }
   ],
   "engines": [

@@ -17,7 +17,7 @@ const runGaitPhysics=createLocalGaitPhysics({runner:resolve(physicsRoot,'gait-ru
 if (port !== 8110) throw new Error('The canonical local parent-origin contracts require port 8110.');
 const mime = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.mjs':'text/javascript; charset=utf-8', '.json':'application/json', '.css':'text/css; charset=utf-8', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.webp':'image/webp', '.ico':'image/x-icon', '.svg':'image/svg+xml', '.glb':'model/gltf-binary', '.gltf':'model/gltf+json', '.woff2':'font/woff2', '.woff':'font/woff', '.bin':'application/octet-stream', '.wasm':'application/wasm', '.gz':'application/gzip', '.mp4':'video/mp4', '.webm':'video/webm', '.mp3':'audio/mpeg' };
 const servers = [];
-const publicDirs = new Set(['assets','simlab','emrs','3dpain','showcase','platform-terms']);
+const publicDirs = new Set(['assets','simlab','emrs','3dpain','showcase','platform-terms','rnd']);
 const publicFiles = new Set(['index.html','privacy.html','terms.html','accessibility.html','sitemap.html','resource-credits.html','apps.json','styles.css','emr-foundation.css','portfolio.css','native-showcase.css','product-walkthrough.css','app.js','walkthrough.js','product-walkthrough.js','feature-workspaces.js','library-model.js','teaching-library.js','teaching-library.css','library-routes.js','site-analytics.js','site-bootstrap.js','site-media.js','site-fonts.css','local-site-config.js','local-site-fonts.css','favicon.ico','robots.txt','sitemap.xml']);
 // This policy belongs to the canonical EMR build, including its public isolation.
 const emrHeadersPath = resolve(emrRoot, 'headers.json');
