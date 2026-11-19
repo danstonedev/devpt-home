@@ -26,6 +26,7 @@ The homepage leads with the reference library. Each product has a dedicated walk
 - `site-analytics.js` — public website measurement, separate from product application instrumentation.
 - `simlab/index.html` — James Morgan's guided simLAB visit, live study tools and student/faculty introduction.
 - `emrs/index.html` and `3dpain/index.html` — dedicated product walkthroughs.
+- `rnd/index.html` — the unlisted R&D page for unreleased project previews (see below).
 - `apps.json` — canonical product/app registry, launch URLs, repositories and public walkthrough endpoints.
 - `app.js` and `styles.css` — shared page behavior and DevPT presentation.
 - `emr-foundation.css` — selected active EMR tokens and established shared chrome, refreshed by `scripts/sync-emr-foundation.mjs`.
@@ -77,6 +78,8 @@ Product-line registry records also declare the EMR and PainMap local source port
 ## Registry and checks
 
 `apps.json` keeps the three `productLines` together with the broader app catalogue. A product line identifies its dedicated page, launch apps and product-owned public entry. Keep canonical URLs aligned with the source repositories; in particular, 3Dpain.app advertises `https://www.3dpain.app`, with `pain3d.com` retained only as a legacy alias.
+
+`apps.json` also has an `rnd` list of unreleased R&D projects: in-development previews that are not released and not for clinical use. Each entry has an id, name, category, preview `url`, `repos`, `status: "rnd"`, a `statusLabel` and a `blurb`. R&D projects take no `placement` and cannot share an id with an app, so they never reach the navigation, footer, plates or product lines. They appear only as cards on `/rnd/`, which nothing on the site links to; it is `noindex, nofollow`, disallowed in `robots.txt` and left out of both sitemaps. `scripts/check-apps.mjs` keeps each card's name, blurb, status line and "Open preview" link identical to its registry entry, and the link check pings R&D previews like apps. When a project is ready for release, move it to `apps` and remove its card.
 
 ```bash
 npm test

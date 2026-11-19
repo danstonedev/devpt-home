@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Unlisted: not linked from navigation, the footer or the sitemaps. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>R&amp;D projects — DevPT</title>
+    <meta
+      name="description"
+      content="DevPT projects in development. They are not released and not for clinical use."
+    />
+    <meta name="theme-color" content="#000000" />
+    <link rel="canonical" href="https://devpt.app/rnd/" />
+    <link rel="icon" href="/assets/devpt-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/emr-foundation.css" />
+    <link rel="stylesheet" href="/portfolio.css" />
+  </head>
+  <body class="product-page rnd-page">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="nav" id="top">
+      <div class="wrap nav-inner">
+        <a href="/" class="brand" aria-label="DevPT home"
+          ><img src="/assets/devpt-logo.png" alt="DevPT" width="89" height="28"
+        /></a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="/#/topics">Resources</a>
+          <a href="/simlab/">simLAB</a><a href="/emrs/">EMRs</a
+          ><a href="/3dpain/">3Dpain.app</a
+          ><a href="/contact/" class="btn btn-green cta-sm"
+            >Let’s talk
+            <span aria-hidden="true"
+              ><svg
+                class="icon-arrow"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path d="M4 16 16 4M4 4h12v12" /></svg></span
+          ></a>
+        </nav>
+        <details class="nav-mobile">
+          <summary>Menu <span aria-hidden="true">＋</span></summary>
+          <nav aria-label="Mobile primary">
+            <a href="/#/topics">Resources</a>
+            <a href="/simlab/">simLAB</a><a href="/emrs/">EMRs</a
+            ><a href="/3dpain/">3Dpain.app</a><a href="/contact/">Let’s talk</a>
+          </nav>
+        </details>
+      </div>
+    </header>
+    <main id="main">
+      <section class="product-page-hero">
+        <div class="wrap">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/">DevPT</a><span aria-hidden="true">/</span
+            ><span>R&amp;D</span>
+          </nav>
+          <div class="product-page-title">
+            <div>
+              <p class="eyebrow">In development · not for clinical use</p>
+              <h1>R&amp;D</h1>
+            </div>
+            <div>
+              <p>
+                These DevPT projects are still in development. They are not
+                released and are not for clinical use, and their previews may
+                change or be unavailable. A project moves to the main DevPT
+                catalogue when it is ready.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Each card mirrors its apps.json "rnd" entry; scripts/check-apps.mjs keeps them in step. -->
+      <section class="product-context" aria-label="R&amp;D projects">
+        <div class="wrap product-context-grid">
+          <article id="rnd-under-pressure">
+            <h2>Under Pressure</h2>
+            <p>
+              A wireless sensor rig for cupping therapy. Each cup carries a
+              small ESP32 board with pressure, temperature and humidity
+              sensors. A gateway on the computer’s USB port collects the cups
+              over ESP-NOW, and a browser app (Web Serial, Chrome or Edge) shows
+              each cup live, records several cups on one clock and compares
+              them.
+            </p>
+            <p class="product-safety">
+              In development. So far it has run only in simulation; it has not
+              yet been tested on sensor hardware.
+            </p>
+            <a
+              class="btn btn-green"
+              href="https://pressure.devpt.app"
+              target="_blank"
+              rel="noopener"
+              >Open preview<span class="sr-only"> of Under Pressure</span></a
+            >
+          </article>
+          <article id="rnd-mash">
+            <h2>MASH</h2>
+            <p>
+              MASH (Motion Analysis Sensor Hub) is a separate research project:
+              motion capture with wearable inertial (IMU) sensors. ESP32-S3
+              sensor nodes send their readings over ESP-NOW to a USB gateway,
+              and a browser app (Web Serial, Chrome or Edge) shows the movement
+              live in 3D, records sessions and exports the data.
+            </p>
+            <p class="product-safety">
+              In development. A research prototype, not for clinical use. Live
+              data needs a MASH gateway connected over USB.
+            </p>
+            <a
+              class="btn btn-green"
+              href="https://gentle-grass-0cb90e410.6.azurestaticapps.net"
+              target="_blank"
+              rel="noopener"
+              >Open preview<span class="sr-only"> of MASH</span></a
+            >
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="wrap footer-shell">
+        <section class="footer-brand" aria-label="DevPT summary">
+          <a class="brand" href="/" aria-label="DevPT home"
+            ><img
+              src="/assets/devpt-logo.png"
+              alt="DevPT"
+              width="108"
+              height="34"
+          /></a>
+          <p>Simulation. Documentation.<br />3D symptom mapping.</p>
+          <a class="footer-email" href="mailto:daniel.j.stone@und.edu"
+            >daniel.j.stone@und.edu</a
+          >
+        </section>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <section>
+            <h2>Product walkthroughs</h2>
+            <ul>
+              <li><a href="/simlab/">simLAB</a></li>
+              <li><a href="/emrs/">EMRs</a></li>
+              <li><a href="/3dpain/">3Dpain.app</a></li>
+            </ul>
+          </section>
+          <section>
+            <h2>Open a product</h2>
+            <ul class="footer-apps" data-product-launchers>
+              <li>
+                <a href="https://lab.devpt.app" target="_blank" rel="noopener"
+                  >simLAB
+                  <svg
+                    class="icon-arrow"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M4 16 16 4M4 4h12v12" /></svg
+                ></a>
+              </li>
+              <li>
+                <a
+                  href="https://simemr.devpt.app"
+                  target="_blank"
+                  rel="noopener"
+                  >simEMR
+                  <svg
+                    class="icon-arrow"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M4 16 16 4M4 4h12v12" /></svg
+                ></a>
+              </li>
+              <li>
+                <a href="https://emr.devpt.app" target="_blank" rel="noopener"
+                  >proBonoEMR
+                  <svg
+                    class="icon-arrow"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M4 16 16 4M4 4h12v12" /></svg
+                ></a>
+              </li>
+              <li>
+                <a href="https://www.3dpain.app" target="_blank" rel="noopener"
+                  >3Dpain.app
+                  <svg
+                    class="icon-arrow"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M4 16 16 4M4 4h12v12" /></svg
+                ></a>
+              </li>
+            </ul>
+          </section>
+          <section>
+            <h2>About DevPT</h2>
+            <ul>
+              <li><a href="/contact/">Contact</a></li>
+              <li>
+                <a
+                  href="https://campus.und.edu/directory/daniel.j.stone"
+                  target="_blank"
+                  rel="noopener"
+                  >About Dan Stone</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/in/dan-stone-1684391b"
+                  target="_blank"
+                  rel="noopener"
+                  >LinkedIn</a
+                >
+              </li>
+              <li><a href="/privacy.html">Privacy</a></li>
+              <li><a href="/terms.html">Terms</a></li>
+              <li><a href="/accessibility.html">Accessibility</a></li>
+              <li><a href="/sitemap.html">Sitemap</a></li>
+            </ul>
+          </section>
+        </nav>
+      </div>
+      <div class="wrap footer-bottom">
+        <p>
+          © <span id="year">2026</span> DevPT · Built by Dan Stone, PT, DPT,
+          MS.
+        </p>
+        <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
+      </div>
+    </footer>
+    <script src="/app.js"></script>
+  </body>
+</html>

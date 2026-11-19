@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /rnd/
 
 Sitemap: https://devpt.app/sitemap.xml

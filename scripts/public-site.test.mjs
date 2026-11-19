@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, mkdtempSync, existsSync, rmSync } from 'node:fs';
+import { readFileSync, readdirSync, mkdtempSync, existsSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -91,6 +91,31 @@ test('nonempty source-owned sections export canonical pages in source order with
     assert.match(read('saved/index.html'),/noindex, follow/);
     assert.match(read('search/index.html'),/noindex, follow/);
   } finally { rmSync(output,{recursive:true,force:true}); }
+});
+
+test('the unlisted R&D page is exported with noindex but is never linked, mapped or placed', () => {
+  const output = mkdtempSync(join(tmpdir(), 'devpt-rnd-test-'));
+  try {
+    buildPublicSite({ catalog, output });
+    const read = name => readFileSync(join(output, name), 'utf8');
+    const registry = JSON.parse(read('apps.json'));
+    const page = read('rnd/index.html');
+    assert.ok(registry.rnd.length > 0);
+    assert.match(page, /<meta name="robots" content="noindex, nofollow"/);
+    assert.match(page, /not for clinical use/);
+    for (const project of registry.rnd) {
+      assert.match(page, new RegExp('<article id="rnd-' + project.id + '">'));
+      assert.ok(page.includes('href="' + project.url + '"'), project.id);
+    }
+    const placed = new Set([...registry.apps.map(app => app.id), ...(registry.unlisted || []).map(app => app.id), ...registry.productLines.flatMap(line => line.appIds)]);
+    for (const project of registry.rnd) assert.equal(placed.has(project.id), false, project.id);
+    assert.match(read('robots.txt'), /^Disallow: \/rnd\/\r?$/m);
+    for (const sitemap of ['sitemap.xml', 'sitemap.html']) assert.doesNotMatch(read(sitemap), /\/rnd\b/);
+    // Generated library pages, product pages and the scripts that draw navigation and footers never point to it.
+    const files = dir => readdirSync(dir, { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? files(join(dir, entry.name)) : [join(dir, entry.name)]);
+    const linking = files(output).filter(file => /\.(html|js|xml)$/.test(file) && file !== join(output, 'rnd', 'index.html') && /\/rnd\b/.test(readFileSync(file, 'utf8')));
+    assert.deepEqual(linking, []);
+  } finally { rmSync(output, { recursive: true, force: true }); }
 });
 
 test('unpublished and malformed source data cannot produce a release', () => {

@@ -18,7 +18,7 @@ mkdirSync(output,{recursive:true});
 // Actual site sources are exported once; native products below are disposable builds.
 const files=['index.html','privacy.html','terms.html','accessibility.html','sitemap.html','resource-credits.html','apps.json','styles.css','emr-foundation.css','portfolio.css','native-showcase.css','product-walkthrough.css','app.js','walkthrough.js','product-walkthrough.js','feature-workspaces.js','library-model.js','teaching-library.js','teaching-library.css','library-routes.js','site-analytics.js','site-bootstrap.js','site-media.js','site-fonts.css','local-site-config.js','local-site-fonts.css','favicon.ico','robots.txt','sitemap.xml'];
 for(const name of files) if(existsSync(resolve(root,name))) cpSync(resolve(root,name),resolve(output,name));
-for(const name of ['assets','simlab','emrs','3dpain','showcase','platform-terms']) if(existsSync(resolve(root,name))) cpSync(resolve(root,name),resolve(output,name),{recursive:true});
+for(const name of ['assets','simlab','emrs','3dpain','showcase','platform-terms','rnd']) if(existsSync(resolve(root,name))) cpSync(resolve(root,name),resolve(output,name),{recursive:true});
 mkdirSync(resolve(output,'scripts'));
 cpSync(resolve(root,'scripts/serve-local-site.mjs'),resolve(output,'scripts/serve-local-site.mjs'));
 cpSync(resolve(root,'scripts/local-gait-physics.mjs'),resolve(output,'scripts/local-gait-physics.mjs'));

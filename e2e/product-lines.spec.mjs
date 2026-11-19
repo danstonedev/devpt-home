@@ -185,12 +185,48 @@ test("the products route introduces three distinct product lines and destination
 test("resource, product directory and product pages remain readable without horizontal overflow", async ({
   page,
 }) => {
-  for (const path of ["/", "/#/products", ...products.map((product) => product.path)]) {
+  for (const path of ["/", "/#/products", ...products.map((product) => product.path), "/rnd/"]) {
     await page.goto(path);
     await expect(page.locator("main h1")).toBeVisible();
     await expect(page.locator("a.skip-link, a.skip")).toHaveAttribute("href", "#main");
     await expect(page.locator("main#main")).toHaveCount(1);
     await expectNoHorizontalOverflow(page);
+  }
+});
+
+test("the unlisted R&D page shows each registry project and nothing links to it", async ({
+  page,
+}) => {
+  const registry = await (
+    await page.request.get(`${homepageOrigin}/apps.json`)
+  ).json();
+  const response = await page.goto("/rnd/");
+  expect(response.status()).toBe(200);
+  await expect(page.locator("main h1")).toHaveText("R&D");
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    "noindex, nofollow",
+  );
+  await expect(page.locator("main")).toContainText("not for clinical use");
+  await expect(page.locator('main article[id^="rnd-"]')).toHaveCount(
+    registry.rnd.length,
+  );
+  for (const project of registry.rnd) {
+    const card = page.locator(`#rnd-${project.id}`);
+    await expect(card.locator("h2")).toHaveText(project.name);
+    await expect(card.locator(".product-safety")).toHaveText(project.statusLabel);
+    await expect(
+      card.getByRole("link", { name: `Open preview of ${project.name}` }),
+    ).toHaveAttribute("href", project.url);
+  }
+  await expectNoHorizontalOverflow(page);
+  // The rendered library navigation and footer and the product pages never
+  // point to it, also after app.js redraws their footers from apps.json.
+  for (const path of ["/", "/#/products", ...products.map((product) => product.path), "/rnd/"]) {
+    await page.goto(path, { waitUntil: "networkidle" });
+    await expect(page.locator("main h1")).toBeVisible();
+    await expect(page.locator('footer a[href]').first()).toBeVisible();
+    await expect(page.locator('a[href*="/rnd"]')).toHaveCount(0);
   }
 });
 
