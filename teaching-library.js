@@ -49,6 +49,11 @@ function updateCatalog() {
 }
 updateCatalog();
 const nativeBase = localReview && typeof NATIVE_SOURCE_BASE === 'string' ? NATIVE_SOURCE_BASE : 'https://lab.devpt.app';
+function caseBriefMission(asset){
+  const launch=asset?.launch;
+  if(!asset||localReview||asset.nativeAvailable===false||asset.formatId!=='case-brief'||asset.access!=='sign-in-required'||launch?.kind!=='case')return null;
+  return typeof launch.missionId==='string'&&idPattern.test(launch.missionId)?launch.missionId:null;
+}
 /** Earlier collection links open the region or topic that now holds their resources. */
 const LEGACY_COLLECTIONS = {'all-hip':'region/hip','whole-body':'region/whole-body','eyes-vestibular':'topic/vestibular','all-rom':'topic/range-of-motion','biomechanics':'topic/joint-mechanics','manual-therapy':'topic/manual-therapy','gait':'topic/gait-balance','imaging':'topic/imaging','physiology':'topic/physiology','neuroscience':'topic/neuroscience'};
 const nativeURL = (asset,{view:withView=true}={})=>{const base=new URL(nativeBase,location.protocol==='file:'?'http://127.0.0.1:8110':location.href);if(!['http:','https:'].includes(base.protocol))throw new Error('Invalid native source');const url=new URL(base.pathname.replace(/\/$/,'')+'/teaching/',base.origin);url.searchParams.set('activity',asset.nativeId||asset.id);url.searchParams.set('embedded','1');const view=withView?anatomyViewFromRoute(asset):null;if(view)writeAnatomyViewParams(url.searchParams,view);return url;};
@@ -453,7 +458,18 @@ function legacyActivityBand(asset){const workspace=isAnatomyWorkspace(asset),cap
 const choosesInPlayer = asset => (asset.launch?.kind==='joint'&&!asset.launch.rest)||(asset.kind==='joint'&&!asset.rest);
 function resourceSwitch(asset){const all=family(asset);if(isAnatomyWorkspace(asset)||all.length<2||choosesInPlayer(asset))return '';return `<label class="resource-switch"><select data-switch aria-label="Switch ${esc(asset.region)} › ${esc(asset.topic)} resource" title="Switch resource">${all.map(other=>`<option value="${other.id}"${other.id===asset.id?' selected':''}>${esc(other.title)}</option>`).join('')}</select>${icon('chevron')}</label>`;}
 function activityDetails(asset){asset=shownAnatomyResource(asset);return `<section class="activity-details"><details><summary>${icon('book')} About this resource ${icon('chevron')}</summary><div><p>${esc(asset.desc)}</p><p>${esc(asset.outcome)}</p></div></details><details><summary>${icon('info')} Model & sources ${icon('chevron')}</summary><div><p>${esc(asset.source)}</p><p>${localReview?'Local development content. Public release review pending.':'Source-owned teaching illustration, not a clinical measurement. See the player for its scope and sources.'}</p></div></details></section>`;}
-function activity(id){const asset=byId(id);if(!asset)return missing();const workspace=isAnatomyWorkspace(asset);return `<main class="main wrap activity-page" id="main" tabindex="-1">${activityBand(asset)}<div class="activity-layout focused-activity"><div>${player(asset)}${activityDetails(asset)}</div></div></main>`;}
+function caseBrief(asset,mission){
+  const url=new URL('https://lab.devpt.app/');
+  url.searchParams.set('mission',mission);
+  return `<section class="case-brief" aria-labelledby="case-brief-title"><h2 id="case-brief-title">Case brief</h2><p>${esc(asset.desc)}</p><p><strong>Learning goal</strong> ${esc(asset.outcome)}</p><div class="case-brief-access"><a class="button" href="${esc(url.href)}" target="_blank" rel="noopener noreferrer">Open case in simLAB ${icon('arrow')}</a><p>Sign-in required. Your usual access and class rules apply.</p></div></section>`;
+}
+function activity(id){
+  const asset=byId(id);
+  if(!asset)return missing();
+  const mission=caseBriefMission(asset);
+  const content=mission?caseBrief(asset,mission):player(asset)+activityDetails(asset);
+  return `<main class="main wrap activity-page" id="main" tabindex="-1">${activityBand(asset)}<div class="activity-layout focused-activity"><div>${content}</div></div></main>`;
+}
 // Moving within a family keeps the loaded player and asks it to switch, so the workspace does not reload. If the player
 // does not confirm the new resource in time, offer Retry or a direct link without destroying its live renderer.
 // Fullscreen Back may normalize the current hash without emitting hashchange.
@@ -1037,7 +1053,9 @@ function render({focus=false}={}){
   if(!window.DEVPT_STATIC_RENDER)app.removeAttribute?.('aria-busy');
   if(catalogValid||!['activity','region','topic','section','collection'].includes(page))publishPage();
   renderedRouteKey=routeKey();document.dispatchEvent(new Event('devpt:render'));
-  const asset=page==='activity'?byId(id):null;if(asset)launchNative(asset.id);
+  const asset=page==='activity'?byId(id):null;
+  if(caseBriefMission(asset))track('resource_ready',{resource_id:asset.id,region_id:asset.regionId,topic_id:asset.topicId});
+  else if(asset)launchNative(asset.id);
   trackReadyResource(document.querySelector('#main .native-player.native-active'));
   restoreNavigation(snapshot,focus);
 }

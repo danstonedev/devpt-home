@@ -580,3 +580,7 @@ html.player-fullscreen,html.player-fullscreen body{overflow:hidden}
 .page-band .browse-note{color:#bacbbf}
 
 .shelf-note{margin-bottom:18px;color:var(--muted);font-size:13px}
+
+.case-brief{display:grid;gap:14px;max-width:76ch;padding:clamp(20px,4vw,36px);background:var(--white);border:1px solid var(--line);border-radius:var(--radius)}
+.case-brief-access{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:4px}
+.case-brief-access p{color:var(--muted);font-size:14px}

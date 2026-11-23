@@ -103,14 +103,22 @@
       return {...entry, topics:members, ...counts(items), count:items.length};
     }).filter(entry => entry.topics.length);
     const labels = (item, dimension) => (dimension === 'region' ? regions : topics).filter(entry => has(item, dimension, entry.id)).map(entry => entry.label);
+    // Search metadata is stable for the lifetime of one catalog. Tokenize only
+    // the resources searched, and rebuild naturally when the catalog changes.
+    const searchIndex = new WeakMap();
     function search({q = '', ...facets} = {}) {
       const terms = words(q), scoped = filter(facets);
       if (!terms.length) return scoped;
       return scoped.map((item, order) => {
-        const all = words([item.title,item.context,item.group,item.type,...labels(item,'region'),...labels(item,'topic'),
-          formats.find(format => format.id === item.formatId)?.label,item.studyFamily?.label,item.studyFamily?.variantLabel,...(Array.isArray(item.keywords) ? item.keywords : [])].join(' '));
-        if (!terms.every(term => all.some(word => word.startsWith(term)))) return null;
-        const title = words(item.title);
+        let indexed = searchIndex.get(item);
+        if (!indexed) {
+          const all = words([item.title,item.context,item.group,item.type,...labels(item,'region'),...labels(item,'topic'),
+            formats.find(format => format.id === item.formatId)?.label,item.studyFamily?.label,item.studyFamily?.variantLabel,...(Array.isArray(item.keywords) ? item.keywords : [])].join(' '));
+          indexed = { all };
+          searchIndex.set(item, indexed);
+        }
+        if (!terms.every(term => indexed.all.some(word => word.startsWith(term)))) return null;
+        const title = indexed.title ??= words(item.title);
         return {item,order,score:terms.filter(term => title.some(word => word.startsWith(term))).length*2 + (title[0]?.startsWith(terms[0]) ? 1 : 0)};
       }).filter(Boolean).sort((a,b) => b.score-a.score || a.order-b.order).map(match => match.item);
     }

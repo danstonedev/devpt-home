@@ -33,7 +33,7 @@ export function libraryRenderer(root, catalog) {
     const [page, id] = route().path.split('/');
     if (page !== 'activity') return;
     const asset = byId(id);
-    if (!asset || asset.nativeAvailable === false) return;
+    if (!asset || asset.nativeAvailable === false || caseBriefMission(asset)) return;
     const path = location.pathname;
     if (asset.launch?.kind === 'joint') canonicalizeAnatomyRoute();
     if (location.pathname !== path || location.search) return;
