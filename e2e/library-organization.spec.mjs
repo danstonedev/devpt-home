@@ -1,4 +1,4 @@
-import {expect,test} from '@playwright/test';
+import {expect,test} from './fixtures/phone-open.mjs';
 import {organizedCatalog} from './fixtures/organized-catalog.mjs';
 
 // Discovery and navigation protocol coverage. Native model behavior remains

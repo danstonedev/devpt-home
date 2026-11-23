@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, onPhonePressOpenResource, test } from './fixtures/phone-open.mjs';
 import { readFileSync, existsSync, statSync } from 'node:fs';
 import { resolve, extname, sep } from 'node:path';
 
@@ -100,6 +100,7 @@ test('a direct resource connects before the release catalog and keeps its iframe
   });
   try{
     const page=await context.newPage();
+    await onPhonePressOpenResource(page,testInfo);
     await page.goto('https://devpt.app/resources/'+id+'/',{waitUntil:'domcontentloaded'});
     const player=page.locator('.native-player');
     const frame=player.locator('iframe');
@@ -123,6 +124,40 @@ test('a direct resource connects before the release catalog and keeps its iframe
   }finally{releaseCatalog();await context.close();}
 });
 
+test('a direct resource page on a phone starts no player before or after the catalog, and Open resource works before it', async ({browser}, testInfo) => {
+  test.skip(testInfo.project.name!=='phone','Phone resource pages wait for Open resource');
+  const {context}=await isolatedPublicSite(browser,catalog,testInfo.project.use);
+  let releaseCatalog,playerRequests=0;
+  const gate=new Promise(resolve=>{releaseCatalog=resolve;});
+  await context.route(releaseCatalogUrl,async route=>{await gate;await route.fulfill({json:catalog});});
+  await context.route(url=>url.origin==='https://lab.devpt.app'&&url.pathname==='/teaching/',route=>{playerRequests+=1;return route.fulfill({contentType:'text/html',body:'<title>Source player</title>'});});
+  try{
+    const page=await context.newPage(),frame=page.locator('.native-frame'),open=page.getByRole('button',{name:'Open resource',exact:true});
+    await page.goto('https://devpt.app/resources/exam-special-lachman/',{waitUntil:'domcontentloaded'});
+    await expect(open).toBeVisible();
+    await expect(frame).toHaveCount(0);
+    releaseCatalog();
+    await expect(page.locator('#app')).not.toHaveAttribute('aria-busy','true');
+    await expect(open).toBeVisible();
+    await expect(frame).toHaveCount(0);
+    expect(playerRequests).toBe(0);
+    const early=await context.newPage(),earlyFrame=early.locator('.native-frame');
+    let holdCatalog;
+    const held=new Promise(resolve=>{holdCatalog=resolve;});
+    await context.unroute(releaseCatalogUrl);
+    await context.route(releaseCatalogUrl,async route=>{await held;await route.fulfill({json:catalog});});
+    try{
+      await early.goto('https://devpt.app/resources/exam-special-lachman/',{waitUntil:'domcontentloaded'});
+      await early.getByRole('button',{name:'Open resource',exact:true}).click();
+      await expect(earlyFrame).toHaveAttribute('src','https://lab.devpt.app/teaching/?activity=exam-special-lachman&embedded=1');
+      await earlyFrame.evaluate(element=>{element.dataset.probe='kept';});
+      holdCatalog();
+      await expect(early.locator('#app')).not.toHaveAttribute('aria-busy','true');
+      await expect(earlyFrame).toHaveAttribute('data-probe','kept');
+    }finally{holdCatalog();}
+  }finally{releaseCatalog();await context.close();}
+});
+
 test('a catalog failure clears the early player and restores the recovery page', async ({browser}, testInfo) => {
   const {context}=await isolatedPublicSite(browser,catalog,testInfo.project.use);
   let releaseCatalog;
@@ -134,6 +169,7 @@ test('a catalog failure clears the early player and restores the recovery page',
   await context.route(url=>url.origin==='https://lab.devpt.app'&&url.pathname==='/teaching/',route=>route.fulfill({contentType:'text/html',body:'<title>Source player</title>'}));
   try{
     const page=await context.newPage();
+    await onPhonePressOpenResource(page,testInfo);
     await page.goto('https://devpt.app/resources/exam-special-lachman/',{waitUntil:'domcontentloaded'});
     await expect(page.locator('.native-frame')).toHaveCount(1);
     releaseCatalog();
@@ -229,6 +265,7 @@ test('public analytics measures homepage, resource use and product interest with
   });
   try {
     const page = await context.newPage();
+    await onPhonePressOpenResource(page, testInfo);
     await page.goto('https://devpt.app/?utm_source=newsletter&utm_medium=email&q=private@example.com');
     const events = () => page.evaluate(() => [...(window.dataLayer||[])].map(args=>[...args]).filter(args=>args[0]==='event'));
     await expect.poll(async () => (await events()).filter(event=>event[1]==='page_view').length).toBe(1);
@@ -301,6 +338,7 @@ test('a parked source becomes ready silently and reports readiness once when res
   });
   try {
     const page = await context.newPage();
+    await onPhonePressOpenResource(page, testInfo);
     const events = () => page.evaluate(() => [...(window.dataLayer || [])].map(args => [...args]).filter(args => args[0] === 'event'));
     await page.goto('https://devpt.app/#/activity/' + id);
     const player = page.locator('.native-player'), frame = page.locator('.native-frame');

@@ -1,5 +1,5 @@
 const publicLocation=value=>{const url=new URL(value);return url.pathname+url.search;};
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures/phone-open.mjs';
 
 // Protocol fixtures only: the source repository verifies actual scenes, layers and motion.
 const sourceOrigin = 'https://lab.devpt.app';
