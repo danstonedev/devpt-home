@@ -9,6 +9,7 @@ const revision = 'a'.repeat(40), build = 'b'.repeat(40);
 const body = JSON.stringify({ schemaVersion: 1, status: 'public-resources', source: 'simlab', build, activities: [{ id: 'posture-test', url: 'https://lab.devpt.app/teaching/?activity=posture-test' }] });
 const page = '<html>exact menu, count and canonical resource</html>';
 const manifest = { schemaVersion: 1, catalogSha256: digest(body), release: { schemaVersion: 1, site: 'devpt.app', revision, catalogBuild: build, resources: 1, indexedPages: 12 }, pages: [{ path: '/', sha256: digest(page) }, { path: '/resources/posture-test/', sha256: digest(page) }], redirects: [{ path: '/resources/old-posture/', location: '/resources/posture-test/' }] };
+const versionedCatalog = `/library-snapshots/${manifest.catalogSha256}.json`;
 const framing = { 'content-security-policy': "frame-ancestors 'self' https://devpt.app https://www.devpt.app" };
 const source = (catalogBody = body) => async url => new URL(url).pathname === '/teaching/catalog.json' ? new Response(catalogBody, { headers: { 'access-control-allow-origin': '*' } }) : new Response('devpt-teaching', { headers: framing });
 const published = async url => {
@@ -17,6 +18,7 @@ const published = async url => {
   const path = new URL(url).pathname;
   if (path === '/release.json') return Response.json(manifest.release);
   if (path === '/library-catalog.json') return new Response(body);
+  if (path === versionedCatalog) return new Response(body, { headers: { 'cache-control': 'public, max-age=31536000, immutable' } });
   if (path === '/resources/old-posture/') return new Response(null, { status: 301, headers: { location: '/resources/posture-test/?release-check=echoed-probe' } });
   return new Response(page);
 };
@@ -41,11 +43,13 @@ test('duplicate/out-of-order wake-ups all reconcile the current immutable snapsh
 
 test('live verification requires release identity/counts, every exact page, and canonical aliases', async () => {
   assert.deepEqual(await verifyRefresh(manifest, { fetcher: published, attempts: 1 }), { pages: 2, aliases: 1, resources: 1, catalogBuild: build, revision });
-  for (const issue of ['release', 'snapshot', 'fallback', 'missing', 'alias']) {
+  for (const issue of ['release', 'snapshot', 'versioned snapshot', 'cache header', 'fallback', 'missing', 'alias']) {
     await assert.rejects(verifyRefresh(manifest, { attempts: 1, fetcher: async url => {
       const path = new URL(url).pathname;
       if (issue === 'release' && path === '/release.json') return Response.json({ ...manifest.release, resources: 2 });
       if (issue === 'snapshot' && path === '/library-catalog.json') return new Response(body.replace(build, 'c'.repeat(40)));
+      if (issue === 'versioned snapshot' && path === versionedCatalog) return new Response('missing', { status: 404 });
+      if (issue === 'cache header' && path === versionedCatalog) return new Response(body, { headers: { 'cache-control': 'no-cache' } });
       if (issue === 'fallback' && path === '/resources/posture-test/') return new Response('<html>generic homepage fallback</html>');
       if (issue === 'missing' && path === '/resources/posture-test/') return new Response('missing', { status: 404 });
       if (issue === 'alias' && path === '/resources/old-posture/') return new Response(null, { status: 301, headers: { location: 'https://evil.example/' } });
@@ -100,6 +104,9 @@ test('one catalog snapshot generates the real menus, counts, complete route mani
     const homepage = readFileSync(join(output, 'index.html'), 'utf8');
     assert.equal(generated.pages.find(item => item.path === '/').sha256, digest(homepage));
     assert.equal(readFileSync(join(output, 'library-catalog.json'), 'utf8'), JSON.stringify(catalog));
+    const snapshotPath = `/library-snapshots/${generated.catalogSha256}.json`;
+    assert.ok(homepage.includes(`href="${snapshotPath}"`));
+    assert.equal(readFileSync(join(output, snapshotPath), 'utf8'), JSON.stringify(catalog));
     assert.throws(() => prepareRefresh({ catalogBody: '{}', revision, output, manifestPath }));
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });

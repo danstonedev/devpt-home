@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runInNewContext } from 'node:vm';
+import { createHash } from 'node:crypto';
 import routes from '../library-routes.js';
 import { buildPublicSite } from './build-public-site.mjs';
 import { robotsAllows } from './robots-rules.mjs';
@@ -51,6 +52,7 @@ test('the public export contains readable canonical pages and a catalog-derived 
     assert.match(read('sitemap.html'), /\/resources\/exam-special-lachman\//);
     const config = JSON.parse(read('staticwebapp.config.json'));
     assert.equal(config.routes.find(rule=>rule.route==='/library-catalog.json').headers['Cache-Control'],'no-cache');
+    assert.equal(config.routes.find(rule=>rule.route==='/library-snapshots/*.json').headers['Cache-Control'],'public, max-age=31536000, immutable');
     assert.deepEqual(config.routes.find(rule => rule.route === '/resources/hip-anatomy/'), {route:'/resources/hip-anatomy/',redirect:'/resources/anatomy-hip/',statusCode:301});
     assert.equal(config.navigationFallback, undefined);
     for (const file of ['node_modules','docs','e2e','local-site-config.js','catalog.json','scripts']) assert.equal(existsSync(join(output,file)), false);
@@ -63,8 +65,14 @@ test('the export retains the exact source snapshot bytes and rejects a different
   try{
     buildPublicSite({catalog,catalogBody,output});
     assert.equal(readFileSync(join(output,'library-catalog.json'),'utf8'),catalogBody);
+    const reference = () => readFileSync(join(output,'index.html'),'utf8').match(/href="(\/library-snapshots\/[a-f0-9]{64}\.json)"/)?.[1];
+    const first = reference();
+    assert.equal(first, `/library-snapshots/${createHash('sha256').update(catalogBody).digest('hex')}.json`);
+    assert.equal(readFileSync(join(output,first),'utf8'),catalogBody);
     assert.throws(()=>buildPublicSite({catalog:{...catalog,build:'b'.repeat(40)},catalogBody,output}),/snapshot bytes/);
     assert.equal(readFileSync(join(output,'library-catalog.json'),'utf8'),catalogBody);
+    buildPublicSite({catalog,catalogBody:catalogBody.trim(),output});
+    assert.notEqual(reference(),first);
   }finally{rmSync(output,{recursive:true,force:true});}
 });
 

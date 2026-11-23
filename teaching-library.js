@@ -85,6 +85,8 @@ function anatomyViewCaption(asset){const view=anatomyViewFromRoute(asset),shown=
 function followAnatomyView(shell,message){const asset=byId(shell.dataset.playerAsset),view=validateAnatomyView(message.view,asset);if(!isAnatomyWorkspace(asset)||message.activity!==(asset.nativeId||asset.id)||!view)return;const params=new URLSearchParams();writeAnatomyViewParams(params,view);history.replaceState(history.state,'',routeHref('activity/'+asset.id+'?'+params));shell.dataset.anatomyView=JSON.stringify(view);renderedRouteKey=routeKey();const main=document.querySelector('#main');if(main){refreshActivityBand(asset);const details=main.querySelector('.activity-details');if(details)details.outerHTML=activityDetails(asset);}publishPage();const shown=shownAnatomyResource(asset);track('resource_ready',{resource_id:shown.id,region_id:shown.regionId,topic_id:shown.topicId});}
 
 const byId = id => {let asset=INDEX.get(id);while(asset?.aliasOf&&INDEX.has(asset.aliasOf))asset=INDEX.get(asset.aliasOf);return asset;};
+let initialPlayerAsset, initialPlayerIntent;
+const playerAsset = id => byId(id) || (initialPlayerAsset?.id === id ? initialPlayerAsset : undefined);
 const regionById = id => REGIONS.find(region=>region.id===id);
 const topicById = id => TOPICS.find(topic=>topic.id===id);
 const sectionById = id => SECTIONS.find(section=>section.id===id);
@@ -319,7 +321,26 @@ function library(){
   return `<main class="main wrap" id="main" tabindex="-1"><div class="page-band"><div class="page-head"><h1>Search the library</h1><a href="#/regions" class="text-link">Browse regions ${icon('arrow')}</a></div><p class="browse-note">Combine a subject, body region and format. Related variants are grouped; each variant keeps its own resource link.</p></div><section class="compact-library" aria-label="Resources"><div class="search-row library-facets"><label class="search-box">${icon('search')}<input type="search" id="library-search" placeholder="Search resources…" aria-label="Search resources" value="${esc(query.q)}" autocomplete="off"></label><label class="facet-control"><span>Body region</span><select id="region-select" class="sort" aria-label="Filter by region"><option value="">All regions</option>${options(REGIONS,query.region)}</select></label><label class="facet-control"><span>Subject topic</span><select id="topic-select" class="sort" aria-label="Filter by topic"><option value="">All topics</option>${topicOptions}</select></label><label class="facet-control"><span>Format</span><select id="format-select" class="sort" aria-label="Filter by format"><option value="">All formats</option>${options(FORMATS,query.format)}</select></label><label class="facet-control"><span>Scope</span><select id="scope-select" class="sort" aria-label="Filter by scope"><option value="">All scopes</option>${options([{id:'regional',label:'Regional'},{id:'whole-body',label:'Whole body'},{id:'nonregional',label:'Methods and tools'},{id:'unassigned',label:'Region not assigned'}],query.scope)}</select></label></div><div id="library-results" aria-live="polite">${results()}</div></section></main>`;
 }
 function player(asset){return `<div class="player native-player" role="region" aria-label="Interactive resource player" data-player-asset="${asset.id}">${asset.nativeAvailable===false?'':`<div class="native-view-tools"><p class="native-loading" role="status" hidden>Loading resource…</p><button type="button" class="button small secondary" data-player-screen aria-expanded="false" aria-controls="native-resource-stage" title="Expand resource">${icon('expand')}<span>Expand resource</span></button></div>`}<div id="native-resource-stage" class="player-stage native-stage">${visual(asset)}${asset.nativeAvailable===false?`<div class="native-unavailable"><strong>${localReview?'Not available locally':'Resource unavailable'}</strong><details><summary>Details</summary><p>${esc(asset.availabilityNote||'Requires the local simPACS service.')}</p></details></div>`:`<div class="native-launch"><button class="button" data-launch-native="${asset.id}">${icon('play')} Open resource</button></div>`}<span class="stage-watermark">devpt.app</span></div><div class="native-recovery" hidden><p class="native-status" role="status"></p><div class="actions"><button class="button small secondary" data-player-retry>Retry</button><a class="button small secondary" data-player-direct target="_blank" rel="noopener">Open full view</a></div></div></div>`;}
-function launchNative(id){if(window.DEVPT_STATIC_RENDER)return;const asset=byId(id),shell=document.querySelector(`[data-player-asset="${id}"]`);if(!asset||!shell||asset.nativeAvailable===false||shell.querySelector('iframe'))return;const url=nativeURL(asset);shell.querySelector('.native-stage').innerHTML=`<iframe class="native-frame" src="${esc(url.href)}" title="${esc(asset.title)} interactive resource" allow="fullscreen" referrerpolicy="origin"></iframe>`;shell.classList.add('native-active');const frame=shell.querySelector('iframe');frame.addEventListener('error',()=>{if(shell.isConnected&&shell.querySelector('iframe')===frame&&!shell.dataset.ready){clearTimeout(nativeTimer);showRecovery(shell,nativeURL(byId(shell.dataset.playerAsset)),true);}});const view=anatomyViewFromRoute(asset);if(view)shell.dataset.anatomyView=JSON.stringify(view);showRecovery(shell,url);if(phoneScreen()&&opensFull(asset)||history.state?.devptPlayer==='fullscreen')playerScreen(true);scheduleRecovery(shell,url,id);}
+function launchNative(id){
+  if(window.DEVPT_STATIC_RENDER)return;
+  const asset=playerAsset(id),shell=document.querySelector(`[data-player-asset="${id}"]`);
+  if(!asset||!shell||asset.nativeAvailable===false||shell.querySelector('iframe'))return;
+  const url=nativeURL(asset);
+  shell.querySelector('.native-stage').innerHTML=`<iframe class="native-frame" src="${esc(url.href)}" title="${esc(asset.title)} interactive resource" allow="fullscreen" referrerpolicy="origin"></iframe>`;
+  shell.classList.add('native-active');
+  const frame=shell.querySelector('iframe');
+  frame.addEventListener('error',()=>{
+    if(shell.isConnected&&shell.querySelector('iframe')===frame&&!shell.dataset.ready){
+      const current=playerAsset(shell.dataset.playerAsset);
+      if(current){clearTimeout(nativeTimer);showRecovery(shell,nativeURL(current),true);}
+    }
+  });
+  const view=anatomyViewFromRoute(asset);
+  if(view)shell.dataset.anatomyView=JSON.stringify(view);
+  showRecovery(shell,url);
+  if(phoneScreen()&&(asset===initialPlayerAsset?asset.fullscreen:opensFull(asset))||history.state?.devptPlayer==='fullscreen')playerScreen(true);
+  scheduleRecovery(shell,url,id);
+}
 function showRecovery(shell,url,failed=false){shell.querySelector('.native-recovery').hidden=!failed;shell.querySelector('.native-loading').hidden=failed;shell.querySelector('.native-stage').setAttribute('aria-busy',String(!failed));shell.querySelector('.native-status').textContent=failed?'The resource did not connect. Retry or open it directly.':'';shell.querySelector('[data-player-direct]').href=url.href;shell.dataset.loading=failed?'failed':'loading';}
 // A slow source keeps its renderer and model cache. Recovery is always explicit.
 function scheduleRecovery(shell,url,id){clearTimeout(nativeTimer);nativeTimer=setTimeout(()=>{if(shell.isConnected&&!shell.dataset.ready&&shell.dataset.playerAsset===id)showRecovery(shell,url,true);},25000);}
@@ -344,7 +365,7 @@ function updatePlayerScreenButton(shell,on){const button=shell?.querySelector('[
 // A source-selected activity replaces the expanded entry, but the older inline
 // entry is still underneath it. Capture the current source intent before Back.
 function currentPlayerViewHash(){
- const shell=document.querySelector('.native-player.native-active'),asset=shell&&byId(shell.dataset.playerAsset);
+ const shell=document.querySelector('.native-player.native-active'),asset=shell&&playerAsset(shell.dataset.playerAsset);
  if(!asset)return null;
  const current={shell,entryHash:playerEntryHash,path:'activity/'+asset.id,hash:routeHref('activity/'+asset.id)};
  if(!isAnatomyWorkspace(asset))return current;
@@ -368,7 +389,7 @@ function playerScreen(on,tell=false,fromHistory=false){
    if(changed){const target=playerReturnFocus?.isConnected?playerReturnFocus:shell?.querySelector('[data-player-screen]');if(playerReturnScroll)scrollTo(playerReturnScroll.x,playerReturnScroll.y);target?.focus({preventScroll:true});playerReturnFocus=null;playerReturnScroll=null;}
    if(playerHistory&&!fromHistory){exitingPlayerView=currentPlayerViewHash();playerHistory=false;history.back();}else playerHistory=false;playerEntryHash=null;
  }
- if(tell&&frame){const url=nativeURL(byId(shell.dataset.playerAsset));frame.contentWindow.postMessage({type:'devpt-teaching-fullscreen',on},url.origin);}
+ if(tell&&frame){const url=nativeURL(playerAsset(shell.dataset.playerAsset));frame.contentWindow.postMessage({type:'devpt-teaching-fullscreen',on},url.origin);}
 }
 // Native SimLab frames already relay an unhandled Escape through gameScreen.
 // Handle Escape on the host's own controls as well, after a dialog or menu has first refusal.
@@ -384,15 +405,15 @@ window.addEventListener('popstate',()=>{
  // jump to another resource or route keeps ownership of its new destination.
  if(view&&shell===view.shell&&routeKey()===view.entryHash&&location.pathname+location.search+location.hash!==view.hash){history.replaceState(history.state,'',view.hash);renderedRouteKey=routeKey();}
 });
-function sendNativeVisibility(visible){const shell=document.querySelector('.native-player.native-active'),frame=shell?.querySelector('iframe');if(!frame)return;const [page,id]=route().path.split('/');visible=!!(visible&&page==='activity'&&byId(id)?.id===shell.dataset.playerAsset&&shell.closest('#main'));const url=nativeURL(byId(shell.dataset.playerAsset));frame.contentWindow.postMessage({type:'devpt-teaching-visibility',visible},url.origin);}
+function sendNativeVisibility(visible){const shell=document.querySelector('.native-player.native-active'),frame=shell?.querySelector('iframe'),asset=shell&&playerAsset(shell.dataset.playerAsset);if(!frame||!asset)return;const [page,id]=route().path.split('/');visible=!!(visible&&page==='activity'&&playerAsset(id)?.id===asset.id&&shell.closest('#main'));const url=nativeURL(asset);frame.contentWindow.postMessage({type:'devpt-teaching-visibility',visible},url.origin);}
 // Hash navigation takes ownership immediately, before its handler removes the
 // old iframe. An already-queued frame update must not undo leaving that route.
-window.addEventListener('message',event=>{
+function receiveNativeMessage(event){
  const shell=document.querySelector('.native-player.native-active'),frame=shell?.querySelector('iframe');
  if(!shell||!frame)return;
- const asset=byId(shell.dataset.playerAsset);if(!asset)return;
+ const asset=playerAsset(shell.dataset.playerAsset);if(!asset)return;
  const url=nativeURL(asset);if(event.origin!==url.origin||event.source!==frame.contentWindow)return;
- const [page,id]=route().path.split('/'),active=page==='activity'&&byId(id)?.id===asset.id&&!!shell.closest('#main');
+ const [page,id]=route().path.split('/'),active=page==='activity'&&playerAsset(id)?.id===asset.id&&!!shell.closest('#main');
  const message=event.data;
  // A parked clinical frame may finish preparing, but cannot navigate or expand the host.
  if(shell.dataset.pendingRetainedFrom&&message?.type==='devpt-teaching-ready'&&message.activity===shell.dataset.pendingRetainedFrom){delete shell.dataset.pendingRetainedFrom;const view=cachedAnatomyView(shell,asset);frame.contentWindow.postMessage({type:'devpt-teaching-select',activity:asset.nativeId||asset.id,...(view?{view}:{})},url.origin);return;}
@@ -407,10 +428,15 @@ window.addEventListener('message',event=>{
    if(active&&document.documentElement.classList.contains('player-fullscreen'))frame.contentWindow.postMessage({type:'devpt-teaching-fullscreen',on:true},url.origin);return;
  }
  if(!active)return;
+ if(initialPlayerAsset&&!catalogValid&&['devpt-teaching-view','devpt-teaching-selected'].includes(message?.type)){
+   initialPlayerIntent=event;
+   return;
+ }
  if(message?.type==='devpt-teaching-view'){followAnatomyView(shell,message);return;}
  if(message?.type==='devpt-teaching-selected'){followPlayer(shell,message.activity);return;}
  if(message?.type==='devpt-teaching-fullscreen'&&typeof message.on==='boolean')playerScreen(message.on);
-});
+}
+window.addEventListener('message',receiveNativeMessage);
 document.addEventListener('visibilitychange',()=>sendNativeVisibility(!document.hidden&&!modal.open));
 // The resource's family: every resource filed under the same region and topic, in the order its region page lists them.
 const family = asset => grouped(LISTED.filter(other=>other.regionId===asset.regionId&&other.topicId===asset.topicId)).flatMap(group=>group.items);
@@ -903,7 +929,15 @@ function missing(title='Resource unavailable',copy='Choose a resource from the c
 function catalogUnavailable(){if(window.DEVPT_CATALOG_STATE==='loading')return `<main class="main wrap" id="main" tabindex="-1"><div class="empty" role="status"><h1>Loading resources…</h1></div>${productStrip()}</main>`;return `<main class="main wrap" id="main" tabindex="-1"><div class="empty" role="alert"><span class="icon-box" style="margin:0 auto 18px">${icon('info')}</span><h1>Library unavailable</h1><p>The source teaching catalog could not be loaded.</p><button class="button secondary" data-reload-catalog>Reload</button></div>${productStrip()}</main>`;}
 // A background catalog refresh updates metadata without replacing an active game
 // or its fullscreen owner. Clinical pages can also park in place while browsing.
-function retainActivePlayer(){const {path}=route(),[page,id]=path.split('/'),asset=page==='activity'?byId(id):null,shell=document.querySelector('.native-player.native-active'),main=document.querySelector('#main');if(!asset||asset.nativeAvailable===false||!shell?.querySelector('iframe')||shell.dataset.playerAsset!==asset.id||!main?.contains(shell))return false;const band=main.querySelector('.page-band'),details=main.querySelector('.activity-details');if(band)refreshActivityBand(asset);if(details)details.outerHTML=activityDetails(asset);publishPage();trackReadyResource(shell);syncSelectionPresentation();return true;}
+function retainActivePlayer(){
+  const [page,id]=route().path.split('/'),asset=page==='activity'?byId(id):null;
+  const shell=document.querySelector('.native-player.native-active'),main=document.querySelector('#main');
+  if(!asset||asset.nativeAvailable===false||!shell?.querySelector('iframe')||shell.dataset.playerAsset!==asset.id||!main?.contains(shell))return false;
+  const band=main.querySelector('.page-band'),details=main.querySelector('.activity-details');
+  if(band)refreshActivityBand(asset);
+  if(details)details.outerHTML=activityDetails(asset);
+  app.removeAttribute('aria-busy');publishPage();trackReadyResource(shell);syncSelectionPresentation();return true;
+}
 // Keep one source-qualified 3D workspace in its original DOM position: reparenting an iframe reloads it on Safari.
 // Browsing pauses it. Opening a different workspace evicts it, bounding GPU memory.
 function retainedWorkspace(asset){
@@ -942,7 +976,20 @@ function render({focus=false}={}){
   const legacyEntry=location.hash?.startsWith('#/');
   if(!window.DEVPT_STATIC_RENDER)canonicalizeAnatomyRoute();
   const snapshot=history.state?.devptNav;
-  if(retainActivePlayer())return;
+  if(initialPlayerAsset){
+    const shell=document.querySelector('.native-player.native-active');
+    const frame=shell?.querySelector('iframe');
+    const [page,id]=route().path.split('/'),asset=page==='activity'?byId(id):null;
+    if(frame&&(!asset||asset.nativeAvailable===false||frame.src!==nativeURL(asset).href)){
+      sendNativeVisibility(false);
+      shell.classList.remove('native-active');
+      frame.remove();
+    }
+  }
+  if(retainActivePlayer()){
+    if(initialPlayerAsset)restoreNavigation(snapshot,focus);
+    return;
+  }
   document.dispatchEvent(new Event('devpt:before-render'));
   releasePlayerPage();playerEntryHash=null;playerReturnFocus=null;playerReturnScroll=null;
   document.documentElement?.classList.remove('player-fullscreen');playerHistory=false;
@@ -1038,7 +1085,27 @@ document.addEventListener('input',event=>{if(event.target.id==='library-search')
 document.addEventListener('submit',event=>{const report=event.target.closest('[data-report-form]');if(report){event.preventDefault();const {title,body}=reportText(report,reportSubject(report.dataset.reportId));location.href=`mailto:${REPORT_TO}?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;closeDialog();notify('Report ready in your email app');return;}const form=event.target.closest('[data-search-form]');if(!form)return;event.preventDefault();const q=String(new FormData(form).get('q')||'').trim();query={q,region:'',topic:'',format:'',scope:'',limit:120};go('library?q='+encodeURIComponent(q));track('library_search',{result_count:search({q}).length});});
 let switchFocus=false;
 document.addEventListener('change',event=>{const key={'topic-select':'topic','region-select':'region','format-select':'format','scope-select':'scope'}[event.target.id];if(key){query[key]=event.target.value;query.limit=120;document.querySelector('#library-results').innerHTML=routeLinks(results());updateSearchRoute();}else if(event.target.matches('select[data-switch]')){rememberNavigation();switchFocus=true;go('activity/'+event.target.value);}else if(event.target.name==='share-mode')modal.querySelectorAll('[data-share-panel]').forEach(panel=>{panel.hidden=panel.dataset.sharePanel!==event.target.value;});});
-document.addEventListener('devpt:catalog-ready',()=>{rememberNavigation();updateCatalog();if(catalogValid){const retained=[...new Set(saved.map(id=>byId(id)?.id||id))];if(retained.join()!==saved.join()){saved=retained;persist();}}if(!['products','contact','faculty','about'].includes(route().path.split('/')[0])){const typing=document.activeElement?.matches?.('.ref-search input')?document.activeElement.value:null;render();if(typing!==null){const input=document.querySelector('.ref-search input');if(input){input.value=typing;input.focus();}}}});
+document.addEventListener('devpt:catalog-ready',()=>{
+  rememberNavigation();updateCatalog();
+  if(catalogValid){
+    const retained=[...new Set(saved.map(id=>byId(id)?.id||id))];
+    if(retained.join()!==saved.join()){saved=retained;persist();}
+  }
+  if(!['products','contact','faculty','about'].includes(route().path.split('/')[0])){
+    const typing=document.activeElement?.matches?.('.ref-search input')?document.activeElement.value:null;
+    render();
+    if(typing!==null){
+      const input=document.querySelector('.ref-search input');
+      if(input){input.value=typing;input.focus();}
+    }
+  }
+  initialPlayerAsset=undefined;
+  if(initialPlayerIntent){
+    const event=initialPlayerIntent;
+    initialPlayerIntent=undefined;
+    receiveNativeMessage(event);
+  }
+});
 window.addEventListener('hashchange',onNavigation);
 if(!localReview&&routeMap)window.addEventListener('popstate',onNavigation);
 // Real hrefs work without JavaScript and with modified clicks. Ordinary local
@@ -1053,7 +1120,20 @@ document.addEventListener('click',event=>{
 // Keep generated content readable while its authoritative live catalog loads.
 // A failed/unpublished catalog still replaces the view with the unavailable state.
 const pendingGenerated=!window.DEVPT_STATIC_RENDER&&!localReview&&document.getElementById?.('library-page-data')&&window.DEVPT_CATALOG_STATE==='loading'&&!location.hash?.startsWith('#/');
-if(pendingGenerated)app.setAttribute('aria-busy','true');else render();
+if(pendingGenerated){
+  app.setAttribute('aria-busy','true');
+  // View links need the full model to validate their anatomy and practice selections.
+  const seed=document.getElementById('library-player-data');
+  const {path,params}=route();
+  if(seed&&!['view','side','cohort','practice'].some(key=>params.has(key))){
+    const asset=JSON.parse(seed.textContent);
+    if(idPattern.test(asset.id)&&idPattern.test(asset.nativeId)&&path==='activity/'+asset.id){
+      initialPlayerAsset=asset;
+      renderedRouteKey=routeKey();
+      launchNative(asset.id);
+    }
+  }
+}else render();
 /** A region's model turns while the pointer or focus is on it; its frames load on first use. */
 // Region turntables are short muted loops fetched only on hover or focus; the poster is their first frame, so the swap is seamless.
 // VP9 WebM is the smaller file; H.264 MP4 covers browsers without VP9.

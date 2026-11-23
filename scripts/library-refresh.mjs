@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { appendFileSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { buildPublicSite } from './build-public-site.mjs';
+import { buildPublicSite, catalogSnapshotPath } from './build-public-site.mjs';
 import { fetchTeachingCatalog } from './wait-for-teaching-catalog.mjs';
 
 const repository = 'danstonedev/devpt-home';
@@ -117,7 +117,12 @@ export async function verifyRefresh(manifest, { fetcher = fetch, workers = 12, a
     if (attempt + 1 < attempts) await sleep(Math.min(15000, deadline - now()));
   }
   if (!releaseReady) throw new Error('Library release identity or counts do not match the export.');
-  let pending = [{ path: '/library-catalog.json', sha256: manifest.catalogSha256, kind: 'page' }, ...manifest.pages.map(page => ({ ...page, kind: 'page' })), ...manifest.redirects.map(item => ({ ...item, kind: 'redirect' }))];
+  let pending = [
+    { path: '/library-catalog.json', sha256: manifest.catalogSha256, kind: 'page' },
+    { path: catalogSnapshotPath(manifest.catalogSha256), sha256: manifest.catalogSha256, kind: 'catalog' },
+    ...manifest.pages.map(page => ({ ...page, kind: 'page' })),
+    ...manifest.redirects.map(item => ({ ...item, kind: 'redirect' })),
+  ];
   for (let attempt = 0; pending.length && attempt < attempts; attempt++) {
     const failures = [];
     let cursor = 0;
@@ -132,7 +137,10 @@ export async function verifyRefresh(manifest, { fetcher = fetch, workers = 12, a
             // Azure may preserve the probe's cache-busting query on redirects.
             target.searchParams.delete('release-check');
             if (response.status !== 301 || target.href !== siteOrigin + item.location) throw new Error('Alias did not retain its canonical redirect.');
-          } else if (response.status !== 200 || digest(await response.text()) !== item.sha256) throw new Error('Exported page is missing or stale.');
+          } else {
+            if (response.status !== 200 || digest(await response.text()) !== item.sha256) throw new Error('Exported file is missing or stale.');
+            if (item.kind === 'catalog' && !/\bimmutable\b/i.test(response.headers.get('cache-control') || '')) throw new Error('Versioned catalog cannot be cached as immutable.');
+          }
         } catch (error) { failures.push({ ...item, issue: error.message }); }
       }
     }));

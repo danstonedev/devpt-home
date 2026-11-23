@@ -29,9 +29,20 @@ export function libraryRenderer(root, catalog) {
   }
   const summary = new Script('({activities:LISTED,regions:REGIONS,topics:TOPICS,subjectTopics:SUBJECT_TOPICS,formats:FORMATS,counts:LIBRARY.counts(LISTED),sections:typeof SECTIONS === "undefined" ? [] : SECTIONS})').runInContext(context);
   const render = new Script('render(); window.DEVPT_PAGE', { filename: 'render-public-page' });
+  const initialPlayer = new Script(`(() => {
+    const [page, id] = route().path.split('/');
+    if (page !== 'activity') return;
+    const asset = byId(id);
+    if (!asset || asset.nativeAvailable === false) return;
+    const path = location.pathname;
+    if (asset.launch?.kind === 'joint') canonicalizeAnatomyRoute();
+    if (location.pathname !== path || location.search) return;
+    return { id, nativeId: asset.nativeId, title: asset.title, fullscreen: opensFull(asset) };
+  })()`);
   return { ...JSON.parse(JSON.stringify(summary)), render(path) {
     context.location = new URL(path, 'https://devpt.app');
     const metadata = render.runInContext(context, { timeout: 3000 });
-    return { html: mount.innerHTML, metadata: JSON.parse(JSON.stringify(metadata)) };
+    const player = initialPlayer.runInContext(context, { timeout: 3000 });
+    return { html: mount.innerHTML, metadata: JSON.parse(JSON.stringify(metadata)), player };
   } };
 }

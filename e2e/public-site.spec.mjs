@@ -5,6 +5,7 @@ import { resolve, extname, sep } from 'node:path';
 const catalog = JSON.parse(readFileSync(new URL('./fixtures/public-catalog.json', import.meta.url), 'utf8'));
 const output = resolve('.cache/public-test');
 const catalogUrl = 'https://lab.devpt.app/teaching/catalog.json';
+const releaseCatalogUrl = /^https:\/\/devpt\.app\/library-snapshots\/[0-9a-f]{64}\.json$/;
 
 test('Evidence flows and the named Posture Lab have independent direct pages and searchable entries', async ({browser,page,baseURL}) => {
   const ids=['evidence-diagnostic-results','evidence-test-clusters','posture-assessment-standing','evidence-test-decisions'];
@@ -40,7 +41,7 @@ async function isolatedPublicSite(browser, value, projectUse) {
   const mime = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.css': 'text/css', '.woff2': 'font/woff2', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml' };
   await context.route('**/*', route => {
     const url = new URL(route.request().url());
-    if (url.href === catalogUrl || url.href === 'https://devpt.app/library-catalog.json') return route.fulfill({ json: value });
+    if (url.href === catalogUrl || releaseCatalogUrl.test(url.href)) return route.fulfill({ json: value });
     if (url.hostname === 'www.googletagmanager.com') { tags.push(url.href); return route.fulfill({ contentType: 'text/javascript', body: '' }); }
     if (url.origin !== 'https://devpt.app') return route.abort();
     let file = resolve(output, '.' + url.pathname);
@@ -73,13 +74,73 @@ test('production discovery stays on its published static snapshot when Lab advan
 
 test('production snapshot failure cannot introduce newer unbuilt Lab routes through a fallback',async({browser},testInfo)=>{
   const {context}=await isolatedPublicSite(browser,catalog,testInfo.project.use);let remote=0;
-  await context.route('https://devpt.app/library-catalog.json',route=>route.fulfill({status:503,body:'Unavailable'}));
+  await context.route(releaseCatalogUrl,route=>route.fulfill({status:503,body:'Unavailable'}));
   await context.route(catalogUrl,route=>{remote++;return route.fulfill({json:catalog});});
   try{
     const page=await context.newPage();await page.goto('https://devpt.app/');
     await expect(page.getByRole('heading',{name:'Library unavailable'})).toBeVisible();
     expect(remote).toBe(0);
   }finally{await context.close();}
+});
+
+test('a direct resource connects before the release catalog and keeps its iframe after discovery loads', async ({browser}, testInfo) => {
+  const {context}=await isolatedPublicSite(browser,catalog,testInfo.project.use);
+  const id='exam-special-lachman';
+  const nextId='exam-special-mcmurray';
+  let releaseCatalog;
+  const gate=new Promise(resolve=>{releaseCatalog=resolve;});
+  let playerLoads=0;
+  await context.route(releaseCatalogUrl,async route=>{
+    await gate;
+    await route.fulfill({json:catalog});
+  });
+  await context.route(url=>url.origin==='https://lab.devpt.app'&&url.pathname==='/teaching/',route=>{
+    playerLoads++;
+    return route.fulfill({contentType:'text/html',body:`<script>parent.postMessage({type:'devpt-teaching-ready',activity:new URLSearchParams(location.search).get('activity')},'https://devpt.app')</script>`});
+  });
+  try{
+    const page=await context.newPage();
+    await page.goto('https://devpt.app/resources/'+id+'/',{waitUntil:'domcontentloaded'});
+    const player=page.locator('.native-player');
+    const frame=player.locator('iframe');
+    await expect(player).toHaveAttribute('data-ready','true');
+    const before=await frame.elementHandle();
+    const source=new URL(await frame.getAttribute('src'));
+    expect(source.searchParams.get('activity')).toBe(id);
+    expect(await page.evaluate(()=>window.DEVPT_CATALOG_STATE)).toBe('loading');
+    if(testInfo.project.name==='phone')await expect(player).toHaveClass(/\bfullscreen\b/);
+    await page.evaluate(()=>addEventListener('message',event=>{
+      if(event.data?.type==='devpt-teaching-selected')document.body.dataset.sourceSelection=event.data.activity;
+    }));
+    const child=await before.contentFrame();
+    await child.evaluate(activity=>parent.postMessage({type:'devpt-teaching-selected',activity},'https://devpt.app'),nextId);
+    await expect(page.locator('body')).toHaveAttribute('data-source-selection',nextId);
+    releaseCatalog();
+    await expect(page.locator('#app')).not.toHaveAttribute('aria-busy','true');
+    await expect(page).toHaveURL('https://devpt.app/resources/'+nextId+'/');
+    expect(await before.evaluate(element=>element===document.querySelector('.native-frame'))).toBe(true);
+    expect(playerLoads).toBe(1);
+  }finally{releaseCatalog();await context.close();}
+});
+
+test('a catalog failure clears the early player and restores the recovery page', async ({browser}, testInfo) => {
+  const {context}=await isolatedPublicSite(browser,catalog,testInfo.project.use);
+  let releaseCatalog;
+  const gate=new Promise(resolve=>{releaseCatalog=resolve;});
+  await context.route(releaseCatalogUrl,async route=>{
+    await gate;
+    await route.fulfill({status:503});
+  });
+  await context.route(url=>url.origin==='https://lab.devpt.app'&&url.pathname==='/teaching/',route=>route.fulfill({contentType:'text/html',body:'<title>Source player</title>'}));
+  try{
+    const page=await context.newPage();
+    await page.goto('https://devpt.app/resources/exam-special-lachman/',{waitUntil:'domcontentloaded'});
+    await expect(page.locator('.native-frame')).toHaveCount(1);
+    releaseCatalog();
+    await expect(page.getByRole('heading',{name:'Library unavailable'})).toBeVisible();
+    await expect(page.locator('.native-frame')).toHaveCount(0);
+    await expect(page.locator('html')).not.toHaveClass(/\bplayer-fullscreen\b/);
+  }finally{releaseCatalog();await context.close();}
 });
 
 test('resource and region pages are readable without JavaScript; missing resources return 404', async ({ browser, baseURL }) => {
@@ -156,7 +217,7 @@ test('public analytics measures homepage, resource use and product interest with
   const mime = {'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.woff2':'font/woff2','.webp':'image/webp','.png':'image/png','.svg':'image/svg+xml'};
   await context.route('**/*', async route => {
     const url = new URL(route.request().url());
-    if (url.href === catalogUrl || url.href === 'https://devpt.app/library-catalog.json') { await catalogGate; return route.fulfill({json:catalog}); }
+    if (url.href === catalogUrl || releaseCatalogUrl.test(url.href)) { await catalogGate; return route.fulfill({json:catalog}); }
     if (url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/') return route.fulfill({contentType:'text/html',body:`<title>Protocol fixture</title><script>parent.postMessage({type:'devpt-teaching-ready',activity:new URLSearchParams(location.search).get('activity')},'https://devpt.app')</script>`});
     if (url.hostname === 'www.googletagmanager.com') attemptedTags.push(url.href);
     if (url.origin !== 'https://devpt.app') return route.abort();

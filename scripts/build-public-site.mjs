@@ -2,6 +2,7 @@ import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } fr
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { isDeepStrictEqual } from 'node:util';
 import routes from '../library-routes.js';
 import { libraryRenderer } from './library-renderer.mjs';
@@ -10,6 +11,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const catalogUrl = 'https://lab.devpt.app/teaching/catalog.json';
 const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const json = value => JSON.stringify(value).replace(/</g, '\\u003c');
+export const catalogSnapshotPath = sha256 => `/library-snapshots/${sha256}.json`;
 
 export function buildPublicSite({ catalog, catalogBody, output = resolve(root, '.cache/public-site') }) {
   if (catalogBody !== undefined && (typeof catalogBody !== 'string' || !isDeepStrictEqual(JSON.parse(catalogBody), catalog))) throw new Error('Catalog snapshot bytes do not describe the catalog used for rendering.');
@@ -19,9 +21,13 @@ export function buildPublicSite({ catalog, catalogBody, output = resolve(root, '
   rmSync(output, { recursive: true, force: true });
   mkdirSync(output, { recursive: true });
   writeFileSync(join(output, 'library-catalog.json'), snapshot);
+  const snapshotPath = catalogSnapshotPath(createHash('sha256').update(snapshot).digest('hex'));
+  const snapshotFile = join(output, snapshotPath);
+  mkdirSync(dirname(snapshotFile), { recursive: true });
+  writeFileSync(snapshotFile, snapshot);
   for (const file of files) if (existsSync(join(root, file))) cpSync(join(root, file), join(output, file));
   for (const dir of ['assets','simlab','emrs','3dpain','showcase','platform-terms','rnd']) if (existsSync(join(root, dir))) cpSync(join(root, dir), join(output, dir), { recursive: true });
-  const template = readFileSync(join(root, 'index.html'), 'utf8');
+  const template = readFileSync(join(root, 'index.html'), 'utf8').replace('href="/library-catalog.json"', `href="${snapshotPath}"`);
   for (const required of ['/site-bootstrap.js','/site-media.js','/site-fonts.css','/library-model.js','/teaching-library.css','/library-routes.js','/site-analytics.js','/assets/navigation-state.js']) {
     if (!template.includes(required) || !existsSync(join(output, required.slice(1)))) throw new Error('Missing public entry dependency: ' + required);
   }
@@ -33,7 +39,7 @@ export function buildPublicSite({ catalog, catalogBody, output = resolve(root, '
     ...renderer.activities.map(item => routes.href('activity/' + item.id))];
   const indexed = [];
   for (const path of pages) {
-    const { html, metadata } = renderer.render(path);
+    const { html, metadata, player } = renderer.render(path);
     if (metadata.page_type === 'unavailable') throw new Error('Cannot export an unavailable page: ' + path);
     if (metadata.canonical !== 'https://devpt.app' + path) throw new Error('Public page canonical does not match its exported path: ' + path);
     let page = template.replace('<div id="app"></div>', () => '<div id="app">' + html + '</div>')
@@ -44,7 +50,8 @@ export function buildPublicSite({ catalog, catalogBody, output = resolve(root, '
       .replace(/<noscript>[\s\S]*?<\/noscript>/, '<noscript><p class="wrap">Enable JavaScript to use the interactive players and saved resources.</p></noscript>');
     for (const [property, value] of Object.entries({'og:title':metadata.title,'og:description':metadata.description,'og:url':metadata.canonical})) page = page.replace(new RegExp('(<meta property="' + property + '" content=")[^"]*'), (_match, prefix) => prefix + escape(value));
     const { structuredData, ...pageData } = metadata;
-    page = page.replace('</head>', () => '<script type="application/ld+json" id="library-structured-data">' + json(structuredData) + '</script>\n<script type="application/json" id="library-page-data">' + json(pageData) + '</script>\n  </head>');
+    const playerData = player ? '<script type="application/json" id="library-player-data">' + json(player) + '</script>\n' : '';
+    page = page.replace('</head>', () => '<script type="application/ld+json" id="library-structured-data">' + json(structuredData) + '</script>\n<script type="application/json" id="library-page-data">' + json(pageData) + '</script>\n' + playerData + '  </head>');
     const file = join(output, path, 'index.html');
     mkdirSync(dirname(file), { recursive: true });
     writeFileSync(file, page);

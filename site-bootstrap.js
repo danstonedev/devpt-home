@@ -21,10 +21,11 @@
     document.dispatchEvent(new Event('devpt:catalog-ready'));
   }
   function loadPublishedCatalog() {
-    return fetch(loopback ? 'https://lab.devpt.app/teaching/catalog.json' : '/library-catalog.json', {
+    const snapshot = document.getElementById('library-catalog-preload')?.getAttribute('href');
+    return fetch(loopback ? 'https://lab.devpt.app/teaching/catalog.json' : snapshot || '/library-catalog.json', {
       // Matches the <link rel="preload"> in index.html so the early request is reused.
-      // The release snapshot is revalidated with its static pages. Raw local
-      // development keeps the live source fixture; production never falls back.
+      // Generated pages pin an immutable snapshot. Raw local development uses
+      // the live source, while production stays on the selected release.
       mode: 'cors', credentials: 'same-origin',
       signal: AbortSignal.timeout(10000),
     }).then(response => {
