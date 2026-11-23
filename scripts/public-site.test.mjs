@@ -8,6 +8,7 @@ import { runInNewContext } from 'node:vm';
 import { createHash } from 'node:crypto';
 import routes from '../library-routes.js';
 import { buildPublicSite } from './build-public-site.mjs';
+import { libraryRenderer } from './library-renderer.mjs';
 import { robotsAllows } from './robots-rules.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -74,6 +75,34 @@ test('the export retains the exact source snapshot bytes and rejects a different
     buildPublicSite({catalog,catalogBody:catalogBody.trim(),output});
     assert.notEqual(reference(),first);
   }finally{rmSync(output,{recursive:true,force:true});}
+});
+
+test('legacy TMJ resources launch directly while the anatomy explorer accepts supported selections',()=>{
+  const base=catalog.activities.find(item=>item.id==='anatomy-hip');
+  const resource=(id,launch)=>({...base,id,nativeId:id,title:id,desc:'Fixture for '+id,launch,url:'https://lab.devpt.app/teaching/?activity='+id});
+  const legacy=[
+    ['anatomy-tmj',{kind:'joint',initial:'tmj:opening',rest:true}],
+    ...['opening','rotation-only','lateral-left','lateral-right','skull-on-fixed-mandible','tmj-medial-glide']
+      .map(preset=>['joint-tmj-'+preset,{kind:'joint',initial:'tmj:'+preset}]),
+  ];
+  const explorer=resource('anatomy-explorer',{kind:'joint',initial:'hip:flexion',mode:'full-range',workspace:'whole-body',workspaceRegions:['hip','tmj']});
+  const modernIds=['modern-tmj','original-tmj'];
+  const modern=modernIds.map((id,index)=>resource(id,{kind:'joint',initial:'tmj:opening',mode:['full-range','original-anatomy'][index]}));
+  const compatibleHip=resource('compatible-hip',{kind:'joint',initial:'hip:flexion'});
+  const sourcePreview=resource('preview-tmj',{kind:'joint',initial:'tmj:opening',mode:'source-preview'});
+  const renderer=libraryRenderer(root,{...catalog,activities:[...catalog.activities,explorer,compatibleHip,sourcePreview,...modern,...legacy.map(([id,launch])=>resource(id,launch))]});
+  for(const id of [...legacy.map(([id])=>id),'preview-tmj']){
+    const direct=renderer.render('/resources/'+id+'/');
+    assert.equal(direct.player?.id,id,id);
+    assert.equal(direct.player?.nativeId,id,id);
+    const unsupported=renderer.render('/resources/anatomy-explorer/?view='+id);
+    assert.ok(!unsupported.html.includes('Fixture for '+id),id);
+  }
+  for(const id of ['compatible-hip',...modernIds]){
+    assert.equal(renderer.render('/resources/'+id+'/').player,undefined,id);
+    const selected=renderer.render('/resources/anatomy-explorer/?view='+id);
+    assert.ok(selected.html.includes('Fixture for '+id),id);
+  }
 });
 
 test('the static public brief uses an authenticated mission link and creates no player bootstrap',()=>{
