@@ -314,6 +314,38 @@ addEventListener('message', event => { if (${answersSelect} && event.data?.type 
 tell(new URLSearchParams(location.search).get('activity'));
 </script>`;
 
+test('a connected player receives the latest resource while an earlier selection is pending', async ({ page }) => {
+  const first = 'exam-special-lachman', slow = 'exam-special-mcmurray', latest = 'demo-mcmurray-medial';
+  await routeCatalog(page, { ...catalog, activities: activities.map(asset => ({ ...asset, playerSession: 'devpt-3d-workbench' })) });
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({
+    contentType: 'text/html', body: `<!doctype html><title>Controlled teaching player</title><script>
+      const origin = new URL(document.referrer).origin;
+      window.selections = [];
+      window.ack = activity => parent.postMessage({ type: 'devpt-teaching-ready', activity }, origin);
+      addEventListener('message', event => {
+        if (event.source !== parent || event.origin !== origin || event.data?.type !== 'devpt-teaching-select') return;
+        window.selections.push(event.data.activity);
+      });
+      window.ack(new URL(location.href).searchParams.get('activity'));
+    </script>`,
+  }));
+  await page.goto('/#/activity/' + first);
+  const player = page.locator('.native-player.native-active');
+  await expect(player).toHaveAttribute('data-ready', 'true');
+  await page.waitForFunction(() => window.DEVPT_CATALOG_STATE === 'ready');
+  const frame = page.frames().find(frame => frame.url().startsWith('https://lab.devpt.app/teaching/'));
+  const navigate = id => page.evaluate(id => { location.hash = '#/activity/' + id; }, id);
+  await navigate(slow);
+  await expect.poll(() => frame.evaluate(() => window.selections)).toEqual([slow]);
+  await navigate(latest);
+  await expect.poll(() => frame.evaluate(() => window.selections)).toEqual([slow, latest]);
+  await frame.evaluate(id => window.ack(id), slow);
+  await expect(player).toHaveAttribute('data-player-asset', latest);
+  await expect(player).not.toHaveAttribute('data-ready', 'true');
+  await frame.evaluate(id => window.ack(id), latest);
+  await expect(player).toHaveAttribute('data-ready', 'true');
+});
+
 test('cold resource loading keeps a dark stage and a stable toolbar without recovery actions', async ({ page }, testInfo) => {
   await routeCatalog(page);
   let release;
