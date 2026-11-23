@@ -5,6 +5,12 @@
   },
   "routes": [
     {
+      "route": "/library-snapshots/*.json",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
       "route": "/library-catalog.json",
       "headers": {
         "Cache-Control": "no-cache"

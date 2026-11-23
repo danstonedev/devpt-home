@@ -111,7 +111,7 @@ Custom domains and DNS live in Azure. Prefer Azure DNS ALIAS for apex changes an
 
 ## Reference library
 
-The root site consumes simLAB’s source-owned public catalog at `https://lab.devpt.app/teaching/catalog.json`. Each export ships those exact upstream bytes as `/library-catalog.json`; production discovery reads this release snapshot so live menus and static direct routes advance together. Raw localhost development retains the live upstream catalog. Browse subjects under the five workflow shelves, anatomical body regions, or formats such as games and practice tools. Subject and region memberships may overlap; section totals count each canonical resource once rather than summing topic counts. Nonregional methods and tools have their own visible entry instead of being filed as whole-body anatomy. Source entries without a reviewed regional assignment stay in a separate Region not assigned scope. Games also appear under their reviewed Anatomy or Imaging subject. The earlier Games topic URL and query remain compatible.
+The root site consumes simLAB’s source-owned public catalog at `https://lab.devpt.app/teaching/catalog.json`. Each export ships those exact upstream bytes as `/library-catalog.json` and at an immutable URL containing their SHA-256 digest. Generated pages use the immutable URL so repeat visits can reuse the snapshot in the browser cache. Raw localhost development retains the live upstream catalog. Browse subjects under the five workflow shelves, anatomical body regions, or formats such as games and practice tools. Subject and region memberships may overlap; section totals count each canonical resource once rather than summing topic counts. Nonregional methods and tools have their own visible entry instead of being filed as whole-body anatomy. Source entries without a reviewed regional assignment stay in a separate Region not assigned scope. Games also appear under their reviewed Anatomy or Imaging subject. The earlier Games topic URL and query remain compatible.
 
 `library-model.js` is the shared model for the browser and static renderer: it validates the same catalog, applies reviewed `topicIds` / `regionIds`, and intersects selected topic, region, format and scope filters. Explicit `studyFamily` metadata groups related source variants behind a “Choose a variant” disclosure. Counts distinguish canonical resources from study groups (one reviewed family, or one standalone resource). Every variant keeps its own canonical resource link, save action and native launch. Grouping never guesses from similar titles. Missing additive metadata retains the earlier scalar memberships and singleton studies.
 
@@ -154,17 +154,17 @@ and the catalog build used for the export.
 Pushes, release notifications and retries share one serialized deployment queue.
 Each run checks out current `main`, validates and saves the current public catalog
 once, then generates all menus, counts, pages and the sitemap from those same
-bytes. The export publishes those bytes at `/library-catalog.json`; production
-browser navigation reads that snapshot so it cannot advance ahead of the matching
-static direct routes. A notification's `source_build` and `source_run_id` are provenance hints,
+bytes. Generated HTML preloads the same content-addressed URL that discovery reads,
+so the matching static pages and catalog advance together. A notification's
+`source_build` and `source_run_id` are provenance hints,
 not checkout targets; duplicates and delayed notifications cannot select an old
 catalog. Immediately before upload, the workflow checks that the website revision
 and catalog bytes are still current. A superseded run skips upload and queues a
 fresh reconciliation. A source update during upload is detected after verification
 and also queues a refresh.
 
-Publication verifies the live `release.json` identity and counts, the catalog
-snapshot's SHA256, the exact HTML
+Publication verifies the live `release.json` identity and counts, both catalog
+URLs' SHA-256 digests, the immutable cache header, the exact HTML
 of every exported Library page (including menus and direct resource URLs), and
 canonical alias redirects. CDN convergence is retried; transient workflow failures
 automatically retry at most three times. The selected catalog, page hashes and
