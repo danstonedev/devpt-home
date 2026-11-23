@@ -348,7 +348,19 @@ function launchNative(id){
   if(phoneScreen()&&(asset===initialPlayerAsset?asset.fullscreen:opensFull(asset))||history.state?.devptPlayer==='fullscreen')playerScreen(true);
   scheduleRecovery(shell,url,id);
 }
-function showRecovery(shell,url,failed=false){shell.querySelector('.native-recovery').hidden=!failed;shell.querySelector('.native-loading').hidden=failed;shell.querySelector('.native-stage').setAttribute('aria-busy',String(!failed));shell.querySelector('.native-status').textContent=failed?'The resource did not connect. Retry or open it directly.':'';shell.querySelector('[data-player-direct]').href=url.href;shell.dataset.loading=failed?'failed':'loading';}
+function showRecovery(shell,url,failed=false,reason){
+  shell.querySelector('.native-recovery').hidden=!failed;shell.querySelector('.native-loading').hidden=failed;
+  shell.querySelector('.native-stage').setAttribute('aria-busy',String(!failed));
+  let status='';
+  if(failed){
+    if(reason==='webgl-unavailable')status='The 3D view could not start WebGL. Retry or open the full view.';
+    else if(reason==='model-unavailable')status='The model could not load. Retry or open the full view.';
+    else if(shell.dataset.connected)status='The player connected, but the resource has not opened. Retry or open the full view.';
+    else status='The resource did not connect. Retry or open it directly.';
+  }
+  shell.querySelector('.native-status').textContent=status;shell.querySelector('[data-player-direct]').href=url.href;
+  shell.dataset.loading=failed?'failed':'loading';
+}
 // A slow source keeps its renderer and model cache. Recovery is always explicit.
 function scheduleRecovery(shell,url,id){clearTimeout(nativeTimer);nativeTimer=setTimeout(()=>{if(shell.isConnected&&!shell.dataset.ready&&shell.dataset.playerAsset===id)showRecovery(shell,url,true);},25000);}
 function retryPlayer(){const shell=document.querySelector('.native-player.native-active');if(!shell)return;delete shell.dataset.ready;shell.querySelector('iframe')?.remove();launchNative(shell.dataset.playerAsset);}
@@ -423,14 +435,21 @@ function receiveNativeMessage(event){
  const [page,id]=route().path.split('/'),active=page==='activity'&&playerAsset(id)?.id===asset.id&&!!shell.closest('#main');
  const message=event.data;
  // A parked clinical frame may finish preparing, but cannot navigate or expand the host.
- if(shell.dataset.pendingRetainedFrom&&message?.type==='devpt-teaching-ready'&&message.activity===shell.dataset.pendingRetainedFrom){delete shell.dataset.pendingRetainedFrom;shell.dataset.connected='true';const view=cachedAnatomyView(shell,asset);frame.contentWindow.postMessage({type:'devpt-teaching-select',activity:asset.nativeId||asset.id,...(view?{view}:{})},url.origin);return;}
+ const connected=message?.type==='devpt-teaching-connected',ready=message?.type==='devpt-teaching-ready';
+ if(shell.dataset.pendingRetainedFrom&&(connected||ready)&&message.activity===shell.dataset.pendingRetainedFrom){delete shell.dataset.pendingRetainedFrom;shell.dataset.connected='true';const view=cachedAnatomyView(shell,asset);frame.contentWindow.postMessage({type:'devpt-teaching-select',activity:asset.nativeId||asset.id,...(view?{view}:{})},url.origin);return;}
+ if(message?.type==='devpt-teaching-failed'&&message.activity===asset.nativeId){
+   delete shell.dataset.ready;clearTimeout(nativeTimer);showRecovery(shell,url,true,message.reason);return;
+ }
  if(message?.type==='devpt-teaching-chrome'&&message.activity===asset.nativeId&&[0,1].includes(message.version)&&Object.keys(message).every(key=>['type','activity','version'].includes(key))){
    shell.dataset.nativeChrome=message.version===1?'study-v1':'';
    if(active&&message.version===1&&shell.querySelector('.native-view-tools')?.contains(document.activeElement))frame.focus({preventScroll:true});return;
  }
- if(message?.type==='devpt-teaching-ready'&&message.activity===asset.nativeId){
-   shell.dataset.connected='true';shell.dataset.ready='true';shell.dataset.loading='ready';if(active)trackReadyResource(shell);clearTimeout(nativeTimer);
-   shell.querySelector('.native-status').textContent='Ready';shell.querySelector('.native-recovery').hidden=true;shell.querySelector('.native-loading').hidden=true;shell.querySelector('.native-stage').setAttribute('aria-busy','false');
+ if((connected||ready)&&message.activity===asset.nativeId){
+   shell.dataset.connected='true';
+   if(ready){
+     shell.dataset.ready='true';shell.dataset.loading='ready';if(active)trackReadyResource(shell);clearTimeout(nativeTimer);
+     shell.querySelector('.native-status').textContent='Ready';shell.querySelector('.native-recovery').hidden=true;shell.querySelector('.native-loading').hidden=true;shell.querySelector('.native-stage').setAttribute('aria-busy','false');
+   }else if(shell.dataset.loading==='failed'){showRecovery(shell,url);scheduleRecovery(shell,url,asset.id);}
    sendNativeVisibility(active&&!document.hidden&&!modal.open);
    if(active&&document.documentElement.classList.contains('player-fullscreen'))frame.contentWindow.postMessage({type:'devpt-teaching-fullscreen',on:true},url.origin);return;
  }
@@ -985,7 +1004,7 @@ function paintRoute(page,content){
    if(view)shell.dataset.anatomyView=JSON.stringify(view);else delete shell.dataset.anatomyView;
    refreshActivityBand(asset);retained.querySelector('.activity-details').outerHTML=routeLinks(activityDetails(asset));
    if(changed){const connected=!!shell.dataset.connected,previous=byId(shell.dataset.playerAsset);if(!connected)shell.dataset.pendingRetainedFrom||=previous.nativeId||previous.id;shell.dataset.playerAsset=asset.id;delete shell.dataset.ready;frame.title=asset.title+' interactive resource';const url=nativeURL(asset);showRecovery(shell,url);if(connected)frame.contentWindow.postMessage({type:'devpt-teaching-select',activity:asset.nativeId||asset.id,...(view?{view}:{})},url.origin);scheduleRecovery(shell,url,asset.id);}
-   else if(!shell.dataset.ready)scheduleRecovery(shell,nativeURL(asset),asset.id);
+   else if(!shell.dataset.ready&&shell.dataset.loading!=='failed')scheduleRecovery(shell,nativeURL(asset),asset.id);
    sendNativeVisibility(!document.hidden&&!modal.open);
    if(phoneScreen()&&opensFull(asset)||history.state?.devptPlayer==='fullscreen')playerScreen(true,true);
  }else app.insertAdjacentHTML('beforeend',routeLinks(header(page)+content)+ending);
