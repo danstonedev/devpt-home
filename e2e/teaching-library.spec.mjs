@@ -346,6 +346,50 @@ test('a connected player receives the latest resource while an earlier selection
   await expect(player).toHaveAttribute('data-ready', 'true');
 });
 
+test('a connected model can fail, retry and open the latest selection without reporting an early launch', async ({ page }) => {
+  const first = 'exam-special-lachman', next = 'exam-special-mcmurray';
+  await routeCatalog(page, { ...catalog, activities: activities.map(asset => ({ ...asset, playerSession: 'devpt-3d-workbench' })) });
+  let loads = 0;
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => {
+    loads++;
+    return route.fulfill({ contentType: 'text/html', body: `<!doctype html><script>
+      const origin = new URL(document.referrer).origin;
+      window.selections = [];
+      window.tell = (type, activity, reason) => parent.postMessage({ type: 'devpt-teaching-' + type, activity, reason }, origin);
+      addEventListener('message', event => {
+        if (event.source === parent && event.origin === origin && event.data?.type === 'devpt-teaching-select') window.selections.push(event.data.activity);
+      });
+      window.tell('connected', new URL(location.href).searchParams.get('activity'));
+    </script>` });
+  });
+  await page.goto('/#/activity/' + first);
+  const player = page.locator('.native-player.native-active');
+  const source = () => page.frames().find(frame => frame.url().startsWith('https://lab.devpt.app/teaching/'));
+  await expect(player).toHaveAttribute('data-connected', 'true');
+  await expect(player).not.toHaveAttribute('data-ready', 'true');
+  await page.waitForFunction(() => window.DEVPT_CATALOG_STATE === 'ready');
+  await page.evaluate(id => { location.hash = '#/activity/' + id; }, next);
+  await expect.poll(() => source().evaluate(() => window.selections)).toEqual([next]);
+  await source().evaluate(([first, next]) => {
+    window.tell('failed', first, 'webgl-unavailable');
+    window.tell('ready', first);
+    window.tell('connected', next);
+  }, [first, next]);
+  await expect(player).toHaveAttribute('data-loading', 'loading');
+  await source().evaluate(id => window.tell('failed', id, 'webgl-unavailable'), next);
+  await expect(player.locator('.native-status')).toContainText('WebGL');
+  await expect(player.locator('[data-player-retry]')).toBeVisible();
+  await expect(player).not.toHaveAttribute('data-ready', 'true');
+  expect(loads).toBe(1);
+  await player.locator('[data-player-retry]').click();
+  await expect(player).toHaveAttribute('data-connected', 'true');
+  await expect(player.locator('.native-recovery')).toBeHidden();
+  await expect(player).not.toHaveAttribute('data-ready', 'true');
+  expect(loads).toBe(2);
+  await source().evaluate(id => window.tell('ready', id), next);
+  await expect(player).toHaveAttribute('data-ready', 'true');
+});
+
 test('cold resource loading keeps a dark stage and a stable toolbar without recovery actions', async ({ page }, testInfo) => {
   await routeCatalog(page);
   let release;
