@@ -539,13 +539,34 @@ test('on a phone a resource opens full screen; Back restores the compact page an
   await expect.poll(heard).toEqual([true, false]);
 });
 
-test('a case brief stays in the page, even on a phone', async ({ page }) => {
-  const brief = item('case-hip-practice', 'Hip case practice', 'hip', 'anatomy', { launch: { kind: 'case', missionId: 'hip-ddx' } });
-  await routeCatalog(page, { ...catalog, activities: [...activities, brief] });
-  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({ contentType: 'text/html', body: gameFixture }));
+test('a public case brief opens without a player and scored screen cases still use the source player', async ({ page }) => {
+  const brief = item('case-hip-practice', 'Hip case practice', 'hip', 'anatomy', {
+    formatId:'case-brief',access:'sign-in-required',desc:'A public brief',outcome:'Review the evidence',
+    launch:{kind:'case',missionId:'hip-ddx'},
+  });
+  const scored = item('move-case-scored', 'Scored movement case', 'hip', 'anatomy', {
+    formatId:'case-brief',launch:{kind:'move-case',case:'scored'},
+  });
+  await routeCatalog(page, {
+    ...catalog,activities:[...activities,brief,scored],
+    formats:[{id:'interactive-study',label:'Interactive studies'},{id:'case-brief',label:'Case briefs'}],
+  });
+  const playerRequests=[];
+  await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => {
+    playerRequests.push(new URL(route.request().url()).searchParams.get('activity'));
+    return route.fulfill({contentType:'text/html',body:gameFixture});
+  });
   await page.goto('/#/activity/case-hip-practice');
+  const content=page.getByRole('region',{name:'Case brief'});
+  await expect(content).toContainText('A public brief');
+  await expect(content).toContainText('Review the evidence');
+  await expect(content).toContainText('Sign-in required');
+  await expect(content.getByRole('link',{name:'Open case in simLAB'})).toHaveAttribute('href','https://lab.devpt.app/?mission=hip-ddx');
+  await expect(page.locator('iframe')).toHaveCount(0);
+  expect(playerRequests).toEqual([]);
+  await page.evaluate(()=>location.hash='#/activity/move-case-scored');
   await expect(page.locator('.native-player')).toHaveAttribute('data-ready', 'true');
-  await expect(page.locator('.native-player')).not.toHaveClass(/\bfullscreen\b/);
+  expect(playerRequests).toEqual(['move-case-scored']);
 });
 
 test('a playing resource retains its frame and fullscreen through catalog refresh and browser fullscreen loss', async ({ page }) => {

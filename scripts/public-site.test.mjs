@@ -76,6 +76,21 @@ test('the export retains the exact source snapshot bytes and rejects a different
   }finally{rmSync(output,{recursive:true,force:true});}
 });
 
+test('the static public brief uses an authenticated mission link and creates no player bootstrap',()=>{
+  const output=mkdtempSync(join(tmpdir(),'devpt-case-brief-test-'));
+  const brief={...catalog.activities.find(item=>item.id==='anatomy-hip'),
+    id:'case-hip-practice',nativeId:'case-hip-practice',formatId:'case-brief',access:'sign-in-required',
+    desc:'A public brief about evidence <examples>',outcome:'Review the evidence',
+    launch:{kind:'case',missionId:'hip-ddx'},url:'https://lab.devpt.app/teaching/?activity=case-hip-practice'};
+  try{
+    buildPublicSite({catalog:{...catalog,formats:[...(catalog.formats??[{id:'interactive-study',label:'Interactive studies'}]),{id:'case-brief',label:'Case briefs'}],activities:[...catalog.activities,brief]},output});
+    const page=readFileSync(join(output,'resources/case-hip-practice/index.html'),'utf8');
+    assert.match(page,/A public brief about evidence &lt;examples&gt;/);
+    assert.match(page,/href="https:\/\/lab\.devpt\.app\/\?mission=hip-ddx" target="_blank" rel="noopener noreferrer"/);
+    assert.doesNotMatch(page,/id="library-player-data"|data-player-asset|<iframe\b/);
+  }finally{rmSync(output,{recursive:true,force:true});}
+});
+
 test('nonempty source-owned sections export canonical pages in source order without indexing private routes', () => {
   const output = mkdtempSync(join(tmpdir(), 'devpt-section-test-'));
   const sectioned = {...catalog,
