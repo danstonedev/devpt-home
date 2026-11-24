@@ -371,6 +371,11 @@ function followPlayer(shell,activity){const next=typeof activity==='string'&&ASS
 // 24 October 2026: "that's really what the experience should be for mobile"). A case brief is a page of text and stays in
 // the page. The test matches the player's own (simLAB gameScreen.wantsFullScreen).
 const phoneScreen=()=>matchMedia('(pointer: coarse)').matches||innerWidth<700;
+// Owner direction, 23 November 2026: "stop the auto-launch on phones". A resource page there shows its poster and Open
+// resource; the player, which can be a download of tens of megabytes, starts when that is pressed and then takes the
+// screen as above. A player that is already running is kept, and Back into an expanded player still reopens it.
+// The build's static render has no screen to ask about and never starts a player.
+const autoLaunch=()=>!window.DEVPT_STATIC_RENDER&&(!phoneScreen()||history.state?.devptPlayer==='fullscreen');
 const opensFull=asset=>(asset.launch?.kind??asset.kind)!=='case';
 // The page's full view only, never the browser's own full screen, on a touch screen: there the browser closes its full
 // screen on a downward swipe, and a one-finger drag down to turn a model is exactly that swipe (owner report, 25 October 2026).
@@ -1076,7 +1081,7 @@ function render({focus=false}={}){
   renderedRouteKey=routeKey();document.dispatchEvent(new Event('devpt:render'));
   const asset=page==='activity'?byId(id):null;
   if(caseBriefMission(asset))track('resource_ready',{resource_id:asset.id,region_id:asset.regionId,topic_id:asset.topicId});
-  else if(asset)launchNative(asset.id);
+  else if(asset&&autoLaunch())launchNative(asset.id);
   trackReadyResource(document.querySelector('#main .native-player.native-active'));
   restoreNavigation(snapshot,focus);
 }
@@ -1169,7 +1174,7 @@ if(pendingGenerated){
     if(idPattern.test(asset.id)&&idPattern.test(asset.nativeId)&&path==='activity/'+asset.id){
       initialPlayerAsset=asset;
       renderedRouteKey=routeKey();
-      launchNative(asset.id);
+      if(autoLaunch())launchNative(asset.id);
     }
   }
 }else render();

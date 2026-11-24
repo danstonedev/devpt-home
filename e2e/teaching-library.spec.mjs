@@ -1,6 +1,6 @@
 import routes from '../library-routes.js';
 const publicLocation=value=>{const url=new URL(value);return url.pathname+url.search;};
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures/phone-open.mjs';
 
 const catalogUrl = 'https://lab.devpt.app/teaching/catalog.json';
 // Protocol-only fixtures exercise discovery/sharing. Actual model/player
@@ -205,7 +205,7 @@ test('resource activation uses only its canonical player and validates the sende
   await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => route.fulfill({
     contentType: 'text/html', body: '<!doctype html><title>Protocol-only source fixture</title><p>Protocol-only source fixture</p>',
   }));
-  // Opening a resource page loads its player straight away, with no second click.
+  // Opening a resource page loads its player straight away, with no second click; on a phone, after Open resource.
   await page.goto('/#/activity/exam-special-lachman');
   await expect(page.getByRole('button', { name: 'Open resource', exact: true })).toHaveCount(0);
   await expect(page.locator('.native-frame')).toHaveAttribute('src', 'https://lab.devpt.app/teaching/?activity=exam-special-lachman&embedded=1');
@@ -221,6 +221,59 @@ test('resource activation uses only its canonical player and validates the sende
   await pageBack(page, testInfo);
   await nav(page, '#/topics');
   await expect(page.locator('.native-frame')).toHaveCount(0);
+});
+
+// Owner direction, 23 November 2026: "stop the auto-launch on phones". A player can be a download of tens of megabytes.
+test.describe('opening a resource page', () => {
+  test.use({ autoOpen: false });
+  test('a phone waits for Open resource before requesting the player, and a desktop starts it', async ({ page }, testInfo) => {
+    await routeCatalog(page);
+    let playerRequests = 0;
+    await page.route(url => url.origin === 'https://lab.devpt.app' && url.pathname === '/teaching/', route => {
+      playerRequests += 1;
+      return route.fulfill({ contentType: 'text/html', body: '<!doctype html><title>Protocol-only source fixture</title>' });
+    });
+    const frame = page.locator('.native-frame'), open = page.getByRole('button', { name: 'Open resource', exact: true });
+    const src = 'https://lab.devpt.app/teaching/?activity=exam-special-lachman&embedded=1';
+    await page.goto('/#/activity/exam-special-lachman');
+    await expect(page.getByRole('heading', { name: 'Lachman test', level: 1 })).toBeVisible();
+    if (testInfo.project.name !== 'phone') {
+      await expect(frame).toHaveAttribute('src', src);
+      await expect(open).toHaveCount(0);
+      return;
+    }
+    await expect(open).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Expand resource', exact: true })).toHaveCount(0);
+    await page.waitForLoadState('networkidle');
+    await expect(frame).toHaveCount(0);
+    expect(playerRequests).toBe(0);
+    // Moving to another resource inside the library does not start one either.
+    await page.evaluate(() => { location.hash = '#/activity/exam-special-mcmurray'; });
+    await expect(page.getByRole('heading', { name: 'McMurray test', level: 1 })).toBeVisible();
+    await expect(open).toBeVisible();
+    await expect(frame).toHaveCount(0);
+    expect(playerRequests).toBe(0);
+    await open.click();
+    await expect(frame).toHaveAttribute('src', 'https://lab.devpt.app/teaching/?activity=exam-special-mcmurray&embedded=1');
+    await expect(page.locator('.native-player')).toHaveClass(/\bfullscreen\b/);
+    await page.goBack();
+    await expect(page.locator('.native-player')).not.toHaveClass(/\bfullscreen\b/);
+    await expect(frame).toHaveCount(1);
+    expect(playerRequests).toBe(1);
+  });
+});
+
+test('the skip link moves with the page instead of staying over the content', async ({ page }) => {
+  await routeCatalog(page);
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'By region' })).toBeVisible();
+  const skip = page.getByRole('link', { name: 'Skip to content', exact: true });
+  await skip.focus();
+  await expect(skip).toBeInViewport();
+  await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
+  expect(await page.evaluate(() => scrollY)).toBeGreaterThan(200);
+  await expect(skip).toBeFocused();
+  await expect(skip).not.toBeInViewport();
 });
 
 test('the home hero renders before the catalog and region turntables load only on hover', async ({ page }, testInfo) => {
